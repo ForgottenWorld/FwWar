@@ -1,4 +1,4 @@
-package me.kaotich00.fwwar.commands.services;
+package me.kaotich00.fwwar.services;
 
 import me.kaotich00.fwwar.plot.CorePlot;
 

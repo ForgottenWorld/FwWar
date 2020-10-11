@@ -5,12 +5,10 @@ import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownBlock;
-import com.palmergames.bukkit.towny.object.TownBlockType;
 import me.kaotich00.fwwar.commands.api.UserCommand;
-import me.kaotich00.fwwar.commands.services.SimplePlotService;
+import me.kaotich00.fwwar.services.SimplePlotService;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.plot.CorePlot;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
