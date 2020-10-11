@@ -1,0 +1,13 @@
+name: FwWar
+version: ${project.version}
+main: me.kaotich00.fwwar.Fwwar
+api-version: 1.13
+authors: [Kaotich00]
+description: Customized war system for Forgotten World server
+commands:
+  war:
+    description: Basic command for war usage
+    usage: /<command>
+    aliases: [war]
+depend:
+  - Towny
