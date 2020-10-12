@@ -13,6 +13,7 @@ import me.kaotich00.fwwar.services.SimplePlotService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -65,6 +66,7 @@ public class WarPlotConquestTask implements Runnable {
 
                         if(residentTown.getNation().hasEnemy(town.getNation())) {
                             corePlot.setConquestPercentage(corePlot.getConquestPercentage() + 1);
+                            player.playSound(player.getLocation(), Sound.BLOCK_BELL_USE, 10, 1);
                             Message.TOWN_CONQUER_STATUS.broadcast(town.getName(), 100 - corePlot.getConquestPercentage());
                         }
 
