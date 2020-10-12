@@ -3,6 +3,7 @@ package me.kaotich00.fwwar.commands;
 import com.palmergames.bukkit.towny.utils.NameUtil;
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.commands.Command;
+import me.kaotich00.fwwar.commands.admin.StartCommand;
 import me.kaotich00.fwwar.commands.user.PlotCommand;
 import me.kaotich00.fwwar.utils.CommandUtils;
 import me.kaotich00.fwwar.utils.MessageUtils;
@@ -28,6 +29,7 @@ public class WarCommandManager implements TabExecutor {
 
     private void setup() {
         this.commandRegistry.put(CommandUtils.WAR_PLOT_COMMAND, new PlotCommand());
+        this.commandRegistry.put(CommandUtils.WAR_START_COMMAND, new StartCommand());
     }
 
     private Command getCommand(String name) {

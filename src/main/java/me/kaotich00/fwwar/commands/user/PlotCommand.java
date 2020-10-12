@@ -8,7 +8,7 @@ import com.palmergames.bukkit.towny.object.TownBlock;
 import me.kaotich00.fwwar.commands.api.UserCommand;
 import me.kaotich00.fwwar.services.SimplePlotService;
 import me.kaotich00.fwwar.message.Message;
-import me.kaotich00.fwwar.plot.CorePlot;
+import me.kaotich00.fwwar.objects.plot.CorePlot;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

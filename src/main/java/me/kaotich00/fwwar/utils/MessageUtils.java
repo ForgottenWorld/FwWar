@@ -4,6 +4,8 @@ import org.bukkit.ChatColor;
 
 public class MessageUtils {
 
+    public static String EOL = "\n";
+
     public static String getPluginPrefix() {
         return ChatColor.DARK_GRAY + "[" +
                 ChatColor.YELLOW + "Fw" +
@@ -12,9 +14,10 @@ public class MessageUtils {
     }
 
     public static String chatHeader() {
-        return  ChatColor.YELLOW + "oOo----------------[ " +
-                ChatColor.GOLD + "FwTournament " +
-                ChatColor.YELLOW + " ]----------------oOo ";
+        return  ChatColor.YELLOW + "oOo--------------------[ " +
+                ChatColor.YELLOW + "Fw" +
+                ChatColor.GOLD + ChatColor.BOLD + "War" +
+                ChatColor.YELLOW + " ]-------------------oOo ";
     }
 
     public static String formatSuccessMessage(String message) {

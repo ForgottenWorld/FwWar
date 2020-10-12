@@ -1,6 +1,6 @@
 package me.kaotich00.fwwar.services;
 
-import me.kaotich00.fwwar.plot.CorePlot;
+import me.kaotich00.fwwar.objects.plot.CorePlot;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -26,10 +26,20 @@ public class SimplePlotService {
         return instance;
     }
 
+    /**
+     * Get the Core Plot for the given town
+     * @param townUUID
+     * @return
+     */
     public Optional<CorePlot> getCorePlotOfTown(UUID townUUID) {
         return Optional.ofNullable(plotMap.get(townUUID));
     }
 
+    /**
+     * Set the Core Plot for the given town
+     * @param townUUID
+     * @param corePlot
+     */
     public void setCorePlotOfTown(UUID townUUID, CorePlot corePlot) {
         this.plotMap.put(townUUID, corePlot);
     }

@@ -1,4 +1,4 @@
-package me.kaotich00.fwwar.plot;
+package me.kaotich00.fwwar.objects.plot;
 
 import java.util.UUID;
 
@@ -6,6 +6,7 @@ public class CorePlot {
 
     private UUID worldUUID;
     private long chunkKey;
+    private float conquestPercentage;
 
     public CorePlot(UUID worldUUID, long chunkKey) {
         this.worldUUID = worldUUID;
@@ -26,6 +27,14 @@ public class CorePlot {
 
     public void setChunkKey(long chunkKey) {
         this.chunkKey = chunkKey;
+    }
+
+    public float getConquestPercentage() {
+        return conquestPercentage;
+    }
+
+    public void setConquestPercentage(float conquestPercentage) {
+        this.conquestPercentage = conquestPercentage;
     }
 
 }

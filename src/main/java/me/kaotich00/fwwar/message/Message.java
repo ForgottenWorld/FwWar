@@ -1,6 +1,7 @@
 package me.kaotich00.fwwar.message;
 
 import me.kaotich00.fwwar.utils.MessageUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -19,8 +20,13 @@ public enum Message {
     CORE_PLOT_SUCCESSFULLY_SET(MessageUtils.formatSuccessMessage("Successfully set town core block!"), true),
     NOT_A_TOWN_BLOCK(MessageUtils.formatErrorMessage("You are not in a town block"), true),
     NOT_YOUR_TOWN_BLOCK(MessageUtils.formatErrorMessage("This is not your town"), true),
-    NOT_AN_OUTPOST(MessageUtils.formatErrorMessage("The core plot must be in an outpost"), true);
+    NOT_AN_OUTPOST(MessageUtils.formatErrorMessage("The core plot must be in an outpost"), true),
 
+    /* War related */
+    NOT_ENOUGH_NATIONS(MessageUtils.formatErrorMessage("Not enough nations to start the war. Can't start"), true),
+    NO_ENEMY_NATION(MessageUtils.formatErrorMessage("There are no enemy nations in this war. Can't start."), true),
+    NATION_CANNOT_JOIN_WAR(ChatColor.GOLD + "{}" + MessageUtils.formatErrorMessage(" can't join the war. No towns found with core block!"), true),
+    NATION_JOIN_WAR(ChatColor.GOLD + "{}" + MessageUtils.formatSuccessMessage(" joined the war!"), true);
 
     private final String message;
     private final boolean showPrefix;
@@ -32,6 +38,10 @@ public enum Message {
 
     public void send(CommandSender sender, Object... objects) {
         sender.sendMessage(asString(objects));
+    }
+
+    public void broadcast(Object... objects) {
+        Bukkit.getServer().broadcastMessage(asString(objects));
     }
 
     public String asString(Object... objects) {
