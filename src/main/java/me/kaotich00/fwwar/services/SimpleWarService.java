@@ -14,6 +14,7 @@ import java.util.Optional;
 public class SimpleWarService {
 
     private static SimpleWarService instance;
+    private int warTaskId;
 
     private War currentWar;
 
@@ -83,8 +84,12 @@ public class SimpleWarService {
         Message.WAR_STARTED.broadcast();
         Bukkit.getServer().broadcastMessage(war.getPrintableParticipants());
 
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), war), 20L, 20L);
+        warTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), war), 20L, 20L);
 
+    }
+
+    public int getWarTaskId() {
+        return this.warTaskId;
     }
 
 }

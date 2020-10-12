@@ -11,6 +11,7 @@ public class CorePlot {
     public CorePlot(UUID worldUUID, long chunkKey) {
         this.worldUUID = worldUUID;
         this.chunkKey = chunkKey;
+        this.conquestPercentage = 0;
     }
 
     public UUID getWorldUUID() {
