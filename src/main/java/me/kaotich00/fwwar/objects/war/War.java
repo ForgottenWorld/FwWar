@@ -13,8 +13,7 @@ import java.util.Set;
 
 public class War {
 
-    Map<Nation, Set<Town>> participantTowns;
-    Set<Nation> participantNations;
+    Map<Nation, Set<Town>> participants;
 
     public enum Status {
         WAR_IDLE,
@@ -24,8 +23,7 @@ public class War {
     Status warStatus;
 
     public War() {
-        this.participantTowns = new HashMap<>();
-        this.participantNations = new HashSet<>();
+        this.participants = new HashMap<>();
         this.warStatus = Status.WAR_IDLE;
     }
 
@@ -35,7 +33,7 @@ public class War {
      * @return true if at least one town is allowed per nation, false otherwise
      */
     public boolean addParticipant(Nation nation) {
-        this.participantNations.add(nation);
+        this.participants.put(nation, new HashSet<>());
 
         Set<Town> allowedTowns = new HashSet<>();
 
@@ -47,7 +45,7 @@ public class War {
         }
 
         if(allowedTowns.size() > 0) {
-            this.participantTowns.put(nation, allowedTowns);
+            this.participants.put(nation, allowedTowns);
             return true;
         }
 
@@ -55,11 +53,31 @@ public class War {
     }
 
     /**
+     * Remove a nation from participants list
+     * @param nation
+     */
+    public void removeParticipant(Nation nation) {
+        this.participants.remove(nation);
+    }
+
+    /**
+     * Remove a town from participants. The town is defeated.
+     * @param town
+     */
+    public void setTownDefeated(Nation nation, Town town) {
+        this.participants.get(nation).remove(town);
+
+        if(this.participants.get(nation).size() == 0) {
+            this.removeParticipant(nation);
+        }
+    }
+
+    /**
      * Get all participant nations
      * @return Set<Nation>
      */
     public Set<Nation> getParticipantNations() {
-        return this.participantNations;
+        return this.participants.keySet();
     }
 
     /**
@@ -68,7 +86,7 @@ public class War {
      * @return Set<Town>
      */
     public Set<Town> getParticipantTownsForNation(Nation nation) {
-        return this.participantTowns.get(nation);
+        return this.participants.get(nation);
     }
 
     /**

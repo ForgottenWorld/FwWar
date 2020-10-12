@@ -23,10 +23,13 @@ public enum Message {
     NOT_AN_OUTPOST(MessageUtils.formatErrorMessage("The core plot must be in an outpost"), true),
 
     /* War related */
+    WAR_STARTED(MessageUtils.formatSuccessMessage("The war has been started!"), true),
     NOT_ENOUGH_NATIONS(MessageUtils.formatErrorMessage("Not enough nations to start the war. Can't start"), true),
     NO_ENEMY_NATION(MessageUtils.formatErrorMessage("There are no enemy nations in this war. Can't start."), true),
     NATION_CANNOT_JOIN_WAR(ChatColor.GOLD + "{}" + MessageUtils.formatErrorMessage(" can't join the war. No towns found with core block!"), true),
-    NATION_JOIN_WAR(ChatColor.GOLD + "{}" + MessageUtils.formatSuccessMessage(" joined the war!"), true);
+    NATION_JOIN_WAR("Nation " + ChatColor.GOLD + "{}" + MessageUtils.formatSuccessMessage(" joined the war!"), true),
+    TOWN_CONQUER_STATUS(MessageUtils.formatSuccessMessage("{} is under attack! {}% reamining before defeat"), true),
+    NATION_DEFEATED(MessageUtils.formatErrorMessage("The Nation {} has been defeated"), true);
 
     private final String message;
     private final boolean showPrefix;

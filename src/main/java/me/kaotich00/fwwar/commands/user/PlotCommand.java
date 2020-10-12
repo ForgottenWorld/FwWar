@@ -29,6 +29,7 @@ public class PlotCommand extends UserCommand {
         } catch (NotRegisteredException e) {
             Message.NOT_PART_OF_A_TOWN.send(sender);
             e.printStackTrace();
+            return;
         }
 
         Town town = null;
@@ -37,6 +38,7 @@ public class PlotCommand extends UserCommand {
         } catch (NotRegisteredException e) {
             Message.NOT_PART_OF_A_TOWN.send(sender);
             e.printStackTrace();
+            return;
         }
 
         if(!resident.equals(town.getMayor())) {

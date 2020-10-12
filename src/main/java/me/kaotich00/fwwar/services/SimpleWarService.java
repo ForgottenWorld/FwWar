@@ -2,8 +2,10 @@ package me.kaotich00.fwwar.services;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Nation;
+import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.war.War;
+import me.kaotich00.fwwar.task.WarPlotConquestTask;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -78,7 +80,10 @@ public class SimpleWarService {
             return;
         }
 
+        Message.WAR_STARTED.broadcast();
         Bukkit.getServer().broadcastMessage(war.getPrintableParticipants());
+
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), war), 20L, 20L);
 
     }
 
