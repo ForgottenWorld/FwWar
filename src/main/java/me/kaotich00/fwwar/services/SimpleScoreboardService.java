@@ -57,6 +57,7 @@ public class SimpleScoreboardService {
                     Float remainingLife = 100 - SimplePlotService.getInstance().getCorePlotOfTown(town.getUuid()).get().getConquestPercentage();
                     Score score_town_name = objective.getScore(org.bukkit.ChatColor.DARK_AQUA + ">> " + org.bukkit.ChatColor.AQUA + town.getName() + " : " + remainingLife + "%");
                     score_town_name.setScore(slot[0]);
+                    slot[0]--;
                 }
             }
         });
