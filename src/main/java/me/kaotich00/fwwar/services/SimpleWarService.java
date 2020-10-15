@@ -84,7 +84,7 @@ public class SimpleWarService {
         Message.WAR_STARTED.broadcast();
         Bukkit.getServer().broadcastMessage(war.getPrintableParticipants());
 
-        warTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), war), 20L, 20L);
+        warTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), war), 40L, 40L);
 
     }
 

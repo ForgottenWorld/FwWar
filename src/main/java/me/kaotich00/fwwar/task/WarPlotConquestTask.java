@@ -10,13 +10,13 @@ import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.plot.CorePlot;
 import me.kaotich00.fwwar.objects.war.War;
 import me.kaotich00.fwwar.services.SimplePlotService;
+import me.kaotich00.fwwar.services.SimpleScoreboardService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class WarPlotConquestTask implements Runnable {
                         if(residentTown.getNation().hasEnemy(town.getNation())) {
                             Bukkit.getConsoleSender().sendMessage("Le città sono nemiche");
                             corePlot.setConquestPercentage(corePlot.getConquestPercentage() + 1);
-                            player.playSound(player.getLocation(), Sound.BLOCK_BELL_USE, 10, 1);
+                            player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 10, 1);
                             Message.TOWN_CONQUER_STATUS.broadcast(town.getName(), 100 - corePlot.getConquestPercentage());
                         }
 
@@ -108,6 +108,8 @@ public class WarPlotConquestTask implements Runnable {
                 }
             }
         }
+
+        SimpleScoreboardService.getInstance().updateWarScoreBoard();
 
     }
 
