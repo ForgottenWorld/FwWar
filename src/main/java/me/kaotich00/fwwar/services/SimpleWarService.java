@@ -40,6 +40,10 @@ public class SimpleWarService {
         return Optional.ofNullable(this.currentWar);
     }
 
+    /**
+     * Set the current war
+     * @param war
+     */
     public void setCurrentWar(War war) {
         this.currentWar = war;
     }
@@ -93,6 +97,15 @@ public class SimpleWarService {
 
         warTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), war), 40L, 40L);
 
+    }
+
+    /**
+     * Stop the current running war
+     */
+    public void stopWar() {
+        Message.WAR_ENDED.broadcast();
+        SimpleScoreboardService.getInstance().destroyWarScoreboard();
+        Bukkit.getScheduler().cancelTask(SimpleWarService.getInstance().getWarTaskId());
     }
 
     public int getWarTaskId() {

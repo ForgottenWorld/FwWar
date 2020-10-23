@@ -41,29 +41,30 @@ public class SimpleScoreboardService {
             scoreboard.resetScores(s);
         }
 
-        final int[] slot = {40};
+        int slot = 40;
 
         Score score_header = objective.getScore(ChatColor.YELLOW + String.join("", Collections.nCopies(27, "-")));
-        score_header.setScore(slot[0]);
-        slot[0]--;
+        score_header.setScore(slot);
+        slot--;
 
         Optional<War> optWar = SimpleWarService.getInstance().getCurrentWar();
-        optWar.ifPresent(war -> {
-            for(Nation participant: war.getParticipantNations()) {
-                Score score_nation_name = objective.getScore(org.bukkit.ChatColor.YELLOW + ">> " + org.bukkit.ChatColor.GOLD + participant.getName());
-                score_nation_name.setScore(slot[0]);
-                slot[0]--;
-                for(Town town: war.getParticipantTownsForNation(participant)) {
+        if (optWar.isPresent()) {
+            War war = optWar.get();
+            for (Nation participant : war.getParticipantNations()) {
+                Score score_nation_name = objective.getScore(org.bukkit.ChatColor.YELLOW + "Nation: " + org.bukkit.ChatColor.GOLD + participant.getName());
+                score_nation_name.setScore(slot);
+                slot = slot - 2;
+                for (Town town : war.getParticipantTownsForNation(participant)) {
                     Float remainingLife = 100 - SimplePlotService.getInstance().getCorePlotOfTown(town.getUuid()).get().getConquestPercentage();
-                    Score score_town_name = objective.getScore(org.bukkit.ChatColor.DARK_AQUA + ">> " + org.bukkit.ChatColor.AQUA + town.getName() + " : " + remainingLife + "%");
-                    score_town_name.setScore(slot[0]);
-                    slot[0]--;
+                    Score score_town_name = objective.getScore(org.bukkit.ChatColor.DARK_AQUA + "Town: " + org.bukkit.ChatColor.AQUA + town.getName() + " - " + remainingLife + "%");
+                    score_town_name.setScore(slot);
+                    slot--;
                 }
             }
-        });
+        }
 
         Score score_footer = objective.getScore(ChatColor.YELLOW + String.join("", Collections.nCopies(27, "-")));
-        score_footer.setScore(slot[0]);
+        score_footer.setScore(slot);
 
     }
 
