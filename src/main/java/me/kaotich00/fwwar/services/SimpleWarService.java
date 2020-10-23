@@ -40,6 +40,10 @@ public class SimpleWarService {
         return Optional.ofNullable(this.currentWar);
     }
 
+    public void setCurrentWar(War war) {
+        this.currentWar = war;
+    }
+
     /**
      * Start war if all conditions are met
      * @param sender
@@ -83,6 +87,9 @@ public class SimpleWarService {
 
         Message.WAR_STARTED.broadcast();
         Bukkit.getServer().broadcastMessage(war.getPrintableParticipants());
+
+        this.currentWar = war;
+        SimpleScoreboardService.getInstance().initWarScoreboard();
 
         warTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), war), 40L, 40L);
 

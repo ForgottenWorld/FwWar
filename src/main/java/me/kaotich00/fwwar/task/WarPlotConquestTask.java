@@ -99,6 +99,7 @@ public class WarPlotConquestTask implements Runnable {
 
                             if(!areThereEnemies) {
                                 Message.WAR_ENDED.broadcast();
+                                SimpleScoreboardService.getInstance().destroyWarScoreboard();
                                 Bukkit.getScheduler().cancelTask(SimpleWarService.getInstance().getWarTaskId());
                             }
                         }

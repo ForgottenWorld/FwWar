@@ -90,4 +90,18 @@ public class SimpleScoreboardService {
         updateWarScoreBoard();
     }
 
+    public void destroyWarScoreboard() {
+        War war = SimpleWarService.getInstance().getCurrentWar().get();
+        for(Nation participant: war.getParticipantNations()) {
+            for(Town town: war.getParticipantTownsForNation(participant)) {
+                for(Resident resident: town.getResidents()) {
+                    Player player = Bukkit.getPlayer(resident.getName());
+                    if(player != null) {
+                        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+                    }
+                }
+            }
+        }
+    }
+
 }
