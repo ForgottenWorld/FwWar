@@ -37,5 +37,5 @@ jobs:
           panel: ${{ secrets.PANEL }}
           api_key: ${{ secrets.API_KEY }}
           server: ${{ secrets.SERVER }}
-          path: /github/workspace/target/fwwar-1.0-SNAPSHOT-shaded.jar
+          path: /home/runner/work/FwWar/FwWar/target/fwwar-1.0-SNAPSHOT-shaded.jar
           directory: ${{ secrets.DIRECTORY }}
