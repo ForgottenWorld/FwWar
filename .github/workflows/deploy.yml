@@ -38,4 +38,4 @@ jobs:
           api_key: ${{ secrets.API_KEY }}
           server: ${{ secrets.SERVER }}
           path: /github/workspace/target/fwwar-1.0-SNAPSHOT.jar
-          directory: ${{ secrets.DIRECTORY }}
+          directory: plugins
