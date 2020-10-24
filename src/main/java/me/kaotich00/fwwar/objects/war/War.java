@@ -2,9 +2,11 @@ package me.kaotich00.fwwar.objects.war;
 
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
+import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.services.SimplePlotService;
 import me.kaotich00.fwwar.utils.MessageUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,11 +37,15 @@ public class War {
     public boolean addParticipant(Nation nation) {
         this.participants.put(nation, new HashSet<>());
 
+        FileConfiguration defaultConfig = Fwwar.getDefaultConfig();
+        int townHP = defaultConfig.getInt("war.town_max_hp");
+
         Set<Town> allowedTowns = new HashSet<>();
 
         SimplePlotService plotService = SimplePlotService.getInstance();
         for(Town town: nation.getTowns()) {
             plotService.getCorePlotOfTown(town.getUuid()).ifPresent(corePlot -> {
+                corePlot.setConquestPercentage(townHP);
                 allowedTowns.add(town);
             });
         }

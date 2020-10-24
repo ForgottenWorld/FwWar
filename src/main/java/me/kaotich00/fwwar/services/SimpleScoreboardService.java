@@ -12,14 +12,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class SimpleScoreboardService {
 
     private static SimpleScoreboardService instance;
     private Scoreboard warScoreBoard;
+    private List<UUID> scoreboards;
 
     private SimpleScoreboardService() {
         if (instance != null){
@@ -87,6 +86,7 @@ public class SimpleScoreboardService {
                     Player player = Bukkit.getPlayer(resident.getName());
                     if(player != null) {
                         player.setScoreboard(this.warScoreBoard);
+                        this.scoreboards.add(player.getUniqueId());
                     }
                 }
             }
@@ -96,17 +96,13 @@ public class SimpleScoreboardService {
     }
 
     public void destroyWarScoreboard() {
-        War war = SimpleWarService.getInstance().getCurrentWar().get();
-        for(Nation participant: war.getParticipantNations()) {
-            for(Town town: war.getParticipantTownsForNation(participant)) {
-                for(Resident resident: town.getResidents()) {
-                    Player player = Bukkit.getPlayer(resident.getName());
-                    if(player != null) {
-                        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-                    }
-                }
+        for(UUID uuid : this.scoreboards) {
+            Player player = Bukkit.getServer().getPlayer(uuid);
+            if(player != null) {
+                player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
             }
         }
+        this.scoreboards = new ArrayList<>();
     }
 
 }
