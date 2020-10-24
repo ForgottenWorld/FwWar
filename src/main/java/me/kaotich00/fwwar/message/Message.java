@@ -30,7 +30,10 @@ public enum Message {
     NATION_JOIN_WAR("Nation " + ChatColor.GOLD + "{}" + MessageUtils.formatSuccessMessage(" joined the war!"), true),
     TOWN_CONQUER_STATUS(MessageUtils.formatSuccessMessage("{} is under attack! {}% reamining before defeat"), true),
     NATION_DEFEATED(MessageUtils.formatErrorMessage("The Nation {} has been defeated"), true),
-    WAR_ENDED(MessageUtils.formatSuccessMessage("The war has ended!"), true);
+    WAR_ENDED(MessageUtils.formatSuccessMessage("The war has ended!"), true),
+
+    /* Miscellaneous */
+    CONFIG_RELOADED(MessageUtils.formatSuccessMessage("Successfully reloaded config.yml"), true);
 
     private final String message;
     private final boolean showPrefix;

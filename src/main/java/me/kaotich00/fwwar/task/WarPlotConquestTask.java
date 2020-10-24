@@ -15,6 +15,7 @@ import me.kaotich00.fwwar.services.SimpleWarService;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Sound;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -34,8 +35,11 @@ public class WarPlotConquestTask implements Runnable {
     @Override
     public void run() {
 
+        FileConfiguration defaultConfig = Fwwar.getDefaultConfig();
         SimplePlotService plotService = SimplePlotService.getInstance();
         TownyAPI townyAPI = TownyAPI.getInstance();
+
+        boolean shouldWarEnd = false;
 
         for(Nation nation: war.getParticipantNations()) {
             for(Town town: war.getParticipantTownsForNation(nation)) {
@@ -51,60 +55,89 @@ public class WarPlotConquestTask implements Runnable {
                     }
                 }
 
+                int allyCount = 0;
+                int enemyCount = 0;
+
                 for(Player player: playerList) {
                     try {
                         Resident resident = townyAPI.getDataSource().getResident(player.getName());
                         Town residentTown = resident.getTown();
 
                         if(residentTown.equals(town)) {
+                            allyCount++;
                             continue;
                         }
 
                         if(residentTown.isAlliedWith(town)) {
+                            allyCount++;
                             continue;
                         }
 
                         if(residentTown.getNation().hasEnemy(town.getNation())) {
-                            corePlot.setConquestPercentage(corePlot.getConquestPercentage() + 1);
-                            player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 10, 1);
-                            Message.TOWN_CONQUER_STATUS.broadcast(town.getName(), 100 - corePlot.getConquestPercentage());
-                        }
-
-                        if(corePlot.getConquestPercentage() == 100) {
-                            war.setTownDefeated(nation, town);
-                        }
-
-                        if(!war.getParticipantNations().contains(nation)) {
-                            Message.NATION_DEFEATED.broadcast(nation.getName());
-                        }
-
-                        /* Check if the required amount of Nations is present */
-                        if(war.getParticipantNations().size() < 2) {
-                            SimpleWarService.getInstance().stopWar();
-                        } else {
-                            /* Check if at least 2 Nations are considered enemies between each other */
-                            boolean areThereEnemies = false;
-                            for(Nation n: war.getParticipantNations()) {
-                                for(Nation plausibleEnemy: war.getParticipantNations()) {
-                                    if(n.hasEnemy(plausibleEnemy)) {
-                                        areThereEnemies = true;
-                                    }
-                                }
-                            }
-
-                            if(!areThereEnemies) {
-                                SimpleWarService.getInstance().stopWar();
-                                break;
-                            }
+                            enemyCount++;
                         }
                     } catch (NotRegisteredException e) {
                         continue;
                     }
                 }
+
+                if(allyCount < enemyCount) {
+                    int basePercentage = defaultConfig.getInt("war.conquest_base_percentage");
+
+                    boolean shouldMultiply = defaultConfig.getBoolean("war.conquest_multiply");
+
+                    int damage;
+                    if(shouldMultiply) {
+                        int maxMultiplier = defaultConfig.getInt("war.conquest_max_multiplier");
+                        damage = basePercentage * (((enemyCount - allyCount) <= maxMultiplier) ? (enemyCount - allyCount) : maxMultiplier);
+                    } else {
+                        damage = basePercentage;
+                    }
+
+
+                    corePlot.setConquestPercentage(corePlot.getConquestPercentage() + damage);
+
+                    int townHP = defaultConfig.getInt("war.town_max_hp");
+                    Message.TOWN_CONQUER_STATUS.broadcast(town.getName(), townHP - corePlot.getConquestPercentage());
+
+                    if(corePlot.getConquestPercentage() == townHP) {
+                        war.setTownDefeated(nation, town);
+                    }
+
+                    if(!war.getParticipantNations().contains(nation)) {
+                        Message.NATION_DEFEATED.broadcast(nation.getName());
+                    }
+
+                    /* Check if the required amount of Nations is present */
+                    if(war.getParticipantNations().size() < 2) {
+                        shouldWarEnd = true;
+                        break;
+                    } else {
+                        /* Check if at least 2 Nations are considered enemies between each other */
+                        boolean areThereEnemies = false;
+                        for(Nation n: war.getParticipantNations()) {
+                            for(Nation plausibleEnemy: war.getParticipantNations()) {
+                                if(n.hasEnemy(plausibleEnemy)) {
+                                    areThereEnemies = true;
+                                }
+                            }
+                        }
+
+                        if(!areThereEnemies) {
+                            shouldWarEnd = true;
+                            break;
+                        }
+                    }
+                }
+
             }
         }
 
-        SimpleScoreboardService.getInstance().updateWarScoreBoard();
+        if(shouldWarEnd) {
+            SimpleWarService.getInstance().stopWar();
+        } else {
+            SimpleScoreboardService.getInstance().updateWarScoreBoard();
+        }
 
     }
 

@@ -8,6 +8,7 @@ import me.kaotich00.fwwar.objects.war.War;
 import me.kaotich00.fwwar.task.WarPlotConquestTask;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.Optional;
 
@@ -95,7 +96,10 @@ public class SimpleWarService {
         this.currentWar = war;
         SimpleScoreboardService.getInstance().initWarScoreboard();
 
-        warTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), war), 40L, 40L);
+        FileConfiguration defaultConfig = Fwwar.getDefaultConfig();
+        Long seconds = defaultConfig.getLong("war.plot_check_time") * 20;
+
+        warTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), war), seconds, seconds);
 
     }
 

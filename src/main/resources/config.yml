@@ -16,3 +16,45 @@
 # |                                                                                              | #
 # +----------------------------------------------------------------------------------------------+ #
 ####################################################################################################
+
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                                      WAR SETTINGS                                            | #
+# |                                                                                              | #
+# |                                 Configure War settings                                       | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+
+war:
+  # How often should the plugin check
+  # for players inside core plots? (in seconds)
+  # Default value: 5 seconds
+  plot_check_time: 5
+
+  # How much percentage of the town life
+  # should be subtracted each time a player is
+  # detected in the core plot?
+  # Default value: 1 %
+  # I suggest to not touch this value unless
+  # you know what you are doing
+  conquest_base_percentage: 1
+
+  # If set to true, the more player are inside
+  # the core plot, the faster will be the percentage drop
+  # If set to false, the amount of enemies inside the plot
+  # will not influence the percentage
+  # Default value: true
+  conquest_multiply: true
+
+  # The max multiplier that will be applied
+  # to the base percentage for each enemy inside the core plot
+  # Ex: If the difference between allies and enemies is 20,
+  #     the max multiplier will not be 20x, but the amount specified
+  #     below.
+  # Default value: 4x
+  conquest_max_multiplier: 4
+
+  # The hp at which every town will start
+  # at the begin of the war
+  # Default value: 100 %
+  town_max_hp: 100
