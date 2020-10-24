@@ -3,10 +3,12 @@ package me.kaotich00.fwwar.services;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
+import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.objects.war.War;
 import me.kaotich00.fwwar.utils.MessageUtils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
@@ -36,6 +38,7 @@ public class SimpleScoreboardService {
 
         Scoreboard scoreboard = this.warScoreBoard;
         Objective objective = scoreboard.getObjective("trackWarStatus");
+        FileConfiguration defaultConfig = Fwwar.getDefaultConfig();
 
         for (String s : scoreboard.getEntries()) {
             scoreboard.resetScores(s);
@@ -55,7 +58,8 @@ public class SimpleScoreboardService {
                 score_nation_name.setScore(slot);
                 slot = slot - 2;
                 for (Town town : war.getParticipantTownsForNation(participant)) {
-                    Float remainingLife = 100 - SimplePlotService.getInstance().getCorePlotOfTown(town.getUuid()).get().getConquestPercentage();
+                    int townHP = defaultConfig.getInt("war.town_max_hp");
+                    Float remainingLife = townHP - SimplePlotService.getInstance().getCorePlotOfTown(town.getUuid()).get().getConquestPercentage();
                     Score score_town_name = objective.getScore(org.bukkit.ChatColor.DARK_AQUA + "Town: " + org.bukkit.ChatColor.AQUA + town.getName() + " - " + remainingLife + "%");
                     score_town_name.setScore(slot);
                     slot--;

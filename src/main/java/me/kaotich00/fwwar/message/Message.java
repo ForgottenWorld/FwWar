@@ -16,8 +16,8 @@ public enum Message {
     NOT_PART_OF_A_TOWN(MessageUtils.formatErrorMessage("You are not part of a town!"), true),
     NOT_A_MAJOR(MessageUtils.formatErrorMessage("You are not the major of the town!"), true),
 
-    CORE_PLOT_ALREADY_PRESENT(MessageUtils.formatErrorMessage("Your town already has a Core Block!"), true),
-    CORE_PLOT_SUCCESSFULLY_SET(MessageUtils.formatSuccessMessage("Successfully set town core block!"), true),
+    CORE_PLOT_ALREADY_PRESENT(MessageUtils.formatErrorMessage("Your town already has a Core Plot!"), true),
+    CORE_PLOT_SUCCESSFULLY_SET(MessageUtils.formatSuccessMessage("Successfully set town core Plot!"), true),
     NOT_A_TOWN_BLOCK(MessageUtils.formatErrorMessage("You are not in a town block"), true),
     NOT_YOUR_TOWN_BLOCK(MessageUtils.formatErrorMessage("This is not your town"), true),
     NOT_AN_OUTPOST(MessageUtils.formatErrorMessage("The core plot must be in an outpost"), true),
