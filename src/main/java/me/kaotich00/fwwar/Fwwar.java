@@ -1,11 +1,16 @@
 package me.kaotich00.fwwar;
 
 import me.kaotich00.fwwar.commands.WarCommandManager;
+import me.kaotich00.fwwar.objects.plot.CorePlot;
+import me.kaotich00.fwwar.services.SimpleStorageService;
 import me.kaotich00.fwwar.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.IOException;
 
 public final class Fwwar extends JavaPlugin {
 
@@ -18,11 +23,22 @@ public final class Fwwar extends JavaPlugin {
 
         Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Registering commands...");
         registerCommands();
+
+        Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Registering serializable objects...");
+        ConfigurationSerialization.registerClass(CorePlot.class);
+
+        Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Loading core plots...");
+        SimpleStorageService.getInstance(this).loadCorePlots();
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        try {
+            Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Saving core plots...");
+            SimpleStorageService.getInstance(this).saveCorePlots();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadConfiguration() {
