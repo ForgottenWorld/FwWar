@@ -100,7 +100,7 @@ public class WarPlotConquestTask implements Runnable {
                     int townHP = defaultConfig.getInt("war.town_max_hp");
                     Message.TOWN_CONQUER_STATUS.broadcast(town.getName(), townHP - corePlot.getConquestPercentage());
 
-                    if(corePlot.getConquestPercentage() == townHP) {
+                    if(corePlot.getConquestPercentage() >= townHP) {
                         war.setTownDefeated(nation, town);
                     }
 

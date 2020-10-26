@@ -38,14 +38,14 @@ public class War {
         this.participants.put(nation, new HashSet<>());
 
         FileConfiguration defaultConfig = Fwwar.getDefaultConfig();
-        int townHP = defaultConfig.getInt("war.town_max_hp");
+        int conquestPercentage = 0;
 
         Set<Town> allowedTowns = new HashSet<>();
 
         SimplePlotService plotService = SimplePlotService.getInstance();
         for(Town town: nation.getTowns()) {
             plotService.getCorePlotOfTown(town.getUuid()).ifPresent(corePlot -> {
-                corePlot.setConquestPercentage(townHP);
+                corePlot.setConquestPercentage(conquestPercentage);
                 allowedTowns.add(town);
             });
         }

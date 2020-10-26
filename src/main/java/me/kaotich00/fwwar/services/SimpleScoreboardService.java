@@ -23,6 +23,7 @@ public class SimpleScoreboardService {
         if (instance != null){
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
         }
+        this.scoreboards = new ArrayList<>();
     }
 
     public static SimpleScoreboardService getInstance() {
