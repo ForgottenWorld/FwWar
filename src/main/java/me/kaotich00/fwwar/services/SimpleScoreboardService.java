@@ -43,9 +43,14 @@ public class SimpleScoreboardService {
         }
 
         int slot = 40;
+        int spacesLenght = 1;
 
         Score score_header = objective.getScore(ChatColor.YELLOW + String.join("", Collections.nCopies(27, "-")));
         score_header.setScore(slot);
+        slot--;
+
+        Score score_blank = objective.getScore(String.join("", Collections.nCopies(spacesLenght++, " ")));
+        score_blank.setScore(slot);
         slot--;
 
         Optional<War> optWar = SimpleWarService.getInstance().getCurrentWar();
@@ -62,10 +67,14 @@ public class SimpleScoreboardService {
                     score_town_name.setScore(slot);
                     slot--;
                 }
+
+                score_blank = objective.getScore(String.join("", Collections.nCopies(spacesLenght++, " ")));
+                score_blank.setScore(slot);
+                slot--;
             }
         }
 
-        Score score_footer = objective.getScore(ChatColor.YELLOW + String.join("", Collections.nCopies(27, "-")));
+        Score score_footer = objective.getScore(ChatColor.YELLOW + String.join("", Collections.nCopies(26, "-")));
         score_footer.setScore(slot);
 
     }
