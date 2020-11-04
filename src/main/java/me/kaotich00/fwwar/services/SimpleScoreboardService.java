@@ -4,7 +4,7 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.Fwwar;
-import me.kaotich00.fwwar.objects.war.War;
+import me.kaotich00.fwwar.objects.war.OldWar;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -54,14 +54,14 @@ public class SimpleScoreboardService {
         score_blank.setScore(slot);
         slot--;
 
-        Optional<War> optWar = SimpleWarService.getInstance().getCurrentWar();
+        Optional<OldWar> optWar = SimpleWarService.getInstance().getCurrentWar();
         if (optWar.isPresent()) {
-            War war = optWar.get();
-            for (Nation participant : war.getParticipantNations()) {
+            OldWar oldWar = optWar.get();
+            for (Nation participant : oldWar.getParticipantNations()) {
                 Score score_nation_name = objective.getScore(org.bukkit.ChatColor.YELLOW + "Nation: " + org.bukkit.ChatColor.GOLD + participant.getName());
                 score_nation_name.setScore(slot);
                 slot = slot - 2;
-                for (Town town : war.getParticipantTownsForNation(participant)) {
+                for (Town town : oldWar.getParticipantTownsForNation(participant)) {
                     int townHP = defaultConfig.getInt("war.town_max_hp");
                     Float remainingLife = townHP - SimplePlotService.getInstance().getCorePlotOfTown(town.getUuid()).get().getConquestPercentage();
                     Score score_town_name = objective.getScore(org.bukkit.ChatColor.DARK_AQUA + "Town: " + org.bukkit.ChatColor.AQUA + town.getName() + " - " + remainingLife + "%");
@@ -88,9 +88,9 @@ public class SimpleScoreboardService {
 
         this.warScoreBoard = scoreboard;
 
-        War war = SimpleWarService.getInstance().getCurrentWar().get();
-        for(Nation participant: war.getParticipantNations()) {
-            for(Town town: war.getParticipantTownsForNation(participant)) {
+        OldWar oldWar = SimpleWarService.getInstance().getCurrentWar().get();
+        for(Nation participant: oldWar.getParticipantNations()) {
+            for(Town town: oldWar.getParticipantTownsForNation(participant)) {
                 for(Resident resident: town.getResidents()) {
                     Player player = Bukkit.getPlayer(resident.getName());
                     if(player != null) {

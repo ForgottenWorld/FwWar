@@ -10,7 +10,7 @@ public class StartCommand extends AdminCommand {
     public void onCommand(CommandSender sender, String[] args) {
         super.onCommand(sender, args);
 
-        SimpleWarService.getInstance().startWar(sender);
+        //SimpleWarService.getInstance().startWar(sender);
     }
 
     @Override

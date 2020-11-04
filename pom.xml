@@ -11,7 +11,7 @@
 
     <name>FwWar</name>
 
-    <description>Customized war system for Forgotten World server</description>
+    <description>Customized oldWar system for Forgotten World server</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

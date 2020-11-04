@@ -3,8 +3,9 @@ package me.kaotich00.fwwar.services;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Nation;
 import me.kaotich00.fwwar.Fwwar;
+import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.message.Message;
-import me.kaotich00.fwwar.objects.war.War;
+import me.kaotich00.fwwar.objects.war.OldWar;
 import me.kaotich00.fwwar.task.WarPlotConquestTask;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -53,8 +54,8 @@ public class SimpleWarService {
      * Start war if all conditions are met
      * @param sender
      */
-    public void startWar(CommandSender sender) {
-        War war = new War();
+    /*public void startWar(CommandSender sender) {
+        War war = this.currentWar;
 
         TownyAPI townyAPI = TownyAPI.getInstance();
 
@@ -69,13 +70,13 @@ public class SimpleWarService {
             }
         }
 
-        /* Check if the required amount of Nations is present */
+        // Check if the required amount of Nations is present
         if(war.getParticipantNations().size() < 2) {
             Message.NOT_ENOUGH_NATIONS.broadcast();
             return;
         }
 
-        /* Check if at least 2 Nations are considered enemies between each other */
+        // Check if at least 2 Nations are considered enemies between each other
         boolean areThereEnemies = false;
         for(Nation nation: war.getParticipantNations()) {
             for(Nation plausibleEnemy: war.getParticipantNations()) {
@@ -91,17 +92,17 @@ public class SimpleWarService {
         }
 
         Message.WAR_STARTED.broadcast();
-        Bukkit.getServer().broadcastMessage(war.getPrintableParticipants());
+        Bukkit.getServer().broadcastMessage(oldWar.getPrintableParticipants());
 
-        this.currentWar = war;
+        this.currentWar = oldWar;
         SimpleScoreboardService.getInstance().initWarScoreboard();
 
         FileConfiguration defaultConfig = Fwwar.getDefaultConfig();
         Long seconds = defaultConfig.getLong("war.plot_check_time") * 20;
 
-        warTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), war), seconds, seconds);
+        warTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), oldWar), seconds, seconds);
 
-    }
+    }*/
 
     /**
      * Stop the current running war
