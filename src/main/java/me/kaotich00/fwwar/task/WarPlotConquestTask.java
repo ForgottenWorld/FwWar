@@ -135,7 +135,7 @@ public class WarPlotConquestTask implements Runnable {
         if(shouldWarEnd) {
             SimpleWarService.getInstance().stopWar();
         } else {
-            SimpleScoreboardService.getInstance().updateWarScoreBoard();
+            //SimpleScoreboardService.getInstance().updateWarScoreBoard();
         }
 
     }

@@ -2,7 +2,7 @@ package me.kaotich00.fwwar.commands.admin;
 
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
-import me.kaotich00.fwwar.war.cui.WarCreationPrompt;
+import me.kaotich00.fwwar.cui.WarCreationPrompt;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

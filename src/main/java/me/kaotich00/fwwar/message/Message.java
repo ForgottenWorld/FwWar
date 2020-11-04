@@ -23,6 +23,7 @@ public enum Message {
     NOT_AN_OUTPOST(MessageUtils.formatErrorMessage("The core plot must be in an outpost"), true),
 
     /* War related */
+    WAR_NOT_FOUND(MessageUtils.formatErrorMessage("There is no war open at the moment"), true),
     WAR_STARTED(MessageUtils.formatSuccessMessage("The war has been started!"), true),
     NOT_ENOUGH_NATIONS(MessageUtils.formatErrorMessage("Not enough nations to start the war. Can't start"), true),
     NO_ENEMY_NATION(MessageUtils.formatErrorMessage("There are no enemy nations in this war. Can't start."), true),
@@ -31,6 +32,12 @@ public enum Message {
     TOWN_CONQUER_STATUS(MessageUtils.formatSuccessMessage("{} is under attack! {}% reamining before defeat"), true),
     NATION_DEFEATED(MessageUtils.formatErrorMessage("The Nation {} has been defeated"), true),
     WAR_ENDED(MessageUtils.formatSuccessMessage("The war has ended!"), true),
+    WAR_DOES_NOT_SUPPORT_KIT(MessageUtils.formatErrorMessage("The current war does not support kits."), true),
+
+    KIT_ALREADY_EXIST(MessageUtils.formatErrorMessage("A kit for the name ") + ChatColor.GOLD + "{}" + MessageUtils.formatErrorMessage(" already exists"), true),
+    KIT_CREATED(MessageUtils.formatSuccessMessage("Successfully created kit ") + ChatColor.GOLD + "{}" + MessageUtils.formatSuccessMessage(". You will be able to edit it in a few seconds."), true),
+    KIT_MODIFIED(MessageUtils.formatSuccessMessage("Successfully modified kit "), true),
+    NO_KIT(MessageUtils.formatErrorMessage("No kits to be found."), true),
 
     /* Miscellaneous */
     CONFIG_RELOADED(MessageUtils.formatSuccessMessage("Successfully reloaded config.yml"), true);

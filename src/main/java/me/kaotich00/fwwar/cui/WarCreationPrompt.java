@@ -1,4 +1,4 @@
-package me.kaotich00.fwwar.war.cui;
+package me.kaotich00.fwwar.cui;
 
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.services.SimpleWarService;
@@ -54,9 +54,9 @@ public class WarCreationPrompt implements ConversationAbandonedListener {
         @Override
         protected Prompt acceptValidatedInput(ConversationContext context, Number input) {
             switch (input.intValue()) {
-                case WarTypes.BOLT_WAR:
+                case 1:
                     return new BoltWarGamemode();
-                case WarTypes.ASSAULT_WAR:
+                case 2:
                     return Prompt.END_OF_CONVERSATION;
             }
             return Prompt.END_OF_CONVERSATION;
@@ -91,19 +91,19 @@ public class WarCreationPrompt implements ConversationAbandonedListener {
         protected Prompt acceptValidatedInput(ConversationContext context, Number input) {
             SimpleWarService warService = SimpleWarService.getInstance();
             switch(input.intValue()) {
-                case WarTypes.FACTION_KIT_WAR:
-                    warService.setCurrentWar(WarFactory.getWarForType(WarFactory.WarType.BOLT_WAR_FACTION));
+                case 1:
+                    warService.setCurrentWar(WarFactory.getWarForType(WarTypes.BOLT_WAR_FACTION));
 
-                    String promptMessage = ChatColor.GREEN + "" + ChatColor.BOLD + String.join("", Collections.nCopies(53, "-")) +
-                            ChatColor.GREEN + " Successfully created war of type " + ChatColor.GOLD + "Faction Kit\n" +
+                    String promptMessage = ChatColor.GREEN + String.join("", Collections.nCopies(53, "-")) +
+                            ChatColor.GREEN + " \nSuccessfully created war of type " + ChatColor.GOLD + "Faction Kit\n" +
                             ChatColor.GRAY + " Now that you have created the war, you may proceed as follows: \n" +
                             ChatColor.AQUA + "\n 1) " + ChatColor.GRAY + "Add participant nations with command " + ChatColor.YELLOW + "/war add <nation>\n" +
                             ChatColor.AQUA + "\n 2) " + ChatColor.GRAY + "Create or modify kit by typing " + ChatColor.YELLOW + "/war kit\n" +
-                            ChatColor.GREEN + "" + ChatColor.BOLD + "\n" + String.join("", Collections.nCopies(53, "-"));
+                            ChatColor.GREEN + String.join("", Collections.nCopies(53, "-"));
                     Player player = (Player) context.getForWhom();
                     player.sendMessage(promptMessage);
                     break;
-                case WarTypes.RANDOM_KIT_WAR:
+                case 2:
                     break;
             }
             return Prompt.END_OF_CONVERSATION;
