@@ -2,10 +2,12 @@ package me.kaotich00.fwwar.listener;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
+import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.War;
+import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import net.md_5.bungee.api.ChatColor;
@@ -17,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.Collections;
@@ -90,6 +93,32 @@ public class PlayerListener implements Listener {
         } catch (NotRegisteredException e) {
             e.printStackTrace();
         }
+
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event){
+
+        if(!(event.getEntity() instanceof Player)) {
+            return;
+        }
+
+        Player player = event.getEntity();
+
+        SimpleWarService simpleWarService = SimpleWarService.getInstance();
+
+        Optional<War> optCurrentWar = simpleWarService.getCurrentWar();
+        if(!optCurrentWar.isPresent()) {
+            return;
+        }
+
+        War currentWar = optCurrentWar.get();
+
+        if(!currentWar.getWarStatus().equals(WarStatus.STARTED)) {
+            return;
+        }
+
+        currentWar.handlePlayerDeath(player);
 
     }
 

@@ -37,7 +37,7 @@ public class RemoveCommand extends AdminCommand {
 
         String nationName = args[1];
 
-        if(!currentWar.getParticipants().stream().filter(nation -> nation.getName().equalsIgnoreCase(nationName)).findFirst().isPresent()) {
+        if(!currentWar.getParticipantsNations().stream().filter(nation -> nation.getName().equalsIgnoreCase(nationName)).findFirst().isPresent()) {
             Message.NATION_NOT_PRESENT.send(sender);
             return;
         }

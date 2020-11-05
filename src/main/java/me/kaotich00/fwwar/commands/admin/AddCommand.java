@@ -35,7 +35,7 @@ public class AddCommand extends AdminCommand {
         }
 
         if(currentWar.hasParticipantsLimit()) {
-            if (currentWar.getMaxAllowedParticipants() < currentWar.getParticipants().size() + 1) {
+            if (currentWar.getMaxAllowedParticipants() < currentWar.getParticipantsNations().size() + 1) {
                 Message.CANNOT_ADD_MORE_NATIONS.send(sender);
                 return;
             }
@@ -43,7 +43,7 @@ public class AddCommand extends AdminCommand {
 
         String nationName = args[1];
 
-        if(currentWar.getParticipants().stream().filter(nation -> nation.getName().equalsIgnoreCase(nationName)).findFirst().isPresent()) {
+        if(currentWar.getParticipantsNations().stream().filter(nation -> nation.getName().equalsIgnoreCase(nationName)).findFirst().isPresent()) {
             Message.NATION_ALREADY_PRESENT.send(sender);
             return;
         }

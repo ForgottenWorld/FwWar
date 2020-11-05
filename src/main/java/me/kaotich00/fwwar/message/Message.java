@@ -39,6 +39,7 @@ public enum Message {
     WAR_CONFIRMED(MessageUtils.formatSuccessMessage("War successfully confirmed, from now on, you will not be able to modify anything. Type ") + ChatColor.YELLOW + "/war start" + MessageUtils.formatSuccessMessage(" when you will need to start the war."), true),
     WAR_ALREADY_CONFIRMED(MessageUtils.formatErrorMessage("The war is confirmed, you can no longer edit anything."), true),
     WAR_ALREADY_STARTED(MessageUtils.formatErrorMessage("The war is started, you can no longer edit anything."), true),
+    WAR_MUST_BE_CONFIRMED(MessageUtils.formatErrorMessage("The war must be confirmed."), true),
 
     KIT_ALREADY_EXIST(MessageUtils.formatErrorMessage("A kit for the name ") + ChatColor.GOLD + "{}" + MessageUtils.formatErrorMessage(" already exists"), true),
     KIT_CREATED(MessageUtils.formatSuccessMessage("Successfully created kit ") + ChatColor.GOLD + "{}" + MessageUtils.formatSuccessMessage(". You will be able to edit it in a few seconds."), true),

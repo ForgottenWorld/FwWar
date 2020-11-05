@@ -1,11 +1,18 @@
 package me.kaotich00.fwwar.war.bolt;
 
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
+import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.kit.Kit;
+import me.kaotich00.fwwar.services.SimpleScoreboardService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
@@ -48,15 +55,19 @@ public class FactionWar extends BoltWar {
     }
 
     @Override
-    public List<Nation> getParticipants() {
+    public List<Nation> getParticipantsNations() {
         return nations;
+    }
+
+    @Override
+    public Set<Town> getParticipantsTowns() {
+        return this.players.keySet();
     }
 
     @Override
     public void addKit(Kit kit){
         this.kits.put(kit.getName(), kit);
     }
-
 
     @Override
     public void removeKit(String kitName) {
@@ -85,7 +96,21 @@ public class FactionWar extends BoltWar {
 
     @Override
     public void startWar() {
+        setWarStatus(WarStatus.STARTED);
 
+        for(List<UUID> uuidList: players.values()) {
+            for(UUID uuid: uuidList) {
+                Player player = Bukkit.getPlayer(uuid);
+                if(player != null) {
+                    player.getInventory().clear();
+
+                    Kit kit = this.playerKits.get(uuid);
+                    for(ItemStack item: kit.getItemsList()) {
+                        player.getInventory().addItem(item);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -117,11 +142,53 @@ public class FactionWar extends BoltWar {
             this.players.put(town, new ArrayList<>());
         }
         this.players.get(town).remove(playerUUID);
+
+        if(this.players.get(town).size() == 0) {
+            this.players.remove(town);
+        }
     }
 
     @Override
     public List<UUID> getParticipantsForTown(Town town) {
         return this.players.get(town);
+    }
+
+    @Override
+    public void handlePlayerDeath(Player player) {
+        try {
+            TownyAPI townyAPI = TownyAPI.getInstance();
+
+            Resident resident = townyAPI.getDataSource().getResident(player.getName());
+            Town town = resident.getTown();
+
+            List<UUID> participants = getParticipantsForTown(town);
+            if (!participants.contains(player.getUniqueId())) {
+                return;
+            }
+
+            removePlayerFromWar(town, player.getUniqueId());
+
+            boolean shouldRemoveNation = true;
+            for(Town t: town.getNation().getTowns()) {
+                if(getParticipantsTowns().contains(t)){
+                    shouldRemoveNation = false;
+                }
+            }
+
+            if(shouldRemoveNation) {
+                removeNation(town.getNation());
+                Message.NATION_DEFEATED.broadcast(town.getNation().getName());
+            }
+
+            if(getParticipantsNations().size() < 2) {
+                Message.WAR_ENDED.broadcast();
+                SimpleScoreboardService.getInstance().removeScoreboards();
+                return;
+            }
+
+        } catch (NotRegisteredException e) {
+            e.printStackTrace();
+        }
     }
 
 }

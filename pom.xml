@@ -42,8 +42,8 @@
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
-                            <!--<outputDirectory>Z:\Users\Simone R\Desktop\Spigot\plugins</outputDirectory>-->
-                            <outputDirectory>C:\Users\Simone\Desktop\Minecraft\Server paper\plugins</outputDirectory>
+                            <outputDirectory>Z:\Users\Simone R\Desktop\Spigot\plugins</outputDirectory>
+                            <!--<outputDirectory>C:\Users\Simone\Desktop\Minecraft\Server paper\plugins</outputDirectory>-->
                         </configuration>
                     </execution>
                 </executions>
@@ -89,6 +89,12 @@
             <groupId>com.github.stefvanschie.inventoryframework</groupId>
             <artifactId>IF</artifactId>
             <version>0.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.mrmicky</groupId>
+            <artifactId>FastBoard</artifactId>
+            <version>1.1.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

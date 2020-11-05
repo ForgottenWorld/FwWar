@@ -33,7 +33,7 @@ public class ConfirmCommand extends AdminCommand {
             return;
         }
 
-        /*if(currentWar.getParticipants().size() < 2) {
+        /*if(currentWar.getParticipantsNations().size() < 2) {
             Message.WAR_AT_LEAST_TWO_NATION.send(sender);
             return;
         }*/

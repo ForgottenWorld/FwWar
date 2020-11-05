@@ -7,10 +7,7 @@ import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public interface War {
 
@@ -20,7 +17,9 @@ public interface War {
 
     void removeNation(Nation nation);
 
-    List<Nation> getParticipants();
+    List<Nation> getParticipantsNations();
+
+    Set<Town> getParticipantsTowns();
 
     void addKit(Kit kit);
 
@@ -55,5 +54,7 @@ public interface War {
     void setWarStatus(WarStatus status);
 
     WarStatus getWarStatus();
+
+    void handlePlayerDeath(Player player);
 
 }
