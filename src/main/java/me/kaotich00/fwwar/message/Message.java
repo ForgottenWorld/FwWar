@@ -34,6 +34,11 @@ public enum Message {
     NATION_DEFEATED(MessageUtils.formatErrorMessage("The Nation {} has been defeated"), true),
     WAR_ENDED(MessageUtils.formatSuccessMessage("The war has ended!"), true),
     WAR_DOES_NOT_SUPPORT_KIT(MessageUtils.formatErrorMessage("The current war does not support kits."), true),
+    WAR_AT_LEAST_TWO_NATION(MessageUtils.formatErrorMessage("There must be at least two nations to confirm the war. To add one use the command ") + ChatColor.YELLOW + "/war add <nation>" , true),
+    FACTION_WAR_NOT_ENOUGH_KITS(MessageUtils.formatErrorMessage("There must be at least one kit to confirm the war. You can modify them via the command ") + ChatColor.YELLOW + "/war kit", true),
+    WAR_CONFIRMED(MessageUtils.formatSuccessMessage("War successfully confirmed, from now on, you will not be able to modify anything. Type ") + ChatColor.YELLOW + "/war start" + MessageUtils.formatSuccessMessage(" when you will need to start the war."), true),
+    WAR_ALREADY_CONFIRMED(MessageUtils.formatErrorMessage("The war is confirmed, you can no longer edit anything."), true),
+    WAR_ALREADY_STARTED(MessageUtils.formatErrorMessage("The war is started, you can no longer edit anything."), true),
 
     KIT_ALREADY_EXIST(MessageUtils.formatErrorMessage("A kit for the name ") + ChatColor.GOLD + "{}" + MessageUtils.formatErrorMessage(" already exists"), true),
     KIT_CREATED(MessageUtils.formatSuccessMessage("Successfully created kit ") + ChatColor.GOLD + "{}" + MessageUtils.formatSuccessMessage(". You will be able to edit it in a few seconds."), true),
@@ -43,9 +48,12 @@ public enum Message {
     NATION_ALREADY_PRESENT(MessageUtils.formatErrorMessage("The nation you specified is already part of the war"), true),
     NATION_NOT_PRESENT(MessageUtils.formatErrorMessage("The nation you specified is not part of the war"), true),
     NATION_DOES_NOT_EXISTS(MessageUtils.formatErrorMessage("The nation you specified is not registered on Towny"), true),
-    NATION_SUCCESSFULLY_ADDED(MessageUtils.formatSuccessMessage("Successfully added Nation to participants"), true),
-    NATION_SUCCESSFULLY_REMOVED(MessageUtils.formatSuccessMessage("Successfully removed Nation from participants"), true),
+    NATION_SUCCESSFULLY_ADDED(MessageUtils.formatSuccessMessage("Successfully added Nation {} to participants"), true),
+    NATION_SUCCESSFULLY_REMOVED(MessageUtils.formatSuccessMessage("Successfully removed Nation {} from participants"), true),
     CANNOT_ADD_MORE_NATIONS(MessageUtils.formatErrorMessage("The maximum number of allowed nations has been reached. Consider deleting one."), true),
+
+    NO_LONGER_PART_OF_WAR(MessageUtils.formatErrorMessage("Sorry, it seems like you are no longer part of the war."), true),
+    KIT_SELECTED(MessageUtils.formatSuccessMessage("Successfully selected kit ") + ChatColor.GOLD + "{}", true),
 
     /* Miscellaneous */
     CONFIG_RELOADED(MessageUtils.formatSuccessMessage("Successfully reloaded config.yml"), true);

@@ -88,7 +88,7 @@ public class KitEditGui {
         List<String> kitEditInfoLore = new ArrayList<>();
         kitEditInfoLore.add(ChatColor.GRAY + "Through this menu you can edit");
         kitEditInfoLore.add(ChatColor.GRAY + "and modify kits by adding the");
-        kitEditInfoLore.add(ChatColor.GRAY + "necesary items in the top 36 slots");
+        kitEditInfoLore.add(ChatColor.GRAY + "necessary items in the top 36 slots");
         kitEditInfoItemMeta.setLore(kitEditInfoLore);
         kitEditInfo.setItemMeta(kitEditInfoItemMeta);
 

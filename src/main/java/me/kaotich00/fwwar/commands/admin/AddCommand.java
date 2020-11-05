@@ -9,6 +9,7 @@ import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.services.SimpleWarService;
+import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.command.CommandSender;
 
 import java.util.UUID;
@@ -27,6 +28,11 @@ public class AddCommand extends AdminCommand {
         }
 
         War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+
+        if(currentWar.getWarStatus().equals(WarStatus.CONFIRMED)) {
+            Message.WAR_ALREADY_CONFIRMED.send(sender);
+            return;
+        }
 
         if(currentWar.hasParticipantsLimit()) {
             if (currentWar.getMaxAllowedParticipants() < currentWar.getParticipants().size() + 1) {
@@ -60,7 +66,7 @@ public class AddCommand extends AdminCommand {
             }
         }
 
-        Message.NATION_SUCCESSFULLY_ADDED.send(sender);
+        Message.NATION_SUCCESSFULLY_ADDED.send(sender, nation.getName());
 
     }
 

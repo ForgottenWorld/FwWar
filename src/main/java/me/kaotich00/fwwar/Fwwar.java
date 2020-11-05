@@ -1,6 +1,7 @@
 package me.kaotich00.fwwar;
 
 import me.kaotich00.fwwar.commands.WarCommandManager;
+import me.kaotich00.fwwar.listener.PlayerListener;
 import me.kaotich00.fwwar.objects.plot.CorePlot;
 import me.kaotich00.fwwar.services.SimpleStorageService;
 import me.kaotich00.fwwar.utils.MessageUtils;
@@ -26,6 +27,9 @@ public final class Fwwar extends JavaPlugin {
 
         Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Registering serializable objects...");
         ConfigurationSerialization.registerClass(CorePlot.class);
+
+        Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Registering listeners...");
+        registerListeners();
 
         Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Loading core plots...");
         SimpleStorageService.getInstance(this).loadCorePlots();
@@ -58,6 +62,10 @@ public final class Fwwar extends JavaPlugin {
 
     public void registerCommands() {
         getCommand("war").setExecutor(new WarCommandManager(this));
+    }
+
+    public void registerListeners() {
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
 }

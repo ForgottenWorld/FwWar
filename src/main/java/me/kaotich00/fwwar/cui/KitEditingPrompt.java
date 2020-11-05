@@ -39,7 +39,7 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
         if (abandonedEvent.gracefulExit()) {
             abandonedEvent.getContext().getForWhom().sendRawMessage(MessageUtils.formatSuccessMessage(""));
         } else {
-            abandonedEvent.getContext().getForWhom().sendRawMessage(MessageUtils.formatErrorMessage("Conversatino aborted"));
+            abandonedEvent.getContext().getForWhom().sendRawMessage(MessageUtils.formatErrorMessage("Conversation aborted"));
         }
     }
 

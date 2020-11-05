@@ -3,6 +3,7 @@ package me.kaotich00.fwwar.war.bolt;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.objects.kit.Kit;
+import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
 import org.bukkit.entity.Player;
 
@@ -16,6 +17,15 @@ public class FactionWar extends BoltWar {
     Map<UUID, Kit> playerKits;
 
     public FactionWar() {
+        this.setWarStatus(WarStatus.CREATED);
+        this.nations = new ArrayList<>();
+        this.kits = new HashMap<>();
+        this.playerKits = new HashMap<>();
+        this.players = new HashMap<>();
+    }
+
+    public FactionWar(WarStatus warStatus) {
+        this.setWarStatus(warStatus);
         this.nations = new ArrayList<>();
         this.kits = new HashMap<>();
         this.playerKits = new HashMap<>();
@@ -24,7 +34,7 @@ public class FactionWar extends BoltWar {
 
     @Override
     public String getDescription() {
-        return "The faction kit war consists in two nations facing each other in a merciless combat! Pick a class and kill every opponent.";
+        return "The faction kit war consists of two nations facing each other in a merciless combat! Pick a class and kill every opponent.";
     }
 
     @Override
@@ -108,7 +118,6 @@ public class FactionWar extends BoltWar {
         }
         this.players.get(town).remove(playerUUID);
     }
-
 
     @Override
     public List<UUID> getParticipantsForTown(Town town) {

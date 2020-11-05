@@ -46,7 +46,7 @@ public class WarCreationPrompt implements ConversationAbandonedListener {
                     ChatColor.GREEN + " Welcome to War Creation manager!\n" +
                     ChatColor.GRAY + " Start by selecting one of the following war types: \n" +
                     ChatColor.YELLOW + "\n [1] " + ChatColor.GOLD + "Bolt war\n" +
-                    ChatColor.YELLOW + " [2] " + ChatColor.GOLD + "Assault war\n" +
+                    ChatColor.YELLOW + " [2] " + ChatColor.GOLD + "Assault war " + ChatColor.RED + "[Under development, currently unavailable] \n" +
                     ChatColor.YELLOW + "\n" + String.join("", Collections.nCopies(53, "-"));
             return promptMessage;
         }
@@ -82,7 +82,7 @@ public class WarCreationPrompt implements ConversationAbandonedListener {
                     ChatColor.GREEN + " You selected " + ChatColor.GOLD + "Bolt War!\n" +
                     ChatColor.GRAY + " Please choose a gamemode for the war: \n" +
                     ChatColor.AQUA + "\n [1] " + ChatColor.DARK_AQUA + "Faction kit\n" +
-                    ChatColor.AQUA + " [2] " + ChatColor.DARK_AQUA + "Random kits\n" +
+                    ChatColor.AQUA + " [2] " + ChatColor.DARK_AQUA + "Random kits\n" + ChatColor.RED + "[Under development, currently unavailable] \n" +
                     ChatColor.DARK_AQUA + "\n" + String.join("", Collections.nCopies(53, "-"));
             return promptMessage;
         }

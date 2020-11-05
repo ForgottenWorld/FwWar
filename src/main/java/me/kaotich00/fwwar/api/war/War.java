@@ -3,6 +3,7 @@ package me.kaotich00.fwwar.api.war;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.objects.kit.Kit;
+import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
 import org.bukkit.entity.Player;
 
@@ -50,5 +51,9 @@ public interface War {
     void removePlayerFromWar(Town town, UUID playerUUID);
 
     List<UUID> getParticipantsForTown(Town town);
+
+    void setWarStatus(WarStatus status);
+
+    WarStatus getWarStatus();
 
 }

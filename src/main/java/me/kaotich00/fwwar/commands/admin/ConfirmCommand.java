@@ -1,17 +1,14 @@
 package me.kaotich00.fwwar.commands.admin;
 
-import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
-import me.kaotich00.fwwar.cui.KitEditingPrompt;
-import me.kaotich00.fwwar.cui.WarCreationPrompt;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
+import me.kaotich00.fwwar.utils.WarTypes;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-public class KitCommand extends AdminCommand {
+public class ConfirmCommand extends AdminCommand {
 
     @Override
     public void onCommand(CommandSender sender, String[] args) {
@@ -36,13 +33,20 @@ public class KitCommand extends AdminCommand {
             return;
         }
 
-        if(!currentWar.supportKits()) {
-            Message.WAR_DOES_NOT_SUPPORT_KIT.send(sender);
+        /*if(currentWar.getParticipants().size() < 2) {
+            Message.WAR_AT_LEAST_TWO_NATION.send(sender);
             return;
+        }*/
+
+        if(currentWar.getWarType().equals(WarTypes.BOLT_WAR_FACTION)) {
+            if(currentWar.getKits().size() == 0) {
+                Message.FACTION_WAR_NOT_ENOUGH_KITS.send(sender);
+                return;
+            }
         }
 
-        KitEditingPrompt prompt = new KitEditingPrompt(Fwwar.getPlugin(Fwwar.class));
-        prompt.startConversationForPlayer((Player) sender);
+        currentWar.setWarStatus(WarStatus.CONFIRMED);
+        Message.WAR_CONFIRMED.send(sender);
 
     }
 
@@ -53,7 +57,7 @@ public class KitCommand extends AdminCommand {
 
     @Override
     public String getUsage() {
-        return "/war kit";
+        return "/war confirm";
     }
 
     @Override

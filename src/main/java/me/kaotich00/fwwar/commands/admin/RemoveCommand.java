@@ -7,6 +7,7 @@ import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.services.SimpleWarService;
+import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.command.CommandSender;
 
 public class RemoveCommand extends AdminCommand {
@@ -23,6 +24,16 @@ public class RemoveCommand extends AdminCommand {
         }
 
         War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+
+        if(currentWar.getWarStatus().equals(WarStatus.CONFIRMED)) {
+            Message.WAR_ALREADY_CONFIRMED.send(sender);
+            return;
+        }
+
+        if(currentWar.getWarStatus().equals(WarStatus.STARTED)) {
+            Message.WAR_ALREADY_STARTED.send(sender);
+            return;
+        }
 
         String nationName = args[1];
 
@@ -41,7 +52,7 @@ public class RemoveCommand extends AdminCommand {
         }
 
         currentWar.removeNation(nation);
-        Message.NATION_SUCCESSFULLY_REMOVED.send(sender);
+        Message.NATION_SUCCESSFULLY_REMOVED.send(sender, nation.getName());
 
     }
 
@@ -52,7 +63,7 @@ public class RemoveCommand extends AdminCommand {
 
     @Override
     public String getUsage() {
-        return "/war add <nation>";
+        return "/war remove <nation>";
     }
 
     @Override
