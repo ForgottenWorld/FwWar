@@ -1,6 +1,7 @@
 package me.kaotich00.fwwar.war.bolt;
 
 import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.objects.kit.Kit;
 import me.kaotich00.fwwar.utils.WarTypes;
 import org.bukkit.entity.Player;
@@ -10,12 +11,15 @@ import java.util.*;
 public class FactionWar extends BoltWar {
 
     List<Nation> nations;
+    Map<Town, List<UUID>> players;
     Map<String, Kit> kits;
     Map<UUID, Kit> playerKits;
 
     public FactionWar() {
         this.nations = new ArrayList<>();
         this.kits = new HashMap<>();
+        this.playerKits = new HashMap<>();
+        this.players = new HashMap<>();
     }
 
     @Override
@@ -35,7 +39,7 @@ public class FactionWar extends BoltWar {
 
     @Override
     public List<Nation> getParticipants() {
-        return null;
+        return nations;
     }
 
     @Override
@@ -87,6 +91,28 @@ public class FactionWar extends BoltWar {
     @Override
     public Optional<Kit> getPlayerKit(Player player) {
         return Optional.ofNullable(this.playerKits.get(player.getUniqueId()));
+    }
+
+    @Override
+    public void addPlayerToWar(Town town, UUID playerUUID) {
+        if(!this.players.containsKey(town)) {
+            this.players.put(town, new ArrayList<>());
+        }
+        this.players.get(town).add(playerUUID);
+    }
+
+    @Override
+    public void removePlayerFromWar(Town town, UUID playerUUID) {
+        if(!this.players.containsKey(town)) {
+            this.players.put(town, new ArrayList<>());
+        }
+        this.players.get(town).remove(playerUUID);
+    }
+
+
+    @Override
+    public List<UUID> getParticipantsForTown(Town town) {
+        return this.players.get(town);
     }
 
 }

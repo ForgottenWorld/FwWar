@@ -50,7 +50,7 @@ public class KitEditGui {
         StaticPane navigationPane = new StaticPane(1, 5, 7, 1);
 
         ItemStack kitEditInfo = kitEditInfo();
-        navigationPane.addItem(new GuiItem(kitEditInfo), 1, 0);
+        navigationPane.addItem(new GuiItem(kitEditInfo, inventoryClickEvent -> inventoryClickEvent.setCancelled(true)),1, 0);
 
         ItemStack kitConfirm = kitConfirm();
         navigationPane.addItem(new GuiItem(kitConfirm, event -> {

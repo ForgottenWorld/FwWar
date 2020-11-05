@@ -3,10 +3,7 @@ package me.kaotich00.fwwar.commands;
 import com.palmergames.bukkit.towny.utils.NameUtil;
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.commands.Command;
-import me.kaotich00.fwwar.commands.admin.KitCommand;
-import me.kaotich00.fwwar.commands.admin.NewCommand;
-import me.kaotich00.fwwar.commands.admin.ReloadCommand;
-import me.kaotich00.fwwar.commands.admin.StartCommand;
+import me.kaotich00.fwwar.commands.admin.*;
 import me.kaotich00.fwwar.commands.user.PlotCommand;
 import me.kaotich00.fwwar.utils.CommandUtils;
 import me.kaotich00.fwwar.utils.MessageUtils;
@@ -36,6 +33,8 @@ public class WarCommandManager implements TabExecutor {
         this.commandRegistry.put(CommandUtils.WAR_RELOAD_COMMAND, new ReloadCommand());
         this.commandRegistry.put(CommandUtils.WAR_NEW_COMMAND, new NewCommand());
         this.commandRegistry.put(CommandUtils.WAR_KIT_COMMAND, new KitCommand());
+        this.commandRegistry.put(CommandUtils.WAR_ADD_NATION_COMMAND, new AddCommand());
+        this.commandRegistry.put(CommandUtils.WAR_REMOVE_NATION_COMMAND, new RemoveCommand());
     }
 
     private Command getCommand(String name) {

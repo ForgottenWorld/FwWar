@@ -24,6 +24,7 @@ public enum Message {
 
     /* War related */
     WAR_NOT_FOUND(MessageUtils.formatErrorMessage("There is no war open at the moment"), true),
+    WAR_ALREADY_PRESENT(MessageUtils.formatErrorMessage("A war is already open at the moment"), true),
     WAR_STARTED(MessageUtils.formatSuccessMessage("The war has been started!"), true),
     NOT_ENOUGH_NATIONS(MessageUtils.formatErrorMessage("Not enough nations to start the war. Can't start"), true),
     NO_ENEMY_NATION(MessageUtils.formatErrorMessage("There are no enemy nations in this war. Can't start."), true),
@@ -38,6 +39,13 @@ public enum Message {
     KIT_CREATED(MessageUtils.formatSuccessMessage("Successfully created kit ") + ChatColor.GOLD + "{}" + MessageUtils.formatSuccessMessage(". You will be able to edit it in a few seconds."), true),
     KIT_MODIFIED(MessageUtils.formatSuccessMessage("Successfully modified kit "), true),
     NO_KIT(MessageUtils.formatErrorMessage("No kits to be found."), true),
+
+    NATION_ALREADY_PRESENT(MessageUtils.formatErrorMessage("The nation you specified is already part of the war"), true),
+    NATION_NOT_PRESENT(MessageUtils.formatErrorMessage("The nation you specified is not part of the war"), true),
+    NATION_DOES_NOT_EXISTS(MessageUtils.formatErrorMessage("The nation you specified is not registered on Towny"), true),
+    NATION_SUCCESSFULLY_ADDED(MessageUtils.formatSuccessMessage("Successfully added Nation to participants"), true),
+    NATION_SUCCESSFULLY_REMOVED(MessageUtils.formatSuccessMessage("Successfully removed Nation from participants"), true),
+    CANNOT_ADD_MORE_NATIONS(MessageUtils.formatErrorMessage("The maximum number of allowed nations has been reached. Consider deleting one."), true),
 
     /* Miscellaneous */
     CONFIG_RELOADED(MessageUtils.formatSuccessMessage("Successfully reloaded config.yml"), true);
