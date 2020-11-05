@@ -11,7 +11,7 @@
 
     <name>FwWar</name>
 
-    <description>Customized war system for Forgotten World server</description>
+    <description>Customized oldWar system for Forgotten World server</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -84,6 +84,11 @@
             <artifactId>Towny</artifactId>
             <version>0.96.2.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.stefvanschie.inventoryframework</groupId>
+            <artifactId>IF</artifactId>
+            <version>0.7.2</version>
         </dependency>
     </dependencies>
 </project>

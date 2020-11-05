@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class War {
+public class OldWar {
 
     Map<Nation, Set<Town>> participants;
 
@@ -24,7 +24,7 @@ public class War {
     }
     Status warStatus;
 
-    public War() {
+    public OldWar() {
         this.participants = new HashMap<>();
         this.warStatus = Status.WAR_IDLE;
     }

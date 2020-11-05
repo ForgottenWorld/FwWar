@@ -1,16 +1,19 @@
 package me.kaotich00.fwwar.commands.admin;
 
+import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
-import me.kaotich00.fwwar.services.SimpleWarService;
+import me.kaotich00.fwwar.cui.WarCreationPrompt;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-public class StartCommand extends AdminCommand {
+public class NewCommand extends AdminCommand {
 
     @Override
     public void onCommand(CommandSender sender, String[] args) {
         super.onCommand(sender, args);
 
-        //SimpleWarService.getInstance().startWar(sender);
+        WarCreationPrompt prompt = new WarCreationPrompt(Fwwar.getPlugin(Fwwar.class));
+        prompt.startConversationForPlayer((Player) sender);
     }
 
     @Override
@@ -20,7 +23,7 @@ public class StartCommand extends AdminCommand {
 
     @Override
     public String getUsage() {
-        return "/war start";
+        return "/war new";
     }
 
     @Override

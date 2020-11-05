@@ -8,13 +8,12 @@ import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.plot.CorePlot;
-import me.kaotich00.fwwar.objects.war.War;
+import me.kaotich00.fwwar.objects.war.OldWar;
 import me.kaotich00.fwwar.services.SimplePlotService;
 import me.kaotich00.fwwar.services.SimpleScoreboardService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -25,11 +24,11 @@ import java.util.List;
 public class WarPlotConquestTask implements Runnable {
 
     private final Fwwar plugin;
-    private War war;
+    private OldWar oldWar;
 
-    public WarPlotConquestTask(Fwwar plugin, War war) {
+    public WarPlotConquestTask(Fwwar plugin, OldWar oldWar) {
         this.plugin = plugin;
-        this.war = war;
+        this.oldWar = oldWar;
     }
 
     @Override
@@ -41,8 +40,8 @@ public class WarPlotConquestTask implements Runnable {
 
         boolean shouldWarEnd = false;
 
-        for(Nation nation: war.getParticipantNations()) {
-            for(Town town: war.getParticipantTownsForNation(nation)) {
+        for(Nation nation: oldWar.getParticipantNations()) {
+            for(Town town: oldWar.getParticipantTownsForNation(nation)) {
                 CorePlot corePlot = plotService.getCorePlotOfTown(town.getUuid()).get();
                 Chunk corePlotChunk = Bukkit.getServer().getWorld(corePlot.getWorldUUID()).getChunkAt(corePlot.getChunkKey());
 
@@ -101,22 +100,22 @@ public class WarPlotConquestTask implements Runnable {
                     Message.TOWN_CONQUER_STATUS.broadcast(town.getName(), townHP - corePlot.getConquestPercentage());
 
                     if(corePlot.getConquestPercentage() >= townHP) {
-                        war.setTownDefeated(nation, town);
+                        oldWar.setTownDefeated(nation, town);
                     }
 
-                    if(!war.getParticipantNations().contains(nation)) {
+                    if(!oldWar.getParticipantNations().contains(nation)) {
                         Message.NATION_DEFEATED.broadcast(nation.getName());
                     }
 
                     /* Check if the required amount of Nations is present */
-                    if(war.getParticipantNations().size() < 2) {
+                    if(oldWar.getParticipantNations().size() < 2) {
                         shouldWarEnd = true;
                         break;
                     } else {
                         /* Check if at least 2 Nations are considered enemies between each other */
                         boolean areThereEnemies = false;
-                        for(Nation n: war.getParticipantNations()) {
-                            for(Nation plausibleEnemy: war.getParticipantNations()) {
+                        for(Nation n: oldWar.getParticipantNations()) {
+                            for(Nation plausibleEnemy: oldWar.getParticipantNations()) {
                                 if(n.hasEnemy(plausibleEnemy)) {
                                     areThereEnemies = true;
                                 }
@@ -136,7 +135,7 @@ public class WarPlotConquestTask implements Runnable {
         if(shouldWarEnd) {
             SimpleWarService.getInstance().stopWar();
         } else {
-            SimpleScoreboardService.getInstance().updateWarScoreBoard();
+            //SimpleScoreboardService.getInstance().updateWarScoreBoard();
         }
 
     }
