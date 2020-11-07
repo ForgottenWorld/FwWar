@@ -31,6 +31,7 @@ public class FactionWar extends BoltWar {
         this.playerKits = new HashMap<>();
         this.players = new HashMap<>();
         this.deathQueue = new ArrayList<>();
+        this.killCount = new HashMap<>();
     }
 
     public FactionWar(WarStatus warStatus) {
@@ -39,6 +40,7 @@ public class FactionWar extends BoltWar {
         this.playerKits = new HashMap<>();
         this.players = new HashMap<>();
         this.deathQueue = new ArrayList<>();
+        this.killCount = new HashMap<>();
     }
 
     @Override

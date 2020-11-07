@@ -53,4 +53,10 @@ public interface War {
 
     boolean isPlayerInDeathQueue(Player player);
 
+    void incrementPlayerKillCount(Player player, int incrementBy);
+
+    int getPlayerKillCount(Player player);
+
+    LinkedHashMap<UUID, Integer> getKillCountsLeaderboard();
+
 }

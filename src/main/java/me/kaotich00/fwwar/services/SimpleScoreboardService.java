@@ -7,6 +7,7 @@ import fr.mrmicky.fastboard.FastBoard;
 import me.kaotich00.fwwar.api.war.War;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -66,6 +67,7 @@ public class SimpleScoreboardService {
 
     public void removeScoreboards() {
         Iterator<UUID> boardsIterator = this.boards.keySet().iterator();
+        List<UUID> boardsToRemove = new ArrayList<>();
         while(boardsIterator.hasNext()) {
             UUID currentUUID = boardsIterator.next();
             Player player = Bukkit.getPlayer(currentUUID);
@@ -73,7 +75,12 @@ public class SimpleScoreboardService {
                 FastBoard board = this.boards.get(currentUUID);
                 board.delete();
                 boardsIterator.remove();
+                boardsToRemove.add(currentUUID);
             }
+        }
+
+        for(UUID boardToRemove: boardsToRemove) {
+            this.boards.remove(boardToRemove);
         }
     }
 
@@ -97,14 +104,35 @@ public class SimpleScoreboardService {
                     if(player != null) {
                         FastBoard board = this.boards.get(player.getUniqueId());
 
-                        List<String> lines = new ArrayList<>();
-                        lines.add("");
-                        lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "Class: " + ChatColor.YELLOW + currentWar.getPlayerKit(player).get().getName());
-                        lines.add("");
+                        if(board!= null) {
+                            List<String> lines = new ArrayList<>();
+                            lines.add("");
+                            lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "   War type: " + ChatColor.YELLOW + "Faction War");
+                            lines.add("");
+                            lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  Your class: " + ChatColor.YELLOW + currentWar.getPlayerKit(player).get().getName());
+                            lines.add("");
+                            lines.add(ChatColor.AQUA + "   Top players: ");
+                            if (currentWar.getKillCountsLeaderboard().size() == 0) {
+                                lines.add(ChatColor.GRAY + "No records yet");
+                            }
+                            for (Map.Entry<UUID, Integer> entry : currentWar.getKillCountsLeaderboard().entrySet()) {
+                                String playerName = "";
+                                Player killer = Bukkit.getPlayer(entry.getKey());
+                                if (killer == null) {
+                                    OfflinePlayer killerOffline = Bukkit.getOfflinePlayer(entry.getKey());
+                                    playerName = killerOffline.getName();
+                                } else {
+                                    playerName = killer.getName();
+                                }
 
-                        board.updateLines(
-                            lines
-                        );
+                                lines.add(ChatColor.DARK_AQUA + ">> " + ChatColor.AQUA + "" + ChatColor.BOLD + playerName + ChatColor.GOLD + entry.getValue() + " kills");
+                            }
+                            lines.add("");
+
+                            board.updateLines(
+                                    lines
+                            );
+                        }
                     }
                 }
             }

@@ -72,7 +72,7 @@ public class PlayerListener implements Listener {
                 return;
             }
 
-            player.sendTitle(ChatColor.YELLOW + "Hi, you are part of the upcoming war!", ChatColor.GOLD + "Check the chat right now", 15, 100, 15);
+            player.sendTitle(ChatColor.YELLOW + "Hi, you are part of the upcoming war!", ChatColor.GOLD + "Check the chat right now", 15, 200, 15);
             String startMessage = ChatColor.GREEN + String.join("", Collections.nCopies(53, "-")) +
                     ChatColor.DARK_AQUA + "Hi " + player.getName() + ", you will be part of the next war." +
                     ChatColor.AQUA + " Therefore you must choose a kit to use during the battle.";
@@ -124,6 +124,12 @@ public class PlayerListener implements Listener {
         }
 
         event.getDrops().clear();
+
+        if(event.getEntity().getKiller() instanceof Player) {
+            Player killer = event.getEntity().getKiller();
+            currentWar.incrementPlayerKillCount(killer, 1);
+            SimpleScoreboardService.getInstance().updateScoreboards();
+        }
 
         currentWar.handlePlayerDeath(player);
 
