@@ -2,12 +2,14 @@ package me.kaotich00.fwwar.listener;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
+import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.message.Message;
+import me.kaotich00.fwwar.services.SimpleScoreboardService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import net.md_5.bungee.api.ChatColor;
@@ -20,7 +22,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.Collections;
 import java.util.List;
@@ -91,7 +96,7 @@ public class PlayerListener implements Listener {
             }, 40L);
 
         } catch (NotRegisteredException e) {
-            e.printStackTrace();
+
         }
 
     }
@@ -118,8 +123,92 @@ public class PlayerListener implements Listener {
             return;
         }
 
+        event.getDrops().clear();
+
         currentWar.handlePlayerDeath(player);
 
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event){
+
+        SimpleScoreboardService.getInstance().removeScoreboardForPlayer(event.getPlayer().getUniqueId());
+
+        Player player = event.getPlayer();
+
+        SimpleWarService simpleWarService = SimpleWarService.getInstance();
+
+        Optional<War> optCurrentWar = simpleWarService.getCurrentWar();
+        if(!optCurrentWar.isPresent()) {
+            return;
+        }
+
+        War currentWar = optCurrentWar.get();
+
+        if(!currentWar.getWarStatus().equals(WarStatus.STARTED)) {
+            return;
+        }
+
+        currentWar.handlePlayerDeath(player);
+
+    }
+
+    @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent event){
+        Player player = event.getPlayer();
+
+        SimpleWarService simpleWarService = SimpleWarService.getInstance();
+
+        Optional<War> optCurrentWar = simpleWarService.getCurrentWar();
+        if(!optCurrentWar.isPresent()) {
+            return;
+        }
+
+        War currentWar = optCurrentWar.get();
+
+        if(!currentWar.getWarStatus().equals(WarStatus.STARTED) && !currentWar.getWarStatus().equals(WarStatus.ENDED)) {
+            return;
+        }
+
+        if(!currentWar.isPlayerInDeathQueue(player)) {
+            return;
+        }
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Fwwar.getPlugin(Fwwar.class), () -> {
+            SimpleScoreboardService.getInstance().removeScoreboardForPlayer(player.getUniqueId());
+
+            try {
+                TownyAPI townyAPI = TownyAPI.getInstance();
+
+                Resident resident = townyAPI.getDataSource().getResident(player.getName());
+                Town town = resident.getTown();
+
+                player.teleport(town.getSpawn());
+            } catch (NotRegisteredException e) {
+            } catch (TownyException e) {
+            }
+        }, 20L);
+    }
+
+    @EventHandler
+    public void onPlayerDropItem(PlayerDropItemEvent event){
+        Player player = event.getPlayer();
+
+        SimpleWarService simpleWarService = SimpleWarService.getInstance();
+
+        Optional<War> optCurrentWar = simpleWarService.getCurrentWar();
+        if(!optCurrentWar.isPresent()) {
+            return;
+        }
+
+        War currentWar = optCurrentWar.get();
+
+        if(!currentWar.getWarStatus().equals(WarStatus.STARTED) && !currentWar.getWarStatus().equals(WarStatus.ENDED)) {
+            return;
+        }
+
+        event.setCancelled(true);
+        Message.WAR_CANNOT_DROP_ITEMS.send(player);
     }
 
 }

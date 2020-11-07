@@ -15,13 +15,11 @@ public class SimpleScoreboardService {
 
     private static SimpleScoreboardService instance;
     private Map<UUID, FastBoard> boards;
-    private List<UUID> scoreboards;
 
     private SimpleScoreboardService() {
         if (instance != null){
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
         }
-        this.scoreboards = new ArrayList<>();
         this.boards = new HashMap<>();
     }
 
@@ -47,7 +45,7 @@ public class SimpleScoreboardService {
                                 org.bukkit.ChatColor.GOLD + org.bukkit.ChatColor.BOLD + "War" +
                                 ChatColor.DARK_GRAY + "]");
 
-                        boards.put(player.getUniqueId(), board);
+                        this.boards.put(player.getUniqueId(), board);
                     }
                 }
             }
@@ -67,26 +65,25 @@ public class SimpleScoreboardService {
     }
 
     public void removeScoreboards() {
-        SimpleWarService warService = SimpleWarService.getInstance();
-        War currentWar = warService.getCurrentWar().get();
+        Iterator<UUID> boardsIterator = this.boards.keySet().iterator();
+        while(boardsIterator.hasNext()) {
+            UUID currentUUID = boardsIterator.next();
+            Player player = Bukkit.getPlayer(currentUUID);
+            if(player != null) {
+                FastBoard board = this.boards.get(currentUUID);
+                board.delete();
+                boardsIterator.remove();
+            }
+        }
+    }
 
-        for(Nation nation: currentWar.getParticipantsNations()) {
-            for(Town town: nation.getTowns()) {
-                for(Resident resident: town.getResidents()) {
-                    Player player = Bukkit.getPlayer(resident.getUUID());
-                    if(player != null) {
-                        FastBoard board = new FastBoard(player);
-
-                        List<String> lines = new ArrayList<>();
-                        lines.add("");
-                        lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "Class: " + ChatColor.YELLOW + currentWar.getPlayerKit(player).get().getName());
-                        lines.add("");
-
-                        board.delete();
-
-                        this.boards.remove(player.getUniqueId());
-                    }
-                }
+    public void removeScoreboardForPlayer(UUID playerUUID) {
+        Player player = Bukkit.getPlayer(playerUUID);
+        if(player != null) {
+            FastBoard board = this.boards.get(playerUUID);
+            if(board != null) {
+                board.delete();
+                this.boards.remove(player.getUniqueId());
             }
         }
     }
@@ -98,7 +95,7 @@ public class SimpleScoreboardService {
                 for(Resident resident: town.getResidents()) {
                     Player player = Bukkit.getPlayer(resident.getUUID());
                     if(player != null) {
-                        FastBoard board = new FastBoard(player);
+                        FastBoard board = this.boards.get(player.getUniqueId());
 
                         List<String> lines = new ArrayList<>();
                         lines.add("");

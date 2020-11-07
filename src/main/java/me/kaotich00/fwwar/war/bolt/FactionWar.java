@@ -2,12 +2,14 @@ package me.kaotich00.fwwar.war.bolt;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
+import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.kit.Kit;
 import me.kaotich00.fwwar.services.SimpleScoreboardService;
+import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
 import org.bukkit.Bukkit;
@@ -20,23 +22,23 @@ public class FactionWar extends BoltWar {
 
     List<Nation> nations;
     Map<Town, List<UUID>> players;
-    Map<String, Kit> kits;
     Map<UUID, Kit> playerKits;
+    List<UUID> deathQueue;
 
     public FactionWar() {
         this.setWarStatus(WarStatus.CREATED);
         this.nations = new ArrayList<>();
-        this.kits = new HashMap<>();
         this.playerKits = new HashMap<>();
         this.players = new HashMap<>();
+        this.deathQueue = new ArrayList<>();
     }
 
     public FactionWar(WarStatus warStatus) {
         this.setWarStatus(warStatus);
         this.nations = new ArrayList<>();
-        this.kits = new HashMap<>();
         this.playerKits = new HashMap<>();
         this.players = new HashMap<>();
+        this.deathQueue = new ArrayList<>();
     }
 
     @Override
@@ -62,31 +64,6 @@ public class FactionWar extends BoltWar {
     @Override
     public Set<Town> getParticipantsTowns() {
         return this.players.keySet();
-    }
-
-    @Override
-    public void addKit(Kit kit){
-        this.kits.put(kit.getName(), kit);
-    }
-
-    @Override
-    public void removeKit(String kitName) {
-        this.kits.remove(kitName);
-    }
-
-    @Override
-    public void updateKit(String kitName, Kit kit) {
-        this.kits.put(kitName, kit);
-    }
-
-    @Override
-    public Collection<Kit> getKits() {
-        return this.kits.values();
-    }
-
-    @Override
-    public Optional<Kit> getKitForName(String name) {
-        return Optional.ofNullable(this.kits.get(name));
     }
 
     @Override
@@ -155,11 +132,16 @@ public class FactionWar extends BoltWar {
 
     @Override
     public void handlePlayerDeath(Player player) {
+
+        addPlayerToDeathQueue(player);
+
         try {
             TownyAPI townyAPI = TownyAPI.getInstance();
 
             Resident resident = townyAPI.getDataSource().getResident(player.getName());
             Town town = resident.getTown();
+
+            player.teleport(town.getSpawn());
 
             List<UUID> participants = getParticipantsForTown(town);
             if (!participants.contains(player.getUniqueId())) {
@@ -181,14 +163,32 @@ public class FactionWar extends BoltWar {
             }
 
             if(getParticipantsNations().size() < 2) {
-                Message.WAR_ENDED.broadcast();
                 SimpleScoreboardService.getInstance().removeScoreboards();
+                SimpleWarService.getInstance().stopWar();
                 return;
             }
 
         } catch (NotRegisteredException e) {
-            e.printStackTrace();
+
+        } catch (TownyException e) {
+
         }
     }
+
+    @Override
+    public void addPlayerToDeathQueue(Player player) {
+        this.deathQueue.add(player.getUniqueId());
+    }
+
+    @Override
+    public void removePlayerFromDeathQueue(Player player) {
+        this.deathQueue.remove(player.getUniqueId());
+    }
+
+    @Override
+    public boolean isPlayerInDeathQueue(Player player) {
+        return this.deathQueue.contains(player.getUniqueId());
+    }
+
 
 }

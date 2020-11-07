@@ -1,5 +1,7 @@
 package me.kaotich00.fwwar.commands;
 
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.utils.NameUtil;
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.commands.Command;
@@ -85,6 +87,14 @@ public class WarCommandManager implements TabExecutor {
         if(args.length == 2) {
             argsIndex = args[1];
 
+            switch(args[0]) {
+                case CommandUtils.WAR_ADD_NATION_COMMAND:
+                    TownyAPI townyAPI = TownyAPI.getInstance();
+                    for(Nation nation: townyAPI.getDataSource().getNations()) {
+                        suggestions.add(nation.getName());
+                    }
+                    break;
+            }
         }
 
         return NameUtil.filterByStart(suggestions, argsIndex);

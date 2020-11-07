@@ -21,16 +21,6 @@ public interface War {
 
     Set<Town> getParticipantsTowns();
 
-    void addKit(Kit kit);
-
-    void removeKit(String kitName);
-
-    void updateKit(String kitName, Kit kit);
-
-    Collection<Kit> getKits();
-
-    Optional<Kit> getKitForName(String name);
-
     WarTypes getWarType();
 
     void startWar();
@@ -56,5 +46,11 @@ public interface War {
     WarStatus getWarStatus();
 
     void handlePlayerDeath(Player player);
+
+    void addPlayerToDeathQueue(Player player);
+
+    void removePlayerFromDeathQueue(Player player);
+
+    boolean isPlayerInDeathQueue(Player player);
 
 }

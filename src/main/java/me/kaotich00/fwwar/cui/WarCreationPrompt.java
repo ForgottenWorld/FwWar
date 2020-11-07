@@ -42,12 +42,12 @@ public class WarCreationPrompt implements ConversationAbandonedListener {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            String promptMessage = ChatColor.YELLOW + String.join("", Collections.nCopies(53, "-")) +
-                    ChatColor.GREEN + " Welcome to War Creation manager!\n" +
+            String promptMessage = ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-")) + "\n" +
+                    ChatColor.GREEN + "" + ChatColor.BOLD + " \n\n Welcome to War Creation manager!\n" +
                     ChatColor.GRAY + " Start by selecting one of the following war types: \n" +
-                    ChatColor.YELLOW + "\n [1] " + ChatColor.GOLD + "Bolt war\n" +
-                    ChatColor.YELLOW + " [2] " + ChatColor.GOLD + "Assault war " + ChatColor.RED + "[Under development, currently unavailable] \n" +
-                    ChatColor.YELLOW + "\n" + String.join("", Collections.nCopies(53, "-"));
+                    ChatColor.YELLOW + "" + ChatColor.BOLD + "\n [1] " + ChatColor.GOLD + "" + ChatColor.BOLD + "Bolt war\n" +
+                    ChatColor.YELLOW + "" + ChatColor.BOLD + " [2] " + ChatColor.GOLD + "" + ChatColor.BOLD + "Assault war " + ChatColor.RED + "[Currently unavailable] \n" +
+                    ChatColor.YELLOW + "" + ChatColor.BOLD + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "\n" + String.join("", Collections.nCopies(45, "-"));
             return promptMessage;
         }
 
@@ -78,12 +78,12 @@ public class WarCreationPrompt implements ConversationAbandonedListener {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            String promptMessage = ChatColor.DARK_AQUA + String.join("", Collections.nCopies(53, "-")) +
-                    ChatColor.GREEN + " You selected " + ChatColor.GOLD + "Bolt War!\n" +
+            String promptMessage = ChatColor.DARK_AQUA + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-")) + "\n" +
+                    ChatColor.GREEN + "" + ChatColor.BOLD + " \n You selected " + ChatColor.GOLD + "Bolt War!\n" +
                     ChatColor.GRAY + " Please choose a gamemode for the war: \n" +
-                    ChatColor.AQUA + "\n [1] " + ChatColor.DARK_AQUA + "Faction kit\n" +
-                    ChatColor.AQUA + " [2] " + ChatColor.DARK_AQUA + "Random kits\n" + ChatColor.RED + "[Under development, currently unavailable] \n" +
-                    ChatColor.DARK_AQUA + "\n" + String.join("", Collections.nCopies(53, "-"));
+                    ChatColor.AQUA + "" + ChatColor.BOLD + "\n [1] " + ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Faction kit\n" +
+                    ChatColor.AQUA + "" + ChatColor.BOLD + " [2] " + ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Random kits " + ChatColor.RED + "[Currently unavailable] \n" +
+                    ChatColor.DARK_AQUA + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "\n" + String.join("", Collections.nCopies(45, "-"));
             return promptMessage;
         }
 
@@ -94,12 +94,12 @@ public class WarCreationPrompt implements ConversationAbandonedListener {
                 case 1:
                     warService.setCurrentWar(WarFactory.getWarForType(WarTypes.BOLT_WAR_FACTION));
 
-                    String promptMessage = ChatColor.GREEN + String.join("", Collections.nCopies(53, "-")) +
-                            ChatColor.GREEN + " \nSuccessfully created war of type " + ChatColor.GOLD + "Faction Kit\n" +
+                    String promptMessage = ChatColor.GREEN + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-")) + "\n" +
+                            ChatColor.GREEN + "" + ChatColor.BOLD + " \nSuccessfully created war of type " + ChatColor.GOLD + "Faction Kit\n" +
                             ChatColor.GRAY + " Now that you have created the war, you may proceed as follows: \n" +
-                            ChatColor.AQUA + "\n 1) " + ChatColor.GRAY + "Add participant nations with command " + ChatColor.YELLOW + "/war add <nation>\n" +
-                            ChatColor.AQUA + "\n 2) " + ChatColor.GRAY + "Create or modify kit by typing " + ChatColor.YELLOW + "/war kit\n" +
-                            ChatColor.GREEN + String.join("", Collections.nCopies(53, "-"));
+                            ChatColor.AQUA + "" + ChatColor.BOLD + "\n 1) " + ChatColor.GRAY + "Add participant nations with command " + ChatColor.YELLOW + "/war add <nation>" +
+                            ChatColor.AQUA + "" + ChatColor.BOLD + "\n 2) " + ChatColor.GRAY + "Create or modify kit by typing " + ChatColor.YELLOW + "/war kit\n" +
+                            ChatColor.GREEN + "\n" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-"));
                     Player player = (Player) context.getForWhom();
                     player.sendMessage(promptMessage);
                     break;

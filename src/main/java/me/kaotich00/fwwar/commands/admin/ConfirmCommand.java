@@ -33,13 +33,13 @@ public class ConfirmCommand extends AdminCommand {
             return;
         }
 
-        /*if(currentWar.getParticipantsNations().size() < 2) {
+        if(currentWar.getParticipantsNations().size() < 1) {
             Message.WAR_AT_LEAST_TWO_NATION.send(sender);
             return;
-        }*/
+        }
 
         if(currentWar.getWarType().equals(WarTypes.BOLT_WAR_FACTION)) {
-            if(currentWar.getKits().size() == 0) {
+            if(SimpleWarService.getInstance().getKits(currentWar.getWarType()).size() == 0) {
                 Message.FACTION_WAR_NOT_ENOUGH_KITS.send(sender);
                 return;
             }

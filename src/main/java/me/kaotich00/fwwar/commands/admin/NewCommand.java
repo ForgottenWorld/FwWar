@@ -1,10 +1,12 @@
 package me.kaotich00.fwwar.commands.admin;
 
 import me.kaotich00.fwwar.Fwwar;
+import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.cui.WarCreationPrompt;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.services.SimpleWarService;
+import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -15,8 +17,13 @@ public class NewCommand extends AdminCommand {
         super.onCommand(sender, args);
 
         if(SimpleWarService.getInstance().getCurrentWar().isPresent()) {
-            Message.WAR_ALREADY_PRESENT.send(sender);
-            return;
+            War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+            WarStatus warStatus = currentWar.getWarStatus();
+
+            if(!warStatus.equals(WarStatus.ENDED)) {
+                Message.WAR_ALREADY_PRESENT.send(sender);
+                return;
+            }
         }
 
         WarCreationPrompt prompt = new WarCreationPrompt(Fwwar.getPlugin(Fwwar.class));

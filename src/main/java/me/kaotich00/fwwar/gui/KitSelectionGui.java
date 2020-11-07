@@ -40,7 +40,7 @@ public class KitSelectionGui {
         mainGUI.addPane(background);
 
         OutlinePane kits = new OutlinePane(1, 1, 7, 4, Pane.Priority.HIGH);
-        for(Kit kit: currentWar.getKits()) {
+        for(Kit kit: SimpleWarService.getInstance().getKits(currentWar.getWarType())) {
             ItemStack kitItem = kitBuilder(kit);
             kits.addItem(new GuiItem(kitItem, event -> {
                 event.setCancelled(true);
@@ -51,7 +51,7 @@ public class KitSelectionGui {
                 ItemStack itemStack = inventory.getItem(rawSlot);
                 String kitName = itemStack.getItemMeta().getDisplayName();
 
-                Optional<Kit> optSelectedKit = currentWar.getKitForName(kitName);
+                Optional<Kit> optSelectedKit = SimpleWarService.getInstance().getKitForName(currentWar.getWarType(), kitName);
                 optSelectedKit.ifPresent(selectedKit -> {
                     currentWar.setPlayerKit(player, selectedKit);
                     Message.KIT_SELECTED.send(player, kitName);
