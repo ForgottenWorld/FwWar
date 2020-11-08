@@ -4,6 +4,7 @@ import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.utils.WarTypes;
 import me.kaotich00.fwwar.war.bolt.FactionWar;
+import me.kaotich00.fwwar.war.bolt.RandomFactionWar;
 
 public class WarFactory {
 
@@ -20,7 +21,7 @@ public class WarFactory {
             case BOLT_WAR_FACTION:
                 return new FactionWar();
             case BOLT_WAR_RANDOM:
-                break;
+                return new RandomFactionWar();
         }
         return null;
     }

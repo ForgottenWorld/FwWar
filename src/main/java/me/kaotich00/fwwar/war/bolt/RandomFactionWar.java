@@ -3,7 +3,6 @@ package me.kaotich00.fwwar.war.bolt;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
-import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.message.Message;
@@ -13,17 +12,16 @@ import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class FactionWar extends BoltWar {
+public class RandomFactionWar extends BoltWar {
 
     private Map<UUID, Kit> playerKits;
 
-    public FactionWar() {
+    public RandomFactionWar() {
         this.setWarStatus(WarStatus.CREATED);
         this.nations = new ArrayList<>();
         this.playerKits = new HashMap<>();
@@ -32,7 +30,7 @@ public class FactionWar extends BoltWar {
         this.killCount = new HashMap<>();
     }
 
-    public FactionWar(WarStatus warStatus) {
+    public RandomFactionWar(WarStatus warStatus) {
         this.setWarStatus(warStatus);
         this.nations = new ArrayList<>();
         this.playerKits = new HashMap<>();
@@ -43,52 +41,41 @@ public class FactionWar extends BoltWar {
 
     @Override
     public String getDescription() {
-        return "The faction kit war consists of two nations facing each other in a merciless combat! Pick a class and kill every opponent.";
+        return "The faction kit war consists of two nations facing each other in a merciless combat with random kits! Pick a class and kill every opponent.";
     }
 
     @Override
     public WarTypes getWarType() {
-        return WarTypes.BOLT_WAR_FACTION;
+        return WarTypes.BOLT_WAR_RANDOM;
     }
 
     @Override
     public void startWar() {
-        List<UUID> playerWithNoSelectedKit = checkKits();
-        if(playerWithNoSelectedKit.size() == 0) {
-            setWarStatus(WarStatus.STARTED);
+        setWarStatus(WarStatus.STARTED);
 
-            Iterator<Town> iterator = this.players.keySet().iterator();
+        Iterator<Town> iterator = this.players.keySet().iterator();
+        Kit kit = generateRandomKit();
 
-            while(iterator.hasNext()) {
-                Town town = iterator.next();
-                List<UUID> residents = this.players.get(town);
+        while(iterator.hasNext()) {
+            Town town = iterator.next();
+            List<UUID> residents = this.players.get(town);
 
-                residents.removeIf(resident -> Bukkit.getPlayer(resident) == null);
+            residents.removeIf(resident -> Bukkit.getPlayer(resident) == null);
 
-                for(UUID uuid: residents) {
-                    Player player = Bukkit.getPlayer(uuid);
-                    if(player != null) {
-                        player.getInventory().clear();
+            for(UUID uuid: residents) {
+                Player player = Bukkit.getPlayer(uuid);
+                if(player != null) {
+                    player.getInventory().clear();
 
-                        Kit kit = this.playerKits.get(uuid);
-                        for(ItemStack item: kit.getItemsList()) {
-                            player.getInventory().addItem(item);
-                        }
+                    for(ItemStack item: kit.getItemsList()) {
+                        player.getInventory().addItem(item);
                     }
                 }
             }
-
-            Message.WAR_STARTED.broadcast();
-            SimpleScoreboardService.getInstance().initScoreboards();
-        } else {
-            Message.WAR_CANNOT_START_KIT_REQUIRED.broadcast();
-            for(UUID uuid: playerWithNoSelectedKit) {
-                Player player = Bukkit.getPlayer(uuid);
-                if(player != null) {
-                    Bukkit.broadcastMessage(ChatColor.AQUA + ">> " + ChatColor.GOLD + player.getName());
-                }
-            }
         }
+
+        Message.WAR_STARTED.broadcast();
+        SimpleScoreboardService.getInstance().initScoreboards();
     }
 
     @Override
@@ -117,24 +104,6 @@ public class FactionWar extends BoltWar {
         setWarStatus(WarStatus.ENDED);
     }
 
-    private List<UUID> checkKits() {
-        List<UUID> playerWithNoKits = new ArrayList<>();
-        Iterator<Town> iterator = this.players.keySet().iterator();
-
-        while(iterator.hasNext()) {
-            Town town = iterator.next();
-            List<UUID> residents = this.players.get(town);
-
-            for(UUID uuid: residents) {
-                Player player = Bukkit.getPlayer(uuid);
-                if(player != null && !getPlayerKit(player).isPresent()) {
-                    playerWithNoKits.add(uuid);
-                }
-            }
-        }
-        return playerWithNoKits;
-    }
-
     @Override
     public boolean supportKits() {
         return true;
@@ -152,7 +121,6 @@ public class FactionWar extends BoltWar {
 
     @Override
     public void handlePlayerDeath(Player player) {
-
         addPlayerToDeathQueue(player);
 
         try {
@@ -192,9 +160,7 @@ public class FactionWar extends BoltWar {
             }
 
         } catch (NotRegisteredException e) {
-
         } catch (TownyException e) {
-
         }
     }
 

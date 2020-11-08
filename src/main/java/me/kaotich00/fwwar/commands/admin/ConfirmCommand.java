@@ -64,6 +64,10 @@ public class ConfirmCommand extends AdminCommand {
         currentWar.setWarStatus(WarStatus.CONFIRMED);
         Message.WAR_CONFIRMED.send(sender);
 
+        if(currentWar.getWarType().equals(WarTypes.BOLT_WAR_RANDOM)) {
+            return;
+        }
+
         for(UUID playerUUID: currentWar.getParticipantPlayers()) {
             Player participantPlayer = Bukkit.getPlayer(playerUUID);
 

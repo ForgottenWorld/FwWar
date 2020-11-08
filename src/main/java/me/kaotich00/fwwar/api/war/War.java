@@ -63,4 +63,6 @@ public interface War {
 
     List<UUID> getParticipantPlayers();
 
+    Kit generateRandomKit();
+
 }

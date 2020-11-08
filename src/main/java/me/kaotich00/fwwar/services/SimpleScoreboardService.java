@@ -62,6 +62,9 @@ public class SimpleScoreboardService {
             case BOLT_WAR_FACTION:
                 updateFactionKitScoreboard(currentWar);
                 break;
+            case BOLT_WAR_RANDOM:
+                updateRandomFactionKitScoreboard(currentWar);
+                break;
         }
     }
 
@@ -110,6 +113,49 @@ public class SimpleScoreboardService {
                             lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  War type: " + ChatColor.YELLOW + "Faction War");
                             lines.add("");
                             lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  Your class: " + ChatColor.YELLOW + currentWar.getPlayerKit(player).get().getName());
+                            lines.add("");
+                            lines.add(ChatColor.AQUA + "  Top players: ");
+                            if (currentWar.getKillCountsLeaderboard().size() == 0) {
+                                lines.add(ChatColor.GRAY + "  No records yet");
+                            }
+                            for (Map.Entry<UUID, Integer> entry : currentWar.getKillCountsLeaderboard().entrySet()) {
+                                String playerName = "";
+                                Player killer = Bukkit.getPlayer(entry.getKey());
+                                if (killer == null) {
+                                    OfflinePlayer killerOffline = Bukkit.getOfflinePlayer(entry.getKey());
+                                    playerName = killerOffline.getName();
+                                } else {
+                                    playerName = killer.getName();
+                                }
+
+                                lines.add(ChatColor.DARK_AQUA + "  >> " + ChatColor.AQUA + "" + ChatColor.BOLD + playerName + ChatColor.GOLD + " - " + entry.getValue() + " kills");
+                            }
+                            lines.add("");
+
+                            board.updateLines(
+                                    lines
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void updateRandomFactionKitScoreboard(War currentWar) {
+
+        for (Nation nation : currentWar.getParticipantsNations()) {
+            for (Town town : nation.getTowns()) {
+                for (Resident resident : town.getResidents()) {
+                    Player player = Bukkit.getPlayer(resident.getUUID());
+                    if (player != null) {
+                        FastBoard board = this.boards.get(player.getUniqueId());
+
+                        if (board != null) {
+                            List<String> lines = new ArrayList<>();
+                            lines.add("");
+                            lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  War type: " + ChatColor.YELLOW + "Random kit");
                             lines.add("");
                             lines.add(ChatColor.AQUA + "  Top players: ");
                             if (currentWar.getKillCountsLeaderboard().size() == 0) {

@@ -82,7 +82,7 @@ public class WarCreationPrompt implements ConversationAbandonedListener {
                     ChatColor.GREEN + "" + ChatColor.BOLD + " \n You selected " + ChatColor.GOLD + "Bolt War!\n" +
                     ChatColor.GRAY + " Please choose a gamemode for the war: \n" +
                     ChatColor.AQUA + "" + ChatColor.BOLD + "\n [1] " + ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Faction kit\n" +
-                    ChatColor.AQUA + "" + ChatColor.BOLD + " [2] " + ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Random kits " + ChatColor.RED + "[Currently unavailable] \n" +
+                    ChatColor.AQUA + "" + ChatColor.BOLD + " [2] " + ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Random kits " + "\n" +
                     ChatColor.DARK_AQUA + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "\n" + String.join("", Collections.nCopies(45, "-"));
             return promptMessage;
         }
@@ -90,20 +90,35 @@ public class WarCreationPrompt implements ConversationAbandonedListener {
         @Override
         protected Prompt acceptValidatedInput(ConversationContext context, Number input) {
             SimpleWarService warService = SimpleWarService.getInstance();
+
+            Player player = (Player) context.getForWhom();
+            String promptMessage = "";
+
             switch(input.intValue()) {
                 case 1:
                     warService.setCurrentWar(WarFactory.getWarForType(WarTypes.BOLT_WAR_FACTION));
 
-                    String promptMessage = ChatColor.GREEN + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-")) + "\n" +
+                    promptMessage = ChatColor.GREEN + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-")) + "\n" +
                             ChatColor.GREEN + "" + ChatColor.BOLD + " \nSuccessfully created war of type " + ChatColor.GOLD + "Faction Kit\n" +
                             ChatColor.GRAY + " Now that you have created the war, you may proceed as follows: \n" +
                             ChatColor.AQUA + "" + ChatColor.BOLD + "\n 1) " + ChatColor.GRAY + "Add participant nations with command " + ChatColor.YELLOW + "/war add <nation>" +
                             ChatColor.AQUA + "" + ChatColor.BOLD + "\n 2) " + ChatColor.GRAY + "Create or modify kit by typing " + ChatColor.YELLOW + "/war kit\n" +
+                            ChatColor.AQUA + "" + ChatColor.BOLD + "\n 3) " + ChatColor.GRAY + "When you finished all of the above type " + ChatColor.YELLOW + "/war confirm\n" +
                             ChatColor.GREEN + "\n" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-"));
-                    Player player = (Player) context.getForWhom();
+
                     player.sendMessage(promptMessage);
                     break;
                 case 2:
+                    warService.setCurrentWar(WarFactory.getWarForType(WarTypes.BOLT_WAR_RANDOM));
+
+                    promptMessage = ChatColor.GREEN + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-")) + "\n" +
+                            ChatColor.GREEN + "" + ChatColor.BOLD + " \nSuccessfully created war of type " + ChatColor.GOLD + "Random Faction Kit\n" +
+                            ChatColor.GRAY + " Now that you have created the war, you may proceed as follows: \n" +
+                            ChatColor.AQUA + "" + ChatColor.BOLD + "\n 1) " + ChatColor.GRAY + "Add participant nations with command " + ChatColor.YELLOW + "/war add <nation>" +
+                            ChatColor.AQUA + "" + ChatColor.BOLD + "\n 2) " + ChatColor.GRAY + "Confirm the war once you entered thr two nations with " + ChatColor.YELLOW + "/war confirm" +
+                            ChatColor.GREEN + "\n" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-"));
+
+                    player.sendMessage(promptMessage);
                     break;
             }
             return Prompt.END_OF_CONVERSATION;
