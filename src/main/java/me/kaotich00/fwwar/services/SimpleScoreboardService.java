@@ -107,13 +107,13 @@ public class SimpleScoreboardService {
                         if(board!= null) {
                             List<String> lines = new ArrayList<>();
                             lines.add("");
-                            lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "   War type: " + ChatColor.YELLOW + "Faction War");
+                            lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  War type: " + ChatColor.YELLOW + "Faction War");
                             lines.add("");
                             lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  Your class: " + ChatColor.YELLOW + currentWar.getPlayerKit(player).get().getName());
                             lines.add("");
-                            lines.add(ChatColor.AQUA + "   Top players: ");
+                            lines.add(ChatColor.AQUA + "  Top players: ");
                             if (currentWar.getKillCountsLeaderboard().size() == 0) {
-                                lines.add(ChatColor.GRAY + "No records yet");
+                                lines.add(ChatColor.GRAY + "  No records yet");
                             }
                             for (Map.Entry<UUID, Integer> entry : currentWar.getKillCountsLeaderboard().entrySet()) {
                                 String playerName = "";
@@ -125,7 +125,7 @@ public class SimpleScoreboardService {
                                     playerName = killer.getName();
                                 }
 
-                                lines.add(ChatColor.DARK_AQUA + ">> " + ChatColor.AQUA + "" + ChatColor.BOLD + playerName + ChatColor.GOLD + entry.getValue() + " kills");
+                                lines.add(ChatColor.DARK_AQUA + "  >> " + ChatColor.AQUA + "" + ChatColor.BOLD + playerName + ChatColor.GOLD + " - " + entry.getValue() + " kills");
                             }
                             lines.add("");
 

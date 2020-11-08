@@ -25,6 +25,8 @@ public interface War {
 
     void startWar();
 
+    void stopWar();
+
     boolean supportKits();
 
     void setPlayerKit(Player player, Kit kit);
@@ -58,5 +60,7 @@ public interface War {
     int getPlayerKillCount(Player player);
 
     LinkedHashMap<UUID, Integer> getKillCountsLeaderboard();
+
+    List<UUID> getParticipantPlayers();
 
 }

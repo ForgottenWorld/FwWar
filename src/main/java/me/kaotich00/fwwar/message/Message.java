@@ -40,7 +40,11 @@ public enum Message {
     WAR_ALREADY_CONFIRMED(MessageUtils.formatErrorMessage("The war is confirmed, you can no longer edit anything."), true),
     WAR_ALREADY_STARTED(MessageUtils.formatErrorMessage("The war is started, you can no longer edit anything."), true),
     WAR_MUST_BE_CONFIRMED(MessageUtils.formatErrorMessage("The war must be confirmed."), true),
+    WAR_MUST_BE_STARTED(MessageUtils.formatErrorMessage("The war must be started."), true),
     WAR_CANNOT_DROP_ITEMS(MessageUtils.formatErrorMessage("You cannot drop items during the war."), true),
+    WAR_CANNOT_CHOOSE_KIT(MessageUtils.formatErrorMessage("Cannot choose kit at the moment."), true),
+    WAR_PLAYER_DEFEATED(MessageUtils.formatErrorMessage("You have been killed in the war. Teleporting to town spawn..."), true),
+    WAR_CANNOT_START_KIT_REQUIRED(MessageUtils.formatErrorMessage("Cannot start war, the following player have not chosen a kit. Please type ") + ChatColor.YELLOW + " /war chooseKit" + MessageUtils.formatErrorMessage(" to select one"), true),
 
     KIT_ALREADY_EXIST(MessageUtils.formatErrorMessage("A kit for the name ") + ChatColor.GOLD + "{}" + MessageUtils.formatErrorMessage(" already exists"), true),
     KIT_CREATED(MessageUtils.formatSuccessMessage("Successfully created kit ") + ChatColor.GOLD + "{}" + MessageUtils.formatSuccessMessage(". You will be able to edit it in a few seconds."), true),

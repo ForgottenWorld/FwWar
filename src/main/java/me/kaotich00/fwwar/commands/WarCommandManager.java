@@ -7,6 +7,7 @@ import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.commands.Command;
 import me.kaotich00.fwwar.commands.admin.*;
 import me.kaotich00.fwwar.commands.user.ChooseKitCommand;
+import me.kaotich00.fwwar.commands.user.InfoCommand;
 import me.kaotich00.fwwar.commands.user.PlotCommand;
 import me.kaotich00.fwwar.utils.CommandUtils;
 import me.kaotich00.fwwar.utils.MessageUtils;
@@ -40,6 +41,8 @@ public class WarCommandManager implements TabExecutor {
         this.commandRegistry.put(CommandUtils.WAR_REMOVE_NATION_COMMAND, new RemoveCommand());
         this.commandRegistry.put(CommandUtils.WAR_CONFIRM_COMMAND, new ConfirmCommand());
         this.commandRegistry.put(CommandUtils.WAR_CHOOSE_KIT_COMMAND, new ChooseKitCommand());
+        this.commandRegistry.put(CommandUtils.WAR_STOP_COMMAND, new StopCommand());
+        this.commandRegistry.put(CommandUtils.WAR_INFO_COMMAND, new InfoCommand());
     }
 
     private Command getCommand(String name) {

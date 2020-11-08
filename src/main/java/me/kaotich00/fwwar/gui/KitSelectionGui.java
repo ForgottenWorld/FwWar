@@ -65,7 +65,7 @@ public class KitSelectionGui {
     }
 
     private ItemStack kitBuilder(Kit kit) {
-        ItemStack kitBuilder = kit.getItemsList().size() > 0 ? kit.getItemsList().get(0) : new ItemStack(Material.DIAMOND_SWORD);
+        ItemStack kitBuilder = kit.getItemsList().size() > 0 ? kit.getItemsList().get(0).clone() : new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta kitBuilderItemMeta = kitBuilder.getItemMeta();
         kitBuilderItemMeta.setDisplayName(kit.getName());
 

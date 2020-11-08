@@ -73,17 +73,17 @@ public class PlayerListener implements Listener {
             }
 
             player.sendTitle(ChatColor.YELLOW + "Hi, you are part of the upcoming war!", ChatColor.GOLD + "Check the chat right now", 15, 200, 15);
-            String startMessage = ChatColor.GREEN + String.join("", Collections.nCopies(53, "-")) +
+            String startMessage = ChatColor.GREEN + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-")) + "\n" +
                     ChatColor.DARK_AQUA + "Hi " + player.getName() + ", you will be part of the next war." +
                     ChatColor.AQUA + " Therefore you must choose a kit to use during the battle.";
 
 
             TextComponent clickMessage = new TextComponent("\n\n [CLICK HERE TO CHOOSE A KIT]\n");
-            clickMessage.setColor(ChatColor.GREEN);
+            clickMessage.setColor(ChatColor.YELLOW);
             clickMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/war chooseKit"));
             clickMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to choose a kit").color(ChatColor.GREEN).italic(true).create()));
 
-            String endMessage = ChatColor.GREEN + String.join("", Collections.nCopies(53, "-"));
+            String endMessage = ChatColor.GREEN + "\n" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-"));
 
             ComponentBuilder message = new ComponentBuilder();
             message
@@ -127,8 +127,20 @@ public class PlayerListener implements Listener {
 
         if(event.getEntity().getKiller() instanceof Player) {
             Player killer = event.getEntity().getKiller();
-            currentWar.incrementPlayerKillCount(killer, 1);
-            SimpleScoreboardService.getInstance().updateScoreboards();
+            if(currentWar.getParticipantPlayers().contains(killer.getUniqueId())) {
+                TownyAPI townyAPI = TownyAPI.getInstance();
+                try {
+                    Resident victimR = townyAPI.getDataSource().getResident(player.getName());
+                    Resident killerR = townyAPI.getDataSource().getResident(killer.getName());
+
+                    if(!victimR.getTown().getNation().equals(killerR.getTown().getNation())) {
+                        currentWar.incrementPlayerKillCount(killer, 1);
+                        SimpleScoreboardService.getInstance().updateScoreboards();
+                    }
+                } catch (NotRegisteredException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         currentWar.handlePlayerDeath(player);
@@ -183,6 +195,9 @@ public class PlayerListener implements Listener {
         Bukkit.getScheduler().scheduleSyncDelayedTask(Fwwar.getPlugin(Fwwar.class), () -> {
             SimpleScoreboardService.getInstance().removeScoreboardForPlayer(player.getUniqueId());
 
+            player.getInventory().clear();
+            player.getInventory().setArmorContents(null);
+
             try {
                 TownyAPI townyAPI = TownyAPI.getInstance();
 
@@ -209,7 +224,7 @@ public class PlayerListener implements Listener {
 
         War currentWar = optCurrentWar.get();
 
-        if(!currentWar.getWarStatus().equals(WarStatus.STARTED) && !currentWar.getWarStatus().equals(WarStatus.ENDED)) {
+        if(!currentWar.getWarStatus().equals(WarStatus.STARTED)) {
             return;
         }
 

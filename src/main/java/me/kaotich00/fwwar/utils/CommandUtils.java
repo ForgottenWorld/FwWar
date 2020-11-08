@@ -14,4 +14,6 @@ public class CommandUtils {
     public static final String WAR_REMOVE_NATION_COMMAND = "remove";
     public static final String WAR_CONFIRM_COMMAND = "confirm";
     public static final String WAR_CHOOSE_KIT_COMMAND = "chooseKit";
+    public static final String WAR_STOP_COMMAND = "stop";
+    public static final String WAR_INFO_COMMAND = "info";
 }

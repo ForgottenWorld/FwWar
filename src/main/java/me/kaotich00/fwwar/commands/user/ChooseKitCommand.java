@@ -11,6 +11,7 @@ import me.kaotich00.fwwar.commands.api.UserCommand;
 import me.kaotich00.fwwar.gui.KitSelectionGui;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.services.SimpleWarService;
+import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -28,6 +29,12 @@ public class ChooseKitCommand extends UserCommand {
         }
 
         War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+
+        if(!currentWar.getWarStatus().equals(WarStatus.CONFIRMED)) {
+            Message.WAR_CANNOT_CHOOSE_KIT.send(sender);
+            return;
+        }
+
         TownyAPI townyAPI = TownyAPI.getInstance();
 
         Player player = (Player) sender;

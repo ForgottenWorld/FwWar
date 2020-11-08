@@ -118,9 +118,8 @@ public class SimpleWarService {
      */
     public void stopWar() {
         Message.WAR_ENDED.broadcast();
-        //SimpleScoreboardService.getInstance().destroyWarScoreboard();
-        //Bukkit.getScheduler().cancelTask(SimpleWarService.getInstance().getWarTaskId());
-        this.currentWar.setWarStatus(WarStatus.ENDED);
+        currentWar.stopWar();
+        SimpleScoreboardService.getInstance().removeScoreboards();
     }
 
     public int getWarTaskId() {

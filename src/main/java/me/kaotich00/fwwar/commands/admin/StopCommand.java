@@ -3,12 +3,11 @@ package me.kaotich00.fwwar.commands.admin;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.message.Message;
-import me.kaotich00.fwwar.services.SimpleScoreboardService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.command.CommandSender;
 
-public class StartCommand extends AdminCommand {
+public class StopCommand extends AdminCommand {
 
     @Override
     public void onCommand(CommandSender sender, String[] args) {
@@ -23,12 +22,12 @@ public class StartCommand extends AdminCommand {
 
         War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
 
-        if(!currentWar.getWarStatus().equals(WarStatus.CONFIRMED)) {
-            Message.WAR_MUST_BE_CONFIRMED.send(sender);
+        if(!currentWar.getWarStatus().equals(WarStatus.STARTED)) {
+            Message.WAR_MUST_BE_STARTED.send(sender);
             return;
         }
 
-        currentWar.startWar();
+        SimpleWarService.getInstance().stopWar();
     }
 
     @Override

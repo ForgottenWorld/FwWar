@@ -13,6 +13,7 @@ import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -75,21 +76,86 @@ public class FactionWar extends BoltWar {
 
     @Override
     public void startWar() {
-        setWarStatus(WarStatus.STARTED);
+        List<UUID> playerWithNoSelectedKit = checkKits();
+        if(playerWithNoSelectedKit.size() == 0) {
+            setWarStatus(WarStatus.STARTED);
 
-        for(List<UUID> uuidList: players.values()) {
-            for(UUID uuid: uuidList) {
+            Iterator<Town> iterator = this.players.keySet().iterator();
+
+            while(iterator.hasNext()) {
+                Town town = iterator.next();
+                List<UUID> residents = this.players.get(town);
+
+                residents.removeIf(resident -> Bukkit.getPlayer(resident) == null);
+
+                for(UUID uuid: residents) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    if(player != null) {
+                        player.getInventory().clear();
+
+                        Kit kit = this.playerKits.get(uuid);
+                        for(ItemStack item: kit.getItemsList()) {
+                            player.getInventory().addItem(item);
+                        }
+                    }
+                }
+            }
+
+            Message.WAR_STARTED.broadcast();
+            SimpleScoreboardService.getInstance().initScoreboards();
+        } else {
+            Message.WAR_CANNOT_START_KIT_REQUIRED.broadcast();
+            for(UUID uuid: playerWithNoSelectedKit) {
+                Player player = Bukkit.getPlayer(uuid);
+                if(player != null) {
+                    Bukkit.broadcastMessage(ChatColor.AQUA + ">> " + ChatColor.GOLD + player.getName());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void stopWar() {
+        Iterator<Town> iterator = this.players.keySet().iterator();
+
+        while(iterator.hasNext()) {
+            Town town = iterator.next();
+            List<UUID> residents = this.players.get(town);
+
+            for(UUID uuid: residents) {
                 Player player = Bukkit.getPlayer(uuid);
                 if(player != null) {
                     player.getInventory().clear();
+                    player.getInventory().setArmorContents(null);
 
-                    Kit kit = this.playerKits.get(uuid);
-                    for(ItemStack item: kit.getItemsList()) {
-                        player.getInventory().addItem(item);
+                    try {
+                        player.teleport(town.getSpawn());
+                    } catch (TownyException e) {
+                        e.printStackTrace();
                     }
                 }
             }
         }
+
+        setWarStatus(WarStatus.ENDED);
+    }
+
+    private List<UUID> checkKits() {
+        List<UUID> playerWithNoKits = new ArrayList<>();
+        Iterator<Town> iterator = this.players.keySet().iterator();
+
+        while(iterator.hasNext()) {
+            Town town = iterator.next();
+            List<UUID> residents = this.players.get(town);
+
+            for(UUID uuid: residents) {
+                Player player = Bukkit.getPlayer(uuid);
+                if(player != null && !getPlayerKit(player).isPresent()) {
+                    playerWithNoKits.add(uuid);
+                }
+            }
+        }
+        return playerWithNoKits;
     }
 
     @Override
@@ -143,14 +209,18 @@ public class FactionWar extends BoltWar {
             Resident resident = townyAPI.getDataSource().getResident(player.getName());
             Town town = resident.getTown();
 
-            player.teleport(town.getSpawn());
-
             List<UUID> participants = getParticipantsForTown(town);
+
+            if(participants == null) {
+                return;
+            }
+
             if (!participants.contains(player.getUniqueId())) {
                 return;
             }
 
             removePlayerFromWar(town, player.getUniqueId());
+            Message.WAR_PLAYER_DEFEATED.send(player);
 
             boolean shouldRemoveNation = true;
             for(Town t: town.getNation().getTowns()) {
@@ -167,7 +237,6 @@ public class FactionWar extends BoltWar {
             if(getParticipantsNations().size() < 2) {
                 SimpleScoreboardService.getInstance().removeScoreboards();
                 SimpleWarService.getInstance().stopWar();
-                return;
             }
 
         } catch (NotRegisteredException e) {
@@ -190,6 +259,18 @@ public class FactionWar extends BoltWar {
     @Override
     public boolean isPlayerInDeathQueue(Player player) {
         return this.deathQueue.contains(player.getUniqueId());
+    }
+
+    @Override
+    public List<UUID> getParticipantPlayers() {
+        List<UUID> playerList = new ArrayList<>();
+
+        for(Map.Entry<Town, List<UUID>> entry : this.players.entrySet()) {
+            List<UUID> currentList = entry.getValue();
+            playerList.addAll(currentList);
+        }
+
+        return playerList;
     }
 
 
