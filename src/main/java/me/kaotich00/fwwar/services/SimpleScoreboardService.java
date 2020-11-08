@@ -3,28 +3,25 @@ package me.kaotich00.fwwar.services;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
-import me.kaotich00.fwwar.Fwwar;
+import fr.mrmicky.fastboard.FastBoard;
 import me.kaotich00.fwwar.api.war.War;
-import me.kaotich00.fwwar.objects.war.OldWar;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.*;
 
 import java.util.*;
 
 public class SimpleScoreboardService {
 
     private static SimpleScoreboardService instance;
-    private Scoreboard warScoreBoard;
-    private List<UUID> scoreboards;
+    private Map<UUID, FastBoard> boards;
 
     private SimpleScoreboardService() {
         if (instance != null){
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
         }
-        this.scoreboards = new ArrayList<>();
+        this.boards = new HashMap<>();
     }
 
     public static SimpleScoreboardService getInstance() {
@@ -32,6 +29,115 @@ public class SimpleScoreboardService {
             instance = new SimpleScoreboardService();
         }
         return instance;
+    }
+
+    public void initScoreboards() {
+        SimpleWarService warService = SimpleWarService.getInstance();
+        War currentWar = warService.getCurrentWar().get();
+
+        for(Nation nation: currentWar.getParticipantsNations()) {
+            for(Town town: nation.getTowns()) {
+                for(Resident resident: town.getResidents()) {
+                    Player player = Bukkit.getPlayer(resident.getUUID());
+                    if(player != null) {
+                        FastBoard board = new FastBoard(player);
+                        board.updateTitle(org.bukkit.ChatColor.DARK_GRAY + "[" +
+                                org.bukkit.ChatColor.YELLOW + "Fw" +
+                                org.bukkit.ChatColor.GOLD + org.bukkit.ChatColor.BOLD + "War" +
+                                ChatColor.DARK_GRAY + "]");
+
+                        this.boards.put(player.getUniqueId(), board);
+                    }
+                }
+            }
+        }
+        updateScoreboards();
+    }
+
+    public void updateScoreboards() {
+        SimpleWarService warService = SimpleWarService.getInstance();
+        War currentWar = warService.getCurrentWar().get();
+
+        switch(currentWar.getWarType()) {
+            case BOLT_WAR_FACTION:
+                updateFactionKitScoreboard(currentWar);
+                break;
+        }
+    }
+
+    public void removeScoreboards() {
+        Iterator<UUID> boardsIterator = this.boards.keySet().iterator();
+        List<UUID> boardsToRemove = new ArrayList<>();
+        while(boardsIterator.hasNext()) {
+            UUID currentUUID = boardsIterator.next();
+            Player player = Bukkit.getPlayer(currentUUID);
+            if(player != null) {
+                FastBoard board = this.boards.get(currentUUID);
+                board.delete();
+                boardsIterator.remove();
+                boardsToRemove.add(currentUUID);
+            }
+        }
+
+        for(UUID boardToRemove: boardsToRemove) {
+            this.boards.remove(boardToRemove);
+        }
+    }
+
+    public void removeScoreboardForPlayer(UUID playerUUID) {
+        Player player = Bukkit.getPlayer(playerUUID);
+        if(player != null) {
+            FastBoard board = this.boards.get(playerUUID);
+            if(board != null) {
+                board.delete();
+                this.boards.remove(player.getUniqueId());
+            }
+        }
+    }
+
+    private void updateFactionKitScoreboard(War currentWar) {
+
+        for(Nation nation: currentWar.getParticipantsNations()) {
+            for(Town town: nation.getTowns()) {
+                for(Resident resident: town.getResidents()) {
+                    Player player = Bukkit.getPlayer(resident.getUUID());
+                    if(player != null) {
+                        FastBoard board = this.boards.get(player.getUniqueId());
+
+                        if(board!= null) {
+                            List<String> lines = new ArrayList<>();
+                            lines.add("");
+                            lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  War type: " + ChatColor.YELLOW + "Faction War");
+                            lines.add("");
+                            lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  Your class: " + ChatColor.YELLOW + currentWar.getPlayerKit(player).get().getName());
+                            lines.add("");
+                            lines.add(ChatColor.AQUA + "  Top players: ");
+                            if (currentWar.getKillCountsLeaderboard().size() == 0) {
+                                lines.add(ChatColor.GRAY + "  No records yet");
+                            }
+                            for (Map.Entry<UUID, Integer> entry : currentWar.getKillCountsLeaderboard().entrySet()) {
+                                String playerName = "";
+                                Player killer = Bukkit.getPlayer(entry.getKey());
+                                if (killer == null) {
+                                    OfflinePlayer killerOffline = Bukkit.getOfflinePlayer(entry.getKey());
+                                    playerName = killerOffline.getName();
+                                } else {
+                                    playerName = killer.getName();
+                                }
+
+                                lines.add(ChatColor.DARK_AQUA + "  >> " + ChatColor.AQUA + "" + ChatColor.BOLD + playerName + ChatColor.GOLD + " - " + entry.getValue() + " kills");
+                            }
+                            lines.add("");
+
+                            board.updateLines(
+                                    lines
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     /*public void updateWarScoreBoard() {

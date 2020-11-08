@@ -1,17 +1,16 @@
 package me.kaotich00.fwwar.commands.admin;
 
-import me.kaotich00.fwwar.Fwwar;
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
+import com.palmergames.bukkit.towny.object.Nation;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
-import me.kaotich00.fwwar.cui.KitEditingPrompt;
-import me.kaotich00.fwwar.cui.WarCreationPrompt;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-public class KitCommand extends AdminCommand {
+public class RemoveCommand extends AdminCommand {
 
     @Override
     public void onCommand(CommandSender sender, String[] args) {
@@ -36,13 +35,24 @@ public class KitCommand extends AdminCommand {
             return;
         }
 
-        if(!currentWar.supportKits()) {
-            Message.WAR_DOES_NOT_SUPPORT_KIT.send(sender);
+        String nationName = args[1];
+
+        if(!currentWar.getParticipantsNations().stream().filter(nation -> nation.getName().equalsIgnoreCase(nationName)).findFirst().isPresent()) {
+            Message.NATION_NOT_PRESENT.send(sender);
             return;
         }
 
-        KitEditingPrompt prompt = new KitEditingPrompt(Fwwar.getPlugin(Fwwar.class));
-        prompt.startConversationForPlayer((Player) sender);
+        TownyAPI townyAPI = TownyAPI.getInstance();
+        Nation nation;
+        try{
+            nation = townyAPI.getDataSource().getNation(nationName);
+        } catch (NotRegisteredException e) {
+            Message.NATION_DOES_NOT_EXISTS.send(sender);
+            return;
+        }
+
+        currentWar.removeNation(nation);
+        Message.NATION_SUCCESSFULLY_REMOVED.send(sender, nation.getName());
 
     }
 
@@ -53,7 +63,7 @@ public class KitCommand extends AdminCommand {
 
     @Override
     public String getUsage() {
-        return "/war kit";
+        return "/war remove <nation>";
     }
 
     @Override
@@ -63,7 +73,7 @@ public class KitCommand extends AdminCommand {
 
     @Override
     public Integer getRequiredArgs() {
-        return 1;
+        return 2;
     }
 
 }

@@ -5,18 +5,26 @@ import com.palmergames.bukkit.towny.object.Nation;
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.message.Message;
+import me.kaotich00.fwwar.objects.kit.Kit;
 import me.kaotich00.fwwar.objects.war.OldWar;
 import me.kaotich00.fwwar.task.WarPlotConquestTask;
+import me.kaotich00.fwwar.utils.WarStatus;
+import me.kaotich00.fwwar.utils.WarTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class SimpleWarService {
 
     private static SimpleWarService instance;
     private int warTaskId;
+
+    Map<WarTypes, Map<String, Kit>> kits;
 
     private War currentWar;
 
@@ -25,6 +33,7 @@ public class SimpleWarService {
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
         }
         this.currentWar = null;
+        this.kits = new HashMap<>();
     }
 
     public static SimpleWarService getInstance() {
@@ -109,12 +118,38 @@ public class SimpleWarService {
      */
     public void stopWar() {
         Message.WAR_ENDED.broadcast();
-        //SimpleScoreboardService.getInstance().destroyWarScoreboard();
-        Bukkit.getScheduler().cancelTask(SimpleWarService.getInstance().getWarTaskId());
+        currentWar.stopWar();
+        SimpleScoreboardService.getInstance().removeScoreboards();
     }
 
     public int getWarTaskId() {
         return this.warTaskId;
+    }
+
+    public void addKit(WarTypes warType, Kit kit){
+        if(!this.kits.containsKey(warType)) {
+            this.kits.put(warType, new HashMap<>());
+        }
+        this.kits.get(warType).put(kit.getName(), kit);
+    }
+
+    public void removeKit(WarTypes warType, String kitName) {
+        this.kits.get(warType).remove(kitName);
+    }
+
+    public void updateKit(WarTypes warType, String kitName, Kit kit) {
+        this.kits.get(warType).put(kitName, kit);
+    }
+
+    public Collection<Kit> getKits(WarTypes warType) {
+        return this.kits.get(warType).values();
+    }
+
+    public Optional<Kit> getKitForName(WarTypes warType, String name) {
+        if(!this.kits.containsKey(warType)) {
+            this.kits.put(warType, new HashMap<>());
+        }
+        return Optional.ofNullable(this.kits.get(warType).get(name));
     }
 
 }

@@ -28,7 +28,9 @@ public class KitEditGui {
     public KitEditGui(String kitName, Player player) {
         this.kitName = kitName;
         this.player = player;
-        this.kit = SimpleWarService.getInstance().getCurrentWar().get().getKitForName(kitName).get();
+
+        War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+        this.kit = SimpleWarService.getInstance().getKitForName(currentWar.getWarType(), kitName).get();
     }
 
     public Gui prepareGui() {
@@ -42,7 +44,7 @@ public class KitEditGui {
         mainGUI.addPane(background);
 
         OutlinePane items = new OutlinePane(0, 0, 9, 4, Pane.Priority.HIGH);
-        for(ItemStack item: currentWar.getKitForName(kitName).get().getItemsList()) {
+        for(ItemStack item: SimpleWarService.getInstance().getKitForName(currentWar.getWarType(), kitName).get().getItemsList()) {
             items.addItem(new GuiItem(item));
         }
         mainGUI.addPane(items);
@@ -50,7 +52,7 @@ public class KitEditGui {
         StaticPane navigationPane = new StaticPane(1, 5, 7, 1);
 
         ItemStack kitEditInfo = kitEditInfo();
-        navigationPane.addItem(new GuiItem(kitEditInfo), 1, 0);
+        navigationPane.addItem(new GuiItem(kitEditInfo, inventoryClickEvent -> inventoryClickEvent.setCancelled(true)),1, 0);
 
         ItemStack kitConfirm = kitConfirm();
         navigationPane.addItem(new GuiItem(kitConfirm, event -> {
@@ -64,7 +66,7 @@ public class KitEditGui {
                 }
             }
 
-            currentWar.updateKit(this.kitName, this.kit);
+            SimpleWarService.getInstance().updateKit(currentWar.getWarType(), this.kitName, this.kit);
 
             Message.KIT_MODIFIED.send(player);
 
@@ -88,7 +90,7 @@ public class KitEditGui {
         List<String> kitEditInfoLore = new ArrayList<>();
         kitEditInfoLore.add(ChatColor.GRAY + "Through this menu you can edit");
         kitEditInfoLore.add(ChatColor.GRAY + "and modify kits by adding the");
-        kitEditInfoLore.add(ChatColor.GRAY + "necesary items in the top 36 slots");
+        kitEditInfoLore.add(ChatColor.GRAY + "necessary items in the top 36 slots");
         kitEditInfoItemMeta.setLore(kitEditInfoLore);
         kitEditInfo.setItemMeta(kitEditInfoItemMeta);
 

@@ -14,7 +14,6 @@ import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
-import java.util.Optional;
 
 public class KitEditingPrompt implements ConversationAbandonedListener{
 
@@ -37,9 +36,9 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
     @Override
     public void conversationAbandoned(ConversationAbandonedEvent abandonedEvent) {
         if (abandonedEvent.gracefulExit()) {
-            abandonedEvent.getContext().getForWhom().sendRawMessage(MessageUtils.formatSuccessMessage("Setup completed!"));
+            abandonedEvent.getContext().getForWhom().sendRawMessage(MessageUtils.formatSuccessMessage(""));
         } else {
-            abandonedEvent.getContext().getForWhom().sendRawMessage(MessageUtils.formatErrorMessage("Setup canceled!"));
+            abandonedEvent.getContext().getForWhom().sendRawMessage(MessageUtils.formatErrorMessage("Conversation aborted"));
         }
     }
 
@@ -47,12 +46,12 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
 
         @Override
         public String getPromptText(ConversationContext context) {
-            String promptMessage = ChatColor.YELLOW + String.join("", Collections.nCopies(53, "-")) +
-                    ChatColor.GREEN + " Welcome to the kit menu!\n" +
+            String promptMessage = ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-")) + "\n" +
+                    ChatColor.GREEN + ChatColor.BOLD + " \n Welcome to the kit menu!\n" +
                     ChatColor.GRAY + " What do you wanna do? \n" +
-                    ChatColor.YELLOW + "\n [1] " + ChatColor.GOLD + "Create a new kit\n" +
-                    ChatColor.YELLOW + " [2] " + ChatColor.GOLD + "Modify an existing kit\n" +
-                    ChatColor.YELLOW + "\n" + String.join("", Collections.nCopies(53, "-"));
+                    ChatColor.YELLOW + "" + ChatColor.BOLD + "\n [1] " + ChatColor.GOLD + ChatColor.BOLD + "Create a new kit\n" +
+                    ChatColor.YELLOW + "" + ChatColor.BOLD + " [2] " + ChatColor.GOLD + ChatColor.BOLD + "Modify an existing kit\n" +
+                    ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "\n" + String.join("", Collections.nCopies(45, "-"));
             return promptMessage;
         }
 
@@ -62,7 +61,7 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
                 case 1:
                     return new NewKitPrompt();
                 case 2:
-                    if(SimpleWarService.getInstance().getCurrentWar().get().getKits().size() == 0) {
+                    if(SimpleWarService.getInstance().getKits(SimpleWarService.getInstance().getCurrentWar().get().getWarType()).size() == 0) {
                         Message.NO_KIT.send((Player) context.getForWhom());
                     } else {
                         return new KitEditPrompt();
@@ -97,7 +96,7 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
             SimpleWarService warService = SimpleWarService.getInstance();
             War currentWar = warService.getCurrentWar().get();
 
-            boolean doesKitExists = currentWar.getKitForName(input).isPresent();
+            boolean doesKitExists = warService.getKitForName(currentWar.getWarType(), input).isPresent();
 
             if(doesKitExists) {
                 Message.KIT_ALREADY_EXIST.send((Player) context.getForWhom(), input);
@@ -105,7 +104,7 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
             }
 
             Kit kit = new Kit(input);
-            currentWar.addKit(kit);
+            warService.addKit(currentWar.getWarType(), kit);
 
             Message.KIT_CREATED.send((Player) context.getForWhom(), input);
 
@@ -125,19 +124,19 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
 
         @Override
         public String getPromptText(ConversationContext context) {
-            String promptMessage = ChatColor.YELLOW + "" + String.join("", Collections.nCopies(53, "-")) +
-                    ChatColor.GREEN + " Welcome to the kit editor!\n" +
-                    ChatColor.GRAY + " Please type the " + ChatColor.GREEN + " name " + ChatColor.GRAY + " of the kit you would like to modify \n" +
-                    ChatColor.GRAY + " Available kits: \n";
+            String promptMessage = ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "" + String.join("", Collections.nCopies(45, "-")) + "\n" +
+                    ChatColor.GREEN + "" + ChatColor.BOLD + " Welcome to the kit editor!\n" +
+                    ChatColor.GRAY + "" + ChatColor.BOLD + " Please type the " + ChatColor.GREEN + " name " + ChatColor.GRAY + " of the kit you would like to modify \n" +
+                    ChatColor.GRAY + "" + ChatColor.BOLD + " Available kits: \n";
 
             SimpleWarService warService = SimpleWarService.getInstance();
             War war = warService.getCurrentWar().get();
 
-            for(Kit kit : war.getKits()) {
-                promptMessage += ChatColor.YELLOW + "\n ["+kit.getName()+"] \n";
+            for(Kit kit : warService.getKits(war.getWarType())) {
+                promptMessage += ChatColor.YELLOW + "" + ChatColor.BOLD + "\n ["+kit.getName()+"] \n";
             }
 
-            promptMessage += ChatColor.YELLOW + "\n" + String.join("", Collections.nCopies(53, "-"));
+            promptMessage += ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "\n" + String.join("", Collections.nCopies(45, "-"));
             return promptMessage;
         }
 
@@ -153,7 +152,7 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
 
         @Override
         protected boolean isInputValid(ConversationContext context, String input) {
-            return SimpleWarService.getInstance().getCurrentWar().get().getKitForName(input).isPresent();
+            return SimpleWarService.getInstance().getKitForName(SimpleWarService.getInstance().getCurrentWar().get().getWarType(), input).isPresent();
         }
 
         @Override

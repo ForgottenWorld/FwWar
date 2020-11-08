@@ -1,33 +1,33 @@
 package me.kaotich00.fwwar.commands.admin;
 
-import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
-import me.kaotich00.fwwar.cui.WarCreationPrompt;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-public class NewCommand extends AdminCommand {
+public class StopCommand extends AdminCommand {
 
     @Override
     public void onCommand(CommandSender sender, String[] args) {
         super.onCommand(sender, args);
 
-        if(SimpleWarService.getInstance().getCurrentWar().isPresent()) {
-            War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
-            WarStatus warStatus = currentWar.getWarStatus();
+        SimpleWarService warService = SimpleWarService.getInstance();
 
-            if(!warStatus.equals(WarStatus.ENDED)) {
-                Message.WAR_ALREADY_PRESENT.send(sender);
-                return;
-            }
+        if(!warService.getCurrentWar().isPresent()) {
+            Message.WAR_NOT_FOUND.send(sender);
+            return;
         }
 
-        WarCreationPrompt prompt = new WarCreationPrompt(Fwwar.getPlugin(Fwwar.class));
-        prompt.startConversationForPlayer((Player) sender);
+        War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+
+        if(!currentWar.getWarStatus().equals(WarStatus.STARTED)) {
+            Message.WAR_MUST_BE_STARTED.send(sender);
+            return;
+        }
+
+        SimpleWarService.getInstance().stopWar();
     }
 
     @Override
@@ -37,7 +37,7 @@ public class NewCommand extends AdminCommand {
 
     @Override
     public String getUsage() {
-        return "/war new";
+        return "/war start";
     }
 
     @Override
