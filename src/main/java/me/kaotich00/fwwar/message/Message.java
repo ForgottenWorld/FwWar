@@ -5,6 +5,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import java.util.Collections;
+
 public enum Message {
 
     PREFIX(ChatColor.DARK_GRAY + "[" +
@@ -50,6 +52,19 @@ public enum Message {
     KIT_CREATED(MessageUtils.formatSuccessMessage("Successfully created kit ") + ChatColor.GOLD + "{}" + MessageUtils.formatSuccessMessage(". You will be able to edit it in a few seconds."), true),
     KIT_MODIFIED(MessageUtils.formatSuccessMessage("Successfully modified kit "), true),
     NO_KIT(MessageUtils.formatErrorMessage("No kits to be found."), true),
+
+    ARENA_ALREADY_EXISTS(MessageUtils.formatErrorMessage("An arena with the name {} already exists."), true),
+    ARENA_NOT_FOUND(MessageUtils.formatErrorMessage("Arena {} not found."), true),
+    ARENA_CREATED(ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.STRIKETHROUGH + String.join("", Collections.nCopies(45, "-")) +
+            ChatColor.GREEN + "Arena " +
+            ChatColor.GOLD + "{} " +
+            ChatColor.GREEN + "was successfully created!" + "\n \n" +
+            ChatColor.GRAY + " Type " +
+            ChatColor.GREEN + "/war arena edit {}" +
+            ChatColor.GRAY + " to setup the Arena.\n" +
+            ChatColor.YELLOW + ChatColor.BOLD + ChatColor.STRIKETHROUGH + String.join("", Collections.nCopies(45, "-")), false),
+    ARENA_CREATION_STEP_COMPLETED(ChatColor.GOLD + "{} " + MessageUtils.formatSuccessMessage("set."), true),
+    ARENA_CREATION_STEP(ChatColor.GRAY + "Right click on a block to select " + ChatColor.GOLD + "{}", true),
 
     NATION_ALREADY_PRESENT(MessageUtils.formatErrorMessage("The nation you specified is already part of the war"), true),
     NATION_NOT_PRESENT(MessageUtils.formatErrorMessage("The nation you specified is not part of the war"), true),

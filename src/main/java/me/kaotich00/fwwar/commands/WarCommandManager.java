@@ -6,6 +6,7 @@ import com.palmergames.bukkit.towny.utils.NameUtil;
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.commands.Command;
 import me.kaotich00.fwwar.commands.admin.*;
+import me.kaotich00.fwwar.commands.admin.arena.ArenaCommand;
 import me.kaotich00.fwwar.commands.user.ChooseKitCommand;
 import me.kaotich00.fwwar.commands.user.InfoCommand;
 import me.kaotich00.fwwar.commands.user.PlotCommand;
@@ -43,6 +44,7 @@ public class WarCommandManager implements TabExecutor {
         this.commandRegistry.put(CommandUtils.WAR_CHOOSE_KIT_COMMAND, new ChooseKitCommand());
         this.commandRegistry.put(CommandUtils.WAR_STOP_COMMAND, new StopCommand());
         this.commandRegistry.put(CommandUtils.WAR_INFO_COMMAND, new InfoCommand());
+        this.commandRegistry.put(CommandUtils.WAR_ARENA_COMMAND, new ArenaCommand());
     }
 
     private Command getCommand(String name) {

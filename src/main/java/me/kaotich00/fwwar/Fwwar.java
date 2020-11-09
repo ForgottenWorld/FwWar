@@ -1,9 +1,11 @@
 package me.kaotich00.fwwar;
 
 import me.kaotich00.fwwar.commands.WarCommandManager;
+import me.kaotich00.fwwar.listener.ArenaCreationListener;
 import me.kaotich00.fwwar.listener.PlayerListener;
 import me.kaotich00.fwwar.objects.plot.CorePlot;
 import me.kaotich00.fwwar.services.SimpleStorageService;
+import me.kaotich00.fwwar.storage.StorageManager;
 import me.kaotich00.fwwar.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -33,6 +35,9 @@ public final class Fwwar extends JavaPlugin {
 
         Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Loading core plots...");
         SimpleStorageService.getInstance(this).loadCorePlots();
+
+        Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Loading Arenas...");
+        StorageManager.getInstance(this).loadArenas();
     }
 
     @Override
@@ -40,6 +45,9 @@ public final class Fwwar extends JavaPlugin {
         try {
             Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Saving core plots...");
             SimpleStorageService.getInstance(this).saveCorePlots();
+
+            Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Saving arenas...");
+            StorageManager.getInstance(this).saveArenas();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,6 +74,7 @@ public final class Fwwar extends JavaPlugin {
 
     public void registerListeners() {
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new ArenaCreationListener(), this);
     }
 
 }

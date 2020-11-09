@@ -3,7 +3,7 @@ package me.kaotich00.fwwar.cui;
 import com.github.stefvanschie.inventoryframework.Gui;
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.War;
-import me.kaotich00.fwwar.gui.KitEditGui;
+import me.kaotich00.fwwar.gui.kit.KitEditGui;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.kit.Kit;
 import me.kaotich00.fwwar.services.SimpleWarService;

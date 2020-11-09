@@ -1,4 +1,4 @@
-package me.kaotich00.fwwar.gui;
+package me.kaotich00.fwwar.gui.kit;
 
 import com.github.stefvanschie.inventoryframework.Gui;
 import com.github.stefvanschie.inventoryframework.GuiItem;
