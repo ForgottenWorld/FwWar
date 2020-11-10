@@ -37,5 +37,5 @@ jobs:
           panel: ${{ secrets.PANEL }}
           api_key: ${{ secrets.API_KEY }}
           server: ${{ secrets.SERVER }}
-          path: /github/workspace/target/*.jar
+          path: /github/workspace/target/fwwar-0.1.2.jar
           directory: plugins
