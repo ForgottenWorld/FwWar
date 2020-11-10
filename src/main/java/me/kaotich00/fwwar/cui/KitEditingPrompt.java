@@ -61,7 +61,7 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
                 case 1:
                     return new NewKitPrompt();
                 case 2:
-                    if(SimpleWarService.getInstance().getKits(SimpleWarService.getInstance().getCurrentWar().get().getWarType()).size() == 0) {
+                    if(SimpleWarService.getInstance().getKitsForType(SimpleWarService.getInstance().getCurrentWar().get().getWarType()).size() == 0) {
                         Message.NO_KIT.send((Player) context.getForWhom());
                     } else {
                         return new KitEditPrompt();
@@ -132,7 +132,7 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
             SimpleWarService warService = SimpleWarService.getInstance();
             War war = warService.getCurrentWar().get();
 
-            for(Kit kit : warService.getKits(war.getWarType())) {
+            for(Kit kit : warService.getKitsForType(war.getWarType())) {
                 promptMessage += ChatColor.YELLOW + "" + ChatColor.BOLD + "\n ["+kit.getName()+"] \n";
             }
 

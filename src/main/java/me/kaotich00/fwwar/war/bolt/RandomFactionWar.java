@@ -3,15 +3,21 @@ package me.kaotich00.fwwar.war.bolt;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
+import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
+import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.message.Message;
+import me.kaotich00.fwwar.objects.arena.Arena;
 import me.kaotich00.fwwar.objects.kit.Kit;
+import me.kaotich00.fwwar.services.SimpleArenaService;
 import me.kaotich00.fwwar.services.SimpleScoreboardService;
 import me.kaotich00.fwwar.services.SimpleWarService;
+import me.kaotich00.fwwar.utils.LocationType;
 import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -23,15 +29,6 @@ public class RandomFactionWar extends BoltWar {
 
     public RandomFactionWar() {
         this.setWarStatus(WarStatus.CREATED);
-        this.nations = new ArrayList<>();
-        this.playerKits = new HashMap<>();
-        this.players = new HashMap<>();
-        this.deathQueue = new ArrayList<>();
-        this.killCount = new HashMap<>();
-    }
-
-    public RandomFactionWar(WarStatus warStatus) {
-        this.setWarStatus(warStatus);
         this.nations = new ArrayList<>();
         this.playerKits = new HashMap<>();
         this.players = new HashMap<>();
@@ -51,31 +48,64 @@ public class RandomFactionWar extends BoltWar {
 
     @Override
     public void startWar() {
-        setWarStatus(WarStatus.STARTED);
+        try {
+            Random random = new Random();
+            SimpleArenaService arenaService = SimpleArenaService.getInstance();
+            Arena warArena = arenaService.getArenas().get(arenaService.getArenas().size() > 1 ? random.nextInt(arenaService.getArenas().size() - 1) : 0);
 
-        Iterator<Town> iterator = this.players.keySet().iterator();
-        Kit kit = generateRandomKit();
+            setWarStatus(WarStatus.STARTED);
 
-        while(iterator.hasNext()) {
-            Town town = iterator.next();
-            List<UUID> residents = this.players.get(town);
+            Iterator<Town> iterator = this.players.keySet().iterator();
+            Kit kit = generateRandomKit();
 
-            residents.removeIf(resident -> Bukkit.getPlayer(resident) == null);
+            Nation firstNation = this.nations.get(0);
+            Map<UUID, Location> playersToTeleport = new HashMap<>();
 
-            for(UUID uuid: residents) {
-                Player player = Bukkit.getPlayer(uuid);
-                if(player != null) {
-                    player.getInventory().clear();
+            while(iterator.hasNext()) {
+                Town town = iterator.next();
+                List<UUID> residents = this.players.get(town);
 
-                    for(ItemStack item: kit.getItemsList()) {
-                        player.getInventory().addItem(item);
+                residents.removeIf(resident -> Bukkit.getPlayer(resident) == null);
+
+                for(UUID uuid: residents) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    Resident resident = TownyAPI.getInstance().getDataSource().getResident(player.getName());
+
+                    if(player != null) {
+                        player.getInventory().clear();
+
+                        for(ItemStack item: kit.getItemsList()) {
+                            player.getInventory().addItem(item);
+                        }
+
+                        Location playerSpawn = firstNation.equals(resident.getTown().getNation()) ? warArena.getLocation(LocationType.FIRST_NATION_SPAWN_POINT) : warArena.getLocation(LocationType.SECOND_NATION_SPAWN_POINT);
+                        Location playerBattle = firstNation.equals(resident.getTown().getNation()) ? warArena.getLocation(LocationType.FIRST_NATION_BATTLE_POINT) : warArena.getLocation(LocationType.SECOND_NATION_BATTLE_POINT);
+
+                        player.teleport(playerSpawn);
+                        playersToTeleport.put(player.getUniqueId(), playerBattle);
+
+                        Message.WAR_WILL_BEGAN.send(player, "30");
                     }
                 }
             }
-        }
 
-        Message.WAR_STARTED.broadcast();
-        SimpleScoreboardService.getInstance().initScoreboards();
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Fwwar.getPlugin(Fwwar.class), () -> {
+                Message.WAR_STARTED.broadcast();
+                SimpleScoreboardService.getInstance().initScoreboards();
+
+                for(Map.Entry<UUID, Location> entry: playersToTeleport.entrySet()) {
+                    UUID playerUUID = entry.getKey();
+                    Location location = entry.getValue();
+
+                    Player player = Bukkit.getPlayer(playerUUID);
+                    if(player != null) {
+                        player.teleport(location);
+                    }
+                }
+            }, 600L);
+        } catch (NotRegisteredException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

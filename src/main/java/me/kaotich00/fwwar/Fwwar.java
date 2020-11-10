@@ -38,6 +38,9 @@ public final class Fwwar extends JavaPlugin {
 
         Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Loading Arenas...");
         StorageManager.getInstance(this).loadArenas();
+
+        Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Loading Kits...");
+        StorageManager.getInstance(this).loadKits();
     }
 
     @Override
@@ -48,6 +51,9 @@ public final class Fwwar extends JavaPlugin {
 
             Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Saving arenas...");
             StorageManager.getInstance(this).saveArenas();
+
+            Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Saving Kits...");
+            StorageManager.getInstance(this).saveKits();
         } catch (IOException e) {
             e.printStackTrace();
         }

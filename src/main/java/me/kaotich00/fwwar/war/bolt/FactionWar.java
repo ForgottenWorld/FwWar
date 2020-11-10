@@ -6,14 +6,19 @@ import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
+import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.message.Message;
+import me.kaotich00.fwwar.objects.arena.Arena;
 import me.kaotich00.fwwar.objects.kit.Kit;
+import me.kaotich00.fwwar.services.SimpleArenaService;
 import me.kaotich00.fwwar.services.SimpleScoreboardService;
 import me.kaotich00.fwwar.services.SimpleWarService;
+import me.kaotich00.fwwar.utils.LocationType;
 import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -25,15 +30,6 @@ public class FactionWar extends BoltWar {
 
     public FactionWar() {
         this.setWarStatus(WarStatus.CREATED);
-        this.nations = new ArrayList<>();
-        this.playerKits = new HashMap<>();
-        this.players = new HashMap<>();
-        this.deathQueue = new ArrayList<>();
-        this.killCount = new HashMap<>();
-    }
-
-    public FactionWar(WarStatus warStatus) {
-        this.setWarStatus(warStatus);
         this.nations = new ArrayList<>();
         this.playerKits = new HashMap<>();
         this.players = new HashMap<>();
@@ -53,8 +49,26 @@ public class FactionWar extends BoltWar {
 
     @Override
     public void startWar() {
-        List<UUID> playerWithNoSelectedKit = checkKits();
-        if(playerWithNoSelectedKit.size() == 0) {
+        try {
+            Random random = new Random();
+            SimpleArenaService arenaService = SimpleArenaService.getInstance();
+            Arena warArena = arenaService.getArenas().get(arenaService.getArenas().size() > 1 ? random.nextInt(arenaService.getArenas().size() - 1) : 0);
+
+            Nation firstNation = this.nations.get(0);
+            Map<UUID, Location> playersToTeleport = new HashMap<>();
+
+            List<UUID> playerWithNoSelectedKit = checkKits();
+            if(playerWithNoSelectedKit.size() > 0) {
+                Message.WAR_CANNOT_START_KIT_REQUIRED.broadcast();
+                for(UUID uuid: playerWithNoSelectedKit) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    if(player != null) {
+                        Bukkit.broadcastMessage(ChatColor.AQUA + ">> " + ChatColor.GOLD + player.getName());
+                    }
+                }
+                return;
+            }
+
             setWarStatus(WarStatus.STARTED);
 
             Iterator<Town> iterator = this.players.keySet().iterator();
@@ -67,6 +81,8 @@ public class FactionWar extends BoltWar {
 
                 for(UUID uuid: residents) {
                     Player player = Bukkit.getPlayer(uuid);
+                    Resident resident = TownyAPI.getInstance().getDataSource().getResident(player.getName());
+
                     if(player != null) {
                         player.getInventory().clear();
 
@@ -74,20 +90,35 @@ public class FactionWar extends BoltWar {
                         for(ItemStack item: kit.getItemsList()) {
                             player.getInventory().addItem(item);
                         }
+
+                        Location playerSpawn = firstNation.equals(resident.getTown().getNation()) ? warArena.getLocation(LocationType.FIRST_NATION_SPAWN_POINT) : warArena.getLocation(LocationType.SECOND_NATION_SPAWN_POINT);
+                        Location playerBattle = firstNation.equals(resident.getTown().getNation()) ? warArena.getLocation(LocationType.FIRST_NATION_BATTLE_POINT) : warArena.getLocation(LocationType.SECOND_NATION_BATTLE_POINT);
+
+                        player.teleport(playerSpawn);
+                        playersToTeleport.put(player.getUniqueId(), playerBattle);
+
+                        Message.WAR_WILL_BEGAN.send(player, "30");
                     }
                 }
             }
 
-            Message.WAR_STARTED.broadcast();
-            SimpleScoreboardService.getInstance().initScoreboards();
-        } else {
-            Message.WAR_CANNOT_START_KIT_REQUIRED.broadcast();
-            for(UUID uuid: playerWithNoSelectedKit) {
-                Player player = Bukkit.getPlayer(uuid);
-                if(player != null) {
-                    Bukkit.broadcastMessage(ChatColor.AQUA + ">> " + ChatColor.GOLD + player.getName());
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Fwwar.getPlugin(Fwwar.class), () -> {
+                Message.WAR_STARTED.broadcast();
+                SimpleScoreboardService.getInstance().initScoreboards();
+
+                for(Map.Entry<UUID, Location> entry: playersToTeleport.entrySet()) {
+                    UUID playerUUID = entry.getKey();
+                    Location location = entry.getValue();
+
+                    Player player = Bukkit.getPlayer(playerUUID);
+                    if(player != null) {
+                        player.teleport(location);
+                    }
                 }
-            }
+            }, 600L);
+
+        } catch (NotRegisteredException e) {
+            e.printStackTrace();
         }
     }
 

@@ -4,7 +4,6 @@ import com.github.stefvanschie.inventoryframework.Gui;
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.kit.Kit;
@@ -40,7 +39,7 @@ public class KitSelectionGui {
         mainGUI.addPane(background);
 
         OutlinePane kits = new OutlinePane(1, 1, 7, 4, Pane.Priority.HIGH);
-        for(Kit kit: SimpleWarService.getInstance().getKits(currentWar.getWarType())) {
+        for(Kit kit: SimpleWarService.getInstance().getKitsForType(currentWar.getWarType())) {
             ItemStack kitItem = kitBuilder(kit);
             kits.addItem(new GuiItem(kitItem, event -> {
                 event.setCancelled(true);

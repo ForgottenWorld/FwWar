@@ -34,7 +34,7 @@ public class ArenaCommand extends AdminCommand {
 
     @Override
     public String getUsage() {
-        return "/war arena <new/edit/delete> <name>";
+        return "/war arena <new/edit> <name>";
     }
 
     @Override

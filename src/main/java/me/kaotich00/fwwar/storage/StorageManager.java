@@ -2,14 +2,18 @@ package me.kaotich00.fwwar.storage;
 
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.objects.arena.Arena;
+import me.kaotich00.fwwar.objects.kit.Kit;
 import me.kaotich00.fwwar.services.SimpleArenaService;
+import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.LocationType;
 import me.kaotich00.fwwar.utils.MessageUtils;
+import me.kaotich00.fwwar.utils.WarTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +25,7 @@ public class StorageManager {
 
     private static StorageManager instance;
     private String saveArenasFile = "arenas.yml";
+    private String saveKitsFile = "kits.yml";
     private Fwwar plugin;
 
     private StorageManager(Fwwar plugin) {
@@ -77,6 +82,43 @@ public class StorageManager {
 
                     arena.setLocation(locationType, location);
                 }
+            }
+        }
+
+    }
+
+    public void saveKits() throws IOException {
+        Map<Kit, WarTypes> kits = SimpleWarService.getInstance().getAllKits();
+
+        FileConfiguration data = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), saveKitsFile));
+        for(Map.Entry<Kit,WarTypes> entry: kits.entrySet()) {
+            Kit kit = entry.getKey();
+            WarTypes warType = entry.getValue();
+
+            data.set("kits." + kit.getName() + ".type", warType.name());
+            data.set("kits." + kit.getName() + ".items", kit.getItemsList());
+        }
+
+        data.save(new File(plugin.getDataFolder(), saveKitsFile));
+    }
+
+    public void loadKits() {
+        FileConfiguration data = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), saveKitsFile));
+        SimpleWarService simpleWarService = SimpleWarService.getInstance();
+
+        if(data != null && data.getConfigurationSection("kits") != null) {
+            for (String key : data.getConfigurationSection("kits").getKeys(false)) {
+                Kit kit = new Kit(key);
+                List<ItemStack> items = (List<ItemStack>) data.get("kits." + key + ".items");
+                for(ItemStack item: items) {
+                    kit.addItemToKit(item);
+                }
+
+                WarTypes warType = WarTypes.valueOf(data.get("kits." + key + ".type").toString());
+
+                simpleWarService.addKit(warType, kit);
+
+                Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " >> Loaded Kit " + kit.getName());
             }
         }
 

@@ -47,6 +47,8 @@ public enum Message {
     WAR_CANNOT_CHOOSE_KIT(MessageUtils.formatErrorMessage("Cannot choose kit at the moment."), true),
     WAR_PLAYER_DEFEATED(MessageUtils.formatErrorMessage("You have been killed in the war. Teleporting to town spawn..."), true),
     WAR_CANNOT_START_KIT_REQUIRED(MessageUtils.formatErrorMessage("Cannot start war, the following player have not chosen a kit. Please type ") + ChatColor.YELLOW + " /war chooseKit" + MessageUtils.formatErrorMessage(" to select one"), true),
+    WAR_CANNOT_START_ARENA_REQUIRED(MessageUtils.formatErrorMessage("Cannot start the war. You should create at least one arena."), true),
+    WAR_WILL_BEGAN(MessageUtils.formatSuccessMessage("The war will began in {} seconds"), true),
 
     KIT_ALREADY_EXIST(MessageUtils.formatErrorMessage("A kit for the name ") + ChatColor.GOLD + "{}" + MessageUtils.formatErrorMessage(" already exists"), true),
     KIT_CREATED(MessageUtils.formatSuccessMessage("Successfully created kit ") + ChatColor.GOLD + "{}" + MessageUtils.formatSuccessMessage(". You will be able to edit it in a few seconds."), true),
