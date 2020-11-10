@@ -1,11 +1,8 @@
 package me.kaotich00.fwwar.commands.admin;
 
-import com.palmergames.bukkit.towny.object.Town;
-import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.message.Message;
-import me.kaotich00.fwwar.objects.kit.Kit;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
@@ -17,11 +14,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 import java.util.UUID;
 
 public class ConfirmCommand extends AdminCommand {
@@ -55,7 +49,7 @@ public class ConfirmCommand extends AdminCommand {
         }
 
         if(currentWar.getWarType().equals(WarTypes.BOLT_WAR_FACTION)) {
-            if(SimpleWarService.getInstance().getKits(currentWar.getWarType()).size() == 0) {
+            if(SimpleWarService.getInstance().getKitsForType(currentWar.getWarType()).size() == 0) {
                 Message.FACTION_WAR_NOT_ENOUGH_KITS.send(sender);
                 return;
             }
@@ -63,6 +57,10 @@ public class ConfirmCommand extends AdminCommand {
 
         currentWar.setWarStatus(WarStatus.CONFIRMED);
         Message.WAR_CONFIRMED.send(sender);
+
+        if(currentWar.getWarType().equals(WarTypes.BOLT_WAR_RANDOM)) {
+            return;
+        }
 
         for(UUID playerUUID: currentWar.getParticipantPlayers()) {
             Player participantPlayer = Bukkit.getPlayer(playerUUID);

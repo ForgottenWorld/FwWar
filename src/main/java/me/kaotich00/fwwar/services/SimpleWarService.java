@@ -1,25 +1,14 @@
 package me.kaotich00.fwwar.services;
 
-import com.palmergames.bukkit.towny.TownyAPI;
-import com.palmergames.bukkit.towny.object.Nation;
-import me.kaotich00.fwwar.Fwwar;
+import me.kaotich00.fwwar.api.services.WarService;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.kit.Kit;
-import me.kaotich00.fwwar.objects.war.OldWar;
-import me.kaotich00.fwwar.task.WarPlotConquestTask;
-import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-public class SimpleWarService {
+public class SimpleWarService implements WarService {
 
     private static SimpleWarService instance;
     private int warTaskId;
@@ -60,60 +49,6 @@ public class SimpleWarService {
     }
 
     /**
-     * Start war if all conditions are met
-     * @param sender
-     */
-    /*public void startWar(CommandSender sender) {
-        War war = this.currentWar;
-
-        TownyAPI townyAPI = TownyAPI.getInstance();
-
-        for(Nation nation: townyAPI.getDataSource().getNations()) {
-            if(!nation.isNeutral()) {
-                boolean canJoin = war.addParticipant(nation);
-                if(canJoin) {
-                    Message.NATION_JOIN_WAR.broadcast(nation.getName());
-                } else {
-                    Message.NATION_CANNOT_JOIN_WAR.broadcast(nation.getName());
-                }
-            }
-        }
-
-        // Check if the required amount of Nations is present
-        if(war.getParticipantNations().size() < 2) {
-            Message.NOT_ENOUGH_NATIONS.broadcast();
-            return;
-        }
-
-        // Check if at least 2 Nations are considered enemies between each other
-        boolean areThereEnemies = false;
-        for(Nation nation: war.getParticipantNations()) {
-            for(Nation plausibleEnemy: war.getParticipantNations()) {
-                if(nation.hasEnemy(plausibleEnemy)) {
-                    areThereEnemies = true;
-                }
-            }
-        }
-
-        if(!areThereEnemies) {
-            Message.NO_ENEMY_NATION.broadcast();
-            return;
-        }
-
-        Message.WAR_STARTED.broadcast();
-        Bukkit.getServer().broadcastMessage(oldWar.getPrintableParticipants());
-
-        this.currentWar = oldWar;
-        SimpleScoreboardService.getInstance().initWarScoreboard();
-
-        FileConfiguration defaultConfig = Fwwar.getDefaultConfig();
-        Long seconds = defaultConfig.getLong("war.plot_check_time") * 20;
-
-        warTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), oldWar), seconds, seconds);
-
-    }*/
-
-    /**
      * Stop the current running war
      */
     public void stopWar() {
@@ -141,7 +76,7 @@ public class SimpleWarService {
         this.kits.get(warType).put(kitName, kit);
     }
 
-    public Collection<Kit> getKits(WarTypes warType) {
+    public Collection<Kit> getKitsForType(WarTypes warType) {
         return this.kits.get(warType).values();
     }
 
@@ -150,6 +85,17 @@ public class SimpleWarService {
             this.kits.put(warType, new HashMap<>());
         }
         return Optional.ofNullable(this.kits.get(warType).get(name));
+    }
+
+    @Override
+    public Map<Kit, WarTypes> getAllKits() {
+        Map<Kit, WarTypes> kits = new HashMap<>();
+        for(Map.Entry<WarTypes, Map<String,Kit>> entry : this.kits.entrySet()) {
+            for(Map.Entry<String,Kit> entry2 : entry.getValue().entrySet()) {
+                kits.put(entry2.getValue(), entry.getKey());
+            }
+        }
+        return kits;
     }
 
 }
