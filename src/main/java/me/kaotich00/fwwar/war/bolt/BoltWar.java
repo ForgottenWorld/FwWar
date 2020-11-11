@@ -148,8 +148,7 @@ public abstract class BoltWar implements War {
         return playerList;
     }
 
-    @Override
-    public Kit generateRandomKit() {
+    protected Kit generateRandomKit() {
 
         String kitName = "Random Kit";
         Kit randomKit = new Kit(kitName);

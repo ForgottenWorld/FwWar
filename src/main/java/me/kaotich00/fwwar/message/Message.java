@@ -14,6 +14,20 @@ public enum Message {
             ChatColor.GOLD + ChatColor.BOLD + "War" +
             ChatColor.DARK_GRAY + "]", false),
 
+    HELP_MESSAGE(ChatColor.GREEN + "" + ChatColor.BOLD + ChatColor.STRIKETHROUGH + String.join("", Collections.nCopies(45, "-")) + "\n" +
+            ChatColor.GRAY + "\nHi, here you can find the list of all commands available for the plugin:\n" +
+            ChatColor.DARK_GRAY + " >> " + ChatColor.YELLOW + "/war new " + ChatColor.GOLD + " - Create a new war\n" +
+            ChatColor.DARK_GRAY + " >> " + ChatColor.YELLOW + "/war add [nation] " + ChatColor.GOLD + " - Add a nation to the war\n" +
+            ChatColor.DARK_GRAY + " >> " + ChatColor.YELLOW + "/war remove [nation] " + ChatColor.GOLD + " - Remove a nation from the war\n" +
+            ChatColor.DARK_GRAY + " >> " + ChatColor.YELLOW + "/war kit " + ChatColor.GOLD + " - Kit menu for the war if kits are supported\n" +
+            ChatColor.DARK_GRAY + " >> " + ChatColor.YELLOW + "/war confirm " + ChatColor.GOLD + " - Confirm a war if all preparations are done\n" +
+            ChatColor.DARK_GRAY + " >> " + ChatColor.YELLOW + "/war start " + ChatColor.GOLD + " - Start the war if it is confirmed\n" +
+            ChatColor.DARK_GRAY + " >> " + ChatColor.YELLOW + "/war stop " + ChatColor.GOLD + " - Stop immediately the war if started\n" +
+            ChatColor.DARK_GRAY + " \n >> " + ChatColor.DARK_GREEN + "/war info " + ChatColor.GREEN + " - Print all the info for the current war\n" +
+            ChatColor.DARK_GRAY + " \n >> " + ChatColor.AQUA + "/war arena new <name> " + ChatColor.DARK_AQUA + " - Create an arena for the given name\n" +
+            ChatColor.DARK_GRAY + " >> " + ChatColor.AQUA + "/war arena edit <name> " + ChatColor.DARK_AQUA + " - Edit the arena for the given name\n" +
+            ChatColor.GREEN + "\n" + ChatColor.BOLD + ChatColor.STRIKETHROUGH + String.join("", Collections.nCopies(45, "-")), false),
+
     NOT_REGISTERED(MessageUtils.formatErrorMessage("You are not a citizen"), true),
     NOT_PART_OF_A_TOWN(MessageUtils.formatErrorMessage("You are not part of a town!"), true),
     NOT_A_MAJOR(MessageUtils.formatErrorMessage("You are not the major of the town!"), true),
@@ -66,13 +80,17 @@ public enum Message {
             ChatColor.GRAY + " to setup the Arena.\n" +
             ChatColor.YELLOW + ChatColor.BOLD + ChatColor.STRIKETHROUGH + String.join("", Collections.nCopies(45, "-")), false),
     ARENA_CREATION_STEP_COMPLETED(ChatColor.GOLD + "{} " + MessageUtils.formatSuccessMessage("set."), true),
-    ARENA_CREATION_STEP(ChatColor.GRAY + "Right click on a block to select " + ChatColor.GOLD + "{}", true),
+    ARENA_CREATION_STEP(ChatColor.GRAY + "Right click on a block with a " + ChatColor.GOLD + "WOOD SHOVEL" + ChatColor.GRAY + " to select " + ChatColor.GOLD + "{}", true),
+    ARENA_CREATION_COMPLETED(ChatColor.GREEN + "Arena creation completed!", true),
+    ARENA_DELETED(ChatColor.GREEN + "Successfully deleted arena {}", true),
 
     NATION_ALREADY_PRESENT(MessageUtils.formatErrorMessage("The nation you specified is already part of the war"), true),
     NATION_NOT_PRESENT(MessageUtils.formatErrorMessage("The nation you specified is not part of the war"), true),
     NATION_DOES_NOT_EXISTS(MessageUtils.formatErrorMessage("The nation you specified is not registered on Towny"), true),
     NATION_SUCCESSFULLY_ADDED(MessageUtils.formatSuccessMessage("Successfully added Nation {} to participants"), true),
     NATION_SUCCESSFULLY_REMOVED(MessageUtils.formatSuccessMessage("Successfully removed Nation {} from participants"), true),
+    NATION_NOT_ENOUGH_MONEY(MessageUtils.formatErrorMessage("The Nation {} cannot afford to join the war."), true),
+    NATION_PAYED_ENTRY(ChatColor.GRAY + "The Nation " + ChatColor.GREEN + "{}" + ChatColor.GRAY + " just payed " + ChatColor.GREEN + "{}" + ChatColor.GRAY + " to enter the war!", true),
     CANNOT_ADD_MORE_NATIONS(MessageUtils.formatErrorMessage("The maximum number of allowed nations has been reached. Consider deleting one."), true),
 
     NO_LONGER_PART_OF_WAR(MessageUtils.formatErrorMessage("Sorry, it seems like you are no longer part of the war."), true),

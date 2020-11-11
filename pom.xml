@@ -82,8 +82,8 @@
         <dependency>
             <groupId>com.github.TownyAdvanced</groupId>
             <artifactId>Towny</artifactId>
-            <version>0.96.2.0</version>
-            <scope>provided</scope>
+            <version>0.96.3.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.github.stefvanschie.inventoryframework</groupId>

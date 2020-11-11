@@ -10,6 +10,9 @@ import me.kaotich00.fwwar.commands.admin.arena.ArenaCommand;
 import me.kaotich00.fwwar.commands.user.ChooseKitCommand;
 import me.kaotich00.fwwar.commands.user.InfoCommand;
 import me.kaotich00.fwwar.commands.user.PlotCommand;
+import me.kaotich00.fwwar.message.Message;
+import me.kaotich00.fwwar.objects.arena.Arena;
+import me.kaotich00.fwwar.services.SimpleArenaService;
 import me.kaotich00.fwwar.utils.CommandUtils;
 import me.kaotich00.fwwar.utils.MessageUtils;
 import org.bukkit.command.CommandException;
@@ -54,7 +57,7 @@ public class WarCommandManager implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
         if( args.length == 0 ) {
-            sender.sendMessage(MessageUtils.helpMessage());
+            Message.HELP_MESSAGE.send(sender);
             return CommandUtils.COMMAND_SUCCESS;
         }
 
@@ -97,6 +100,24 @@ public class WarCommandManager implements TabExecutor {
                     TownyAPI townyAPI = TownyAPI.getInstance();
                     for(Nation nation: townyAPI.getDataSource().getNations()) {
                         suggestions.add(nation.getName());
+                    }
+                    break;
+                case CommandUtils.WAR_ARENA_COMMAND:
+                    suggestions.add("add");
+                    suggestions.add("edit");
+                    suggestions.add("delete");
+                    break;
+            }
+        }
+
+        if(args.length == 3) {
+            argsIndex = args[2];
+
+            switch(args[1]) {
+                case CommandUtils.ARENA_EDIT_COMMAND:
+                case CommandUtils.ARENA_DELETE_COMMAND:
+                    for(Arena arena: SimpleArenaService.getInstance().getArenas()) {
+                        suggestions.add(arena.getName());
                     }
                     break;
             }

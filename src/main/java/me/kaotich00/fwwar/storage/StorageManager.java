@@ -46,6 +46,7 @@ public class StorageManager {
         List<Arena> arenas = SimpleArenaService.getInstance().getArenas();
 
         FileConfiguration data = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), saveArenasFile));
+        data.set("arenas", null);
         for(Arena arena: arenas) {
             for(Map.Entry<LocationType,Location> entry: arena.getGameLocations().entrySet()) {
                 LocationType locationType = entry.getKey();
