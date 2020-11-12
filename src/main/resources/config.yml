@@ -19,6 +19,23 @@
 
 # +----------------------------------------------------------------------------------------------+ #
 # |                                                                                              | #
+# |                                    GENERAL SETTINGS                                          | #
+# |                                                                                              | #
+# |                               Configure General settings                                     | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+
+localization:
+  # Select the language you would
+  # like the Plugin to use
+  # You can copy the content of the language_en_EN.yml
+  # and create a new file called language_<shortcode>_<shortcode_uppercase>.yml
+  # for your preferred language and change the content accordingly
+  # Default file: language_en_EN.yml
+  language_file: 'language_en_EN.yml'
+
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
 # |                                      WAR SETTINGS                                            | #
 # |                                                                                              | #
 # |                                 Configure War settings                                       | #
