@@ -52,6 +52,11 @@ public class LocalizationManager {
         }
     }
 
+    public void reload() {
+        this.strings.clear();
+        loadLanguageFile();
+    }
+
     public String localize(String key) {
         return this.strings.containsKey(key) ? this.strings.get(key) : ChatColor.RED + "No translation present for " + key;
     }

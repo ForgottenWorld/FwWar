@@ -1,18 +1,21 @@
 strings:
   fwwar_prefix: "&8[&eFw&6&lWar&8]"
-  help_message: "&a&l&m------------------------------------------\n
-   &7\nHi, here you can find the list of all commands available for the plugin:\n
-   &8 >> &e/war new &6- Create a new war\n
-   &8 >> &e/war add [nation] &6- Add a nation to the war\n
-   &8 >> &e/war remove [nation] &6- Remove a nation from the war\n
-   &8 >> &e/war kit &6- Kit menu for the war if kits are supported\n
-   &8 >> &e/war confirm &6- Confirm a war if all preparations are done\n
-   &8 >> &e/war start &6- Start the war if it is confirmed\n
-   &8 >> &e/war stop &6- Stop immediately the war if started\n
-   &8 \n >> &2/war info &6- Print all the info for the current war\n
-   &8 \n >> &b/war arena new <name> &3- Create an arena for the given name\n
-   &8 >> &b/war arena edit <name> &3- Edit the arena for the given name\n
-   &a\n&l&m---------------------------------------------"
+  help_message: |+
+   &a&l&m------------------------------------------
+   &7
+   Hi, here you can find the list of all commands available for the plugin:
+   &8 >> &e/war new &6- Create a new war
+   &8 >> &e/war add [nation] &6- Add a nation to the war
+   &8 >> &e/war remove [nation] &6- Remove a nation from the war
+   &8 >> &e/war kit &6- Kit menu for the war if kits are supported
+   &8 >> &e/war confirm &6- Confirm a war if all preparations are done
+   &8 >> &e/war start &6- Start the war if it is confirmed
+   &8 >> &e/war stop &6- Stop immediately the war if started
+   &8 >> &2/war info &6- Print all the info for the current war
+   &8 >> &b/war arena new <name> &3- Create an arena for the given name
+   &8 >> &b/war arena edit <name> &3- Edit the arena for the given name
+   &a
+   &l&m---------------------------------------------
 
   not_registered: "&cYou are not a citizen"
   not_part_of_a_town: "&cYou are not part of a town"
@@ -48,12 +51,63 @@ strings:
   war_cannot_start_kit_required: "&cCannot start war, the following player have not chosen a kit. Please type &e/war chooseKit &cto select one"
   war_cannot_start_arena_required: "&cCannot start the war. You should create at least one arena."
   war_will_began: "&aThe war will began in &6{0} &aseconds"
+  war_creation_menu: |+
+    &e&m&l---------------------------------------------
+    &a
+    &l Welcome to War Creation manager!
+    &7 Start by selecting one of the following war types:
+    &e&l [1] &6&lBolt war
+    &e&l [2] &6&lAssault war &c[Currently unavailable]
+    &e
+    &m&l---------------------------------------------"
+  war_creation_bolt_war: |+
+    &3&m&l---------------------------------------------
+    &a&l You selected &6Bolt War!
+    &7 Please choose a gamemode for the war:
+    &b&l [1] &3&lFaction kit
+    &b&l [2] &b&lRandom kits
+    &3
+    &m&l---------------------------------------------"
+  war_creation_bolt_war_faction: |+
+    "&a&m&l---------------------------------------------
+    &a&l Successfully created war of type &6Faction Kit
+    &7 Now that you have created the war, you may proceed as follows:
+    &b&l 1) &7Add participant nations with command &e/war add <nation> <price>
+    &b&l 2) &7Create or modify kit by typing &e/war kit
+    &b&l 3) &7When you finished all of the above type &e/war confirm
+    &a
+    &m&l---------------------------------------------
+  war_creation_bolt_war_random: |+
+   &a&m&l---------------------------------------------
+   &a
+   &l Successfully created war of type &6Random Faction Kit
+   &7 Now that you have created the war, you may proceed as follows:
+   &b&l 1) &7Add participant nations with command &e/war add <nation> <price>
+   &b&l 2) &7Confirm the war by typing &e/war confirm
+   &a
+   &m&l---------------------------------------------
 
   kit_already_exists: "&cA kit for the name &6{0} &calready exists"
   kit_created: "&aSuccessfully created kit &6{0} &aYou will be able to edit it in a few seconds."
   kit_modified: "&aSuccessfully modified kit"
   no_kit: "&cNo kits to be found."
   kit_selected: "&aSuccessfully selected kit &6{0}"
+  kit_menu: |+
+    &e&m&l---------------------------------------------
+    &a
+    &l Welcome to the kit menu!
+    &7 What do you wanna do?
+    &6&l [1] &6&lCreate a new kit
+    &6&l [2] &6&lModify an existing kit
+    &e
+    &m&k---------------------------------------------
+  kit_editor: |+
+    &e&m&l---------------------------------------------
+    &a
+    &lWelcome to the kit editor!
+    &7&lPlease type the &aname &7of the kit you would like to modify
+    &7&lAvailable kits:
+  kit_name_selection: "&7Please choose a recognizable name for the kit, such as 'Tank', 'Healer' ecc..."
 
   arena_already_exists: "&cAn arena with the name &6{0} &calready exists."
   arena_not_found: "&cArena &6{0} &cnot found."
