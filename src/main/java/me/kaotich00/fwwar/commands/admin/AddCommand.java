@@ -1,6 +1,7 @@
 package me.kaotich00.fwwar.commands.admin;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.exceptions.EconomyException;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
@@ -11,6 +12,7 @@ import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -57,6 +59,26 @@ public class AddCommand extends AdminCommand {
             return;
         }
 
+        Double price = Double.parseDouble(args[2]);
+        try {
+            if(!nation.getAccount().canPayFromHoldings(price)) {
+                Message.NATION_NOT_ENOUGH_MONEY.send(sender, nation.getName());
+                return;
+            }
+
+            nation.getAccount().withdraw(price, "Joining the war");
+            Message.NATION_PAYED_ENTRY.send(sender, nation.getName(), price);
+
+            for(Resident resident: nation.getResidents()) {
+                Player player = resident.getPlayer();
+                if(player != null) {
+                    Message.NATION_PAYED_ENTRY.send(player, nation.getName(), price);
+                }
+            }
+        } catch (EconomyException e) {
+            return;
+        }
+
         currentWar.addNation(nation);
 
         for(Town town: nation.getTowns()) {
@@ -77,7 +99,7 @@ public class AddCommand extends AdminCommand {
 
     @Override
     public String getUsage() {
-        return "/war add <nation>";
+        return "/war add <nation> <price>";
     }
 
     @Override
@@ -87,7 +109,7 @@ public class AddCommand extends AdminCommand {
 
     @Override
     public Integer getRequiredArgs() {
-        return 2;
+        return 3;
     }
 
 }

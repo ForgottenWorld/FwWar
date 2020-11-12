@@ -24,6 +24,10 @@ public class ArenaCommand extends AdminCommand {
                 ArenaEditCommand editCommand = new ArenaEditCommand();
                 editCommand.onCommand(sender, args);
                 break;
+            case CommandUtils.ARENA_DELETE_COMMAND:
+                ArenaDeleteCommand deleteCommand = new ArenaDeleteCommand();
+                deleteCommand.onCommand(sender, args);
+                break;
         }
     }
 
