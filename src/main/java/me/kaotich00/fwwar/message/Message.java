@@ -84,7 +84,8 @@ public enum Message {
     NO_LONGER_PART_OF_WAR("no_longer_part_of_war", true),
 
     /* Miscellaneous */
-    CONFIG_RELOADED("config_reloaded", true);
+    CONFIG_RELOADED("config_reloaded", true),
+    ECHELON_MISSING("echelon_missing", true),;
 
     private final String message;
     private final boolean showPrefix;

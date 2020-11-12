@@ -48,6 +48,7 @@ public class WarCommandManager implements TabExecutor {
         this.commandRegistry.put(CommandUtils.WAR_STOP_COMMAND, new StopCommand());
         this.commandRegistry.put(CommandUtils.WAR_INFO_COMMAND, new InfoCommand());
         this.commandRegistry.put(CommandUtils.WAR_ARENA_COMMAND, new ArenaCommand());
+        this.commandRegistry.put(CommandUtils.WAR_DETECT_COMMAND, new DetectCommand());
     }
 
     private Command getCommand(String name) {

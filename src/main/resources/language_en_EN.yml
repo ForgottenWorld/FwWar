@@ -132,3 +132,4 @@ strings:
   no_longer_part_of_war: "&cSorry, it seems like you are no longer part of the war."
 
   config_reloaded: "&aSuccessfully reloaded config.yml"
+  echelon_missing: '&cFwEchelon missing'

@@ -150,3 +150,4 @@ strings:
   no_longer_part_of_war: "&cCi dispiace, sembra che tu non faccia piu' parte della guerra."
 
   config_reloaded: "&aRicaricato con successo il file config.yml"
+  echelon_missing: "&cFwEchelon non trovato"

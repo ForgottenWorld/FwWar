@@ -1,6 +1,7 @@
 package me.kaotich00.fwwar;
 
 import me.kaotich00.fwwar.commands.WarCommandManager;
+import me.kaotich00.fwwar.integration.DiscourseParser;
 import me.kaotich00.fwwar.listener.ArenaCreationListener;
 import me.kaotich00.fwwar.listener.PlayerListener;
 import me.kaotich00.fwwar.locale.LocalizationManager;
