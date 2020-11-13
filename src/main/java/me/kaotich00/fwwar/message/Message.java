@@ -85,7 +85,8 @@ public enum Message {
 
     /* Miscellaneous */
     CONFIG_RELOADED("config_reloaded", true),
-    ECHELON_MISSING("echelon_missing", true),;
+    ECHELON_MISSING("echelon_missing", true),
+    IMPORTER_INFO("importer_info", false);
 
     private final String message;
     private final boolean showPrefix;

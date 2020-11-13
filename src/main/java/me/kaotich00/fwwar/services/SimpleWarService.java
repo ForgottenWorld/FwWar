@@ -57,6 +57,10 @@ public class SimpleWarService implements WarService {
         SimpleScoreboardService.getInstance().removeScoreboards();
     }
 
+    public void deleteWar() {
+        this.currentWar = null;
+    }
+
     public int getWarTaskId() {
         return this.warTaskId;
     }

@@ -119,18 +119,11 @@ public class RandomFactionWar extends BoltWar {
 
                         for(Map.Entry<UUID, Location> entry: playersToTeleport.entrySet()) {
                             UUID playerUUID = entry.getKey();
-                            Player player = Bukkit.getPlayer(playerUUID);
-                            if(player != null) {
-                                bossBar.removePlayer(player);
-                            }
-                        }
-
-                        for(Map.Entry<UUID, Location> entry: playersToTeleport.entrySet()) {
-                            UUID playerUUID = entry.getKey();
                             Location location = entry.getValue();
 
                             Player player = Bukkit.getPlayer(playerUUID);
                             if(player != null) {
+                                bossBar.removePlayer(player);
                                 player.teleport(location);
                             }
                         }

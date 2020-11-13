@@ -151,3 +151,4 @@ strings:
 
   config_reloaded: "&aRicaricato con successo il file config.yml"
   echelon_missing: "&cFwEchelon non trovato"
+  importer_info: "&e(Importatore) -> &7{0}"

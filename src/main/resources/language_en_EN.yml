@@ -133,3 +133,4 @@ strings:
 
   config_reloaded: "&aSuccessfully reloaded config.yml"
   echelon_missing: '&cFwEchelon missing'
+  importer_info: '&2[Importer] -> &7{0}'

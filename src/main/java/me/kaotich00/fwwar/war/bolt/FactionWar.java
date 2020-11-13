@@ -135,6 +135,7 @@ public class FactionWar extends BoltWar {
 
                             Player player = Bukkit.getPlayer(playerUUID);
                             if(player != null) {
+                                bossBar.removePlayer(player);
                                 player.teleport(location);
                             }
                         }
