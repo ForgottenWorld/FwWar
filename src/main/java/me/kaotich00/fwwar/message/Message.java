@@ -34,6 +34,7 @@ public enum Message {
     NATION_CANNOT_JOIN_WAR("war_nation_cannot_join_war", true),
     NATION_JOIN_WAR("war_nation_join_war", true),
     TOWN_CONQUER_STATUS("war_town_conquer_status", true),
+    TOWN_DEFEATED("war_town_defeated", true),
     NATION_DEFEATED("war_nation_defeated", true),
     WAR_ENDED("war_ended", true),
     WAR_DOES_NOT_SUPPORT_KIT("war_does_not_support_kit", true),
@@ -54,6 +55,9 @@ public enum Message {
     WAR_CREATION_BOLT_WAR("war_creation_bolt_war", false),
     WAR_CREATION_BOLT_WAR_FACTION("war_creation_bolt_war_faction", false),
     WAR_CREATION_BOLT_WAR_RANDOM("war_creation_bolt_war_random", false),
+    WAR_CREATION_ASSAULT_WAR("war_creation_assault_war", false),
+    WAR_CREATION_ASSAULT_WAR_CLASSIC("war_creation_assault_war_classic", false),
+    WAR_CREATION_ASSAULT_WAR_SIEGE("war_creation_assault_war_siege", false),
 
     KIT_ALREADY_EXIST("kit_already_exists", true),
     KIT_CREATED("kit_created", true),

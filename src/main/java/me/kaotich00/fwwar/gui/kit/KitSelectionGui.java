@@ -4,6 +4,7 @@ import com.github.stefvanschie.inventoryframework.Gui;
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
+import me.kaotich00.fwwar.api.war.KitWar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.kit.Kit;
@@ -52,7 +53,7 @@ public class KitSelectionGui {
 
                 Optional<Kit> optSelectedKit = SimpleWarService.getInstance().getKitForName(currentWar.getWarType(), kitName);
                 optSelectedKit.ifPresent(selectedKit -> {
-                    currentWar.setPlayerKit(player, selectedKit);
+                    ((KitWar)currentWar).setPlayerKit(player, selectedKit);
                     Message.KIT_SELECTED.send(player, kitName);
                 });
 

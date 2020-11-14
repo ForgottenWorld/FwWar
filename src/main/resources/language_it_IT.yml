@@ -2,7 +2,6 @@ strings:
   fwwar_prefix: "&8[&eFw&6&lWar&8]"
   help_message: |+
     &a&l&m---------------------------------------------
-
     &7
     Ciao, qua di seguito puoi trovare la lista dei comandi disponibili:
     &8 >> &e/war new &6- Crea una nuova guerra
@@ -16,7 +15,6 @@ strings:
     &8 >> &b/war arena new <nome> &3- Crea una nuova arena
     &8 >> &b/war arena edit <nome> &3- Modifica un'arena
     &8 >> &b/war arena delete <nome> &3- Elimina un'arena
-
     &a
     &l&m---------------------------------------------
 
@@ -54,53 +52,75 @@ strings:
   war_cannot_start_kit_required: "&cLa guerra non puo' iniziare, il seguente player non ha selezionato un kit. Per piacere scrivi &e/war chooseKit &cper selezionarne uno"
   war_cannot_start_arena_required: "&cNon puoi iniziare la guerra senza arena. Dovresti crearne almeno una."
   war_will_began: "&aLa guerra iniziera' fra &6{0} &asecondi"
+  war_town_defeated: "&cLa citta' &6{0} &c ha perso tutti i suoi cittadini! La citta' e' stata sconfitta in guerra."
   war_creation_menu: |+
     &e&m&l---------------------------------------------
-
     &a
     &l Benvenuto nel menu creazione della guerra
     &7 Seleziona una delle seguenti metodologie:
     &e&l [1] &6&lGuerra lampo
-    &e&l [2] &6&lGuerra d'assalto &c[Al momento non disponibile]
-
+    &e&l [2] &6&lGuerra d'assalto
     &e
     &m&l---------------------------------------------"
   war_creation_bolt_war: |+
     &3&m&l---------------------------------------------
-
     &a
     &l Hai selezionato &6Guerra lampo!
     &7 Seleziona una modalita' per la guerra lampo:
     &b&l [1] &3&lKit fazione
     &b&l [2] &3&lKit random
-
     &3
     &m&l---------------------------------------------
   war_creation_bolt_war_faction: |+
     &a&m&l---------------------------------------------
-
     &a
     &l Creazione completata per la guerra &6Kit fazione
     &7
-    Ora che hai creato la guerra, segui gli step seguenti:
+     Ora che hai creato la guerra, segui gli step seguenti:
     &b&l 1) &7Aggiungi le nazioni partecipanti con il comando &e/war add <nazione> <prezzo>
     &b&l 2) &7Crea o modifica i kit con il comando &e/war kit
     &b&l 3) &7Quando hai completato i due punti precedenti conferma la guerra con il comando &e/war confirm
-
     &a
     &m&l---------------------------------------------
   war_creation_bolt_war_random: |+
     &a&m&l---------------------------------------------
-
     &a
     &l Creazione completata per la guerra &6Kit random
     &7
-    Ora che hai creato la guerra, segui gli step seguenti:
+     Ora che hai creato la guerra, segui gli step seguenti:
     &b&l 1) &7Aggiungi le nazioni partecipanti con il comando &e/war add <nazione> <prezzo>
     &b&l 2) &7Conferma la guerra con il comando &e/war confirm
-
     &a
     &m&l---------------------------------------------
+  war_creation_assault_war: |+
+    &3&m&l---------------------------------------------
+    &a
+    &l Hai selezionato &6Guerra d'assalto!
+    &7 Seleziona una modalità per la guerra d'assalto:
+    &b&l [1] &3&lGuerra classica (navale,aeronavale,campale)
+    &b&l [2] &b&lGuerra d'assedio
+    &3&m
+    &l---------------------------------------------"
+  war_creation_assault_war_classic: |+
+    &a&m&l---------------------------------------------
+    &a
+    &l &6Guerra classica &acreata con successo
+    &7
+     Ora che hai creato la guerra, segui gli step seguenti:
+    &b&l 1) &7Aggiungi le nazioni partecipanti con il comando &e/war add <nazione> <prezzo>
+    &b&l 2) &7Conferma la guerra con il comando &e/war confirm
+    &a&m
+    &l---------------------------------------------
+  war_creation_assault_war_siege: |+
+    &a&m&l---------------------------------------------
+    &a
+    &l&6Guerra d'assedio &acreata con successo
+    &7
+     Ora che hai creato la guerra, segui gli step seguenti:
+    &b&l 1) &7Aggiungi le nazioni partecipanti con il comando &e/war add <nazione> <prezzo>
+    &b&l 2) &7Conferma la guerra con il comando &e/war confirm
+    &a&m
+    &l---------------------------------------------
 
   kit_already_exists: "&cUn kit con questo nome &6{0} &cesiste gia'"
   kit_created: "&aKit creato con successo &6{0} &aRiuscirai ad editarlo fra qualche secondo."

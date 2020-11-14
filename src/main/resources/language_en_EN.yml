@@ -51,11 +51,13 @@ strings:
   war_cannot_start_kit_required: "&cCannot start war, the following player have not chosen a kit. Please type &e/war chooseKit &cto select one"
   war_cannot_start_arena_required: "&cCannot start the war. You should create at least one arena."
   war_will_began: "&aThe war will began in &6{0} &aseconds"
+  war_town_defeated: "&cThe town &6{0} &c lost all of his citizen! The town is defeated."
   war_creation_menu: |+
     &e&m&l---------------------------------------------
     &a
     &l Welcome to War Creation manager!
-    &7 Start by selecting one of the following war types:
+    &7
+    Start by selecting one of the following war types:
     &e&l [1] &6&lBolt war
     &e&l [2] &6&lAssault war &c[Currently unavailable]
     &e
@@ -63,29 +65,61 @@ strings:
   war_creation_bolt_war: |+
     &3&m&l---------------------------------------------
     &a&l You selected &6Bolt War!
-    &7 Please choose a gamemode for the war:
+    &7
+    Please choose a gamemode for the war:
     &b&l [1] &3&lFaction kit
     &b&l [2] &b&lRandom kits
     &3
     &m&l---------------------------------------------"
   war_creation_bolt_war_faction: |+
     "&a&m&l---------------------------------------------
-    &a&l Successfully created war of type &6Faction Kit
-    &7 Now that you have created the war, you may proceed as follows:
+    &a&l
+    Successfully created war of type &6Faction Kit
+    &7
+    Now that you have created the war, you may proceed as follows:
     &b&l 1) &7Add participant nations with command &e/war add <nation> <price>
     &b&l 2) &7Create or modify kit by typing &e/war kit
     &b&l 3) &7When you finished all of the above type &e/war confirm
     &a
     &m&l---------------------------------------------
   war_creation_bolt_war_random: |+
-   &a&m&l---------------------------------------------
-   &a
-   &l Successfully created war of type &6Random Faction Kit
-   &7 Now that you have created the war, you may proceed as follows:
-   &b&l 1) &7Add participant nations with command &e/war add <nation> <price>
-   &b&l 2) &7Confirm the war by typing &e/war confirm
-   &a
-   &m&l---------------------------------------------
+    &a&m&l---------------------------------------------
+    &a
+    &l Successfully created war of type &6Random Faction Kit
+    &7 Now that you have created the war, you may proceed as follows:
+    &b&l 1) &7Add participant nations with command &e/war add <nation> <price>
+    &b&l 2) &7Confirm the war by typing &e/war confirm
+    &a
+    &m&l---------------------------------------------
+  war_creation_assault_war: |+
+    &3&m&l---------------------------------------------
+    &a&l You selected &Assault War!
+    &7
+    Please choose a gamemode for the war:
+    &b&l [1] &3&lClassic War
+    &b&l [2] &b&lSiege War
+    &3
+    &m&l---------------------------------------------"
+  war_creation_assault_war_classic: |+
+    &a&m&l---------------------------------------------
+    &a&l
+    Successfully created war of type &6Classic War
+    &7
+    Now that you have created the war, you may proceed as follows:
+    &b&l 1) &7Add participant nations with command &e/war add <nation> <price>
+    &b&l 2) &7When you finished all of the above type &e/war confirm
+    &a
+    &m&l---------------------------------------------
+  war_creation_assault_war_siege: |+
+    &a&m&l---------------------------------------------
+    &a&l
+    Successfully created war of type &6Siege War
+    &7
+    Now that you have created the war, you may proceed as follows:
+    &b&l 1) &7Add participant nations with command &e/war add <nation> <price>
+    &b&l 2) &7When you finished all of the above type &e/war confirm
+    &a
+    &m&l---------------------------------------------
 
   kit_already_exists: "&cA kit for the name &6{0} &calready exists"
   kit_created: "&aSuccessfully created kit &6{0} &aYou will be able to edit it in a few seconds."

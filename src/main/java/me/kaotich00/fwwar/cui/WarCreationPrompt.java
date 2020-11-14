@@ -50,7 +50,7 @@ public class WarCreationPrompt implements ConversationAbandonedListener {
                 case 1:
                     return new BoltWarGamemode();
                 case 2:
-                    return Prompt.END_OF_CONVERSATION;
+                    return new AssaultWarGamemode();
             }
             return Prompt.END_OF_CONVERSATION;
         }
@@ -62,7 +62,7 @@ public class WarCreationPrompt implements ConversationAbandonedListener {
 
         @Override
         protected String getFailedValidationText(ConversationContext context, Number invalidInput) {
-            return "Input number must be equal or greater than 2";
+            return "Input number must be equal or lesser than 2";
         }
 
     }
@@ -104,7 +104,49 @@ public class WarCreationPrompt implements ConversationAbandonedListener {
 
         @Override
         protected String getFailedValidationText(ConversationContext context, Number invalidInput) {
-            return "Input number must be equal or greater than 2";
+            return "Input number must be equal or lesser than 2";
+        }
+
+    }
+
+    private class AssaultWarGamemode extends NumericPrompt {
+
+        @Override
+        public String getPromptText(ConversationContext context) {
+            String promptMessage = Message.WAR_CREATION_ASSAULT_WAR.asString();
+            return promptMessage;
+        }
+
+        @Override
+        protected Prompt acceptValidatedInput(ConversationContext context, Number input) {
+            SimpleWarService warService = SimpleWarService.getInstance();
+
+            Player player = (Player) context.getForWhom();
+            String promptMessage = "";
+
+            switch(input.intValue()) {
+                case 1:
+                    warService.setCurrentWar(WarFactory.getWarForType(WarTypes.ASSAULT_WAR_CLASSIC));
+                    promptMessage = Message.WAR_CREATION_ASSAULT_WAR_CLASSIC.asString();
+                    player.sendMessage(promptMessage);
+                    break;
+                case 2:
+                    warService.setCurrentWar(WarFactory.getWarForType(WarTypes.ASSAULT_WAR_CONQUEST));
+                    promptMessage = Message.WAR_CREATION_ASSAULT_WAR_SIEGE.asString();
+                    player.sendMessage(promptMessage);
+                    break;
+            }
+            return Prompt.END_OF_CONVERSATION;
+        }
+
+        @Override
+        protected boolean isNumberValid(ConversationContext context, Number input) {
+            return input.intValue() > 0 && input.intValue() <= 2;
+        }
+
+        @Override
+        protected String getFailedValidationText(ConversationContext context, Number invalidInput) {
+            return "Input number must be equal or lesser than 2";
         }
 
     }

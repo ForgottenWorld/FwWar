@@ -4,6 +4,7 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import fr.mrmicky.fastboard.FastBoard;
+import me.kaotich00.fwwar.api.war.KitWar;
 import me.kaotich00.fwwar.api.war.War;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -63,7 +64,8 @@ public class SimpleScoreboardService {
                 updateFactionKitScoreboard(currentWar);
                 break;
             case BOLT_WAR_RANDOM:
-                updateRandomFactionKitScoreboard(currentWar);
+            case ASSAULT_WAR_CLASSIC:
+                genericWarScoreboard(currentWar);
                 break;
         }
     }
@@ -112,7 +114,7 @@ public class SimpleScoreboardService {
                             lines.add("");
                             lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  War type: " + ChatColor.YELLOW + "Faction War");
                             lines.add("");
-                            lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  Your class: " + ChatColor.YELLOW + currentWar.getPlayerKit(player).get().getName());
+                            lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  Your class: " + ChatColor.YELLOW + ((KitWar)currentWar).getPlayerKit(player).get().getName());
                             lines.add("");
                             lines.add(ChatColor.AQUA + "  Top players: ");
                             if (currentWar.getKillCountsLeaderboard().size() == 0) {
@@ -143,7 +145,7 @@ public class SimpleScoreboardService {
 
     }
 
-    private void updateRandomFactionKitScoreboard(War currentWar) {
+    private void genericWarScoreboard(War currentWar) {
 
         for (Nation nation : currentWar.getParticipantsNations()) {
             for (Town town : nation.getTowns()) {
@@ -155,7 +157,7 @@ public class SimpleScoreboardService {
                         if (board != null) {
                             List<String> lines = new ArrayList<>();
                             lines.add("");
-                            lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  War type: " + ChatColor.YELLOW + "Random kit");
+                            lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  War type: " + ChatColor.YELLOW + currentWar.getWarType().name());
                             lines.add("");
                             lines.add(ChatColor.AQUA + "  Top players: ");
                             if (currentWar.getKillCountsLeaderboard().size() == 0) {

@@ -2,7 +2,6 @@ package me.kaotich00.fwwar.api.war;
 
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
-import me.kaotich00.fwwar.objects.kit.Kit;
 import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
 import org.bukkit.entity.Player;
@@ -62,20 +61,6 @@ public interface War {
      * @return true if the war support kits, false otherwise
      */
     boolean supportKits();
-
-    /**
-     * Set a specific Kit for the given Player
-     * @param player the Player to give the kit
-     * @param kit the kit to be given
-     */
-    void setPlayerKit(Player player, Kit kit);
-
-    /**
-     * Get a Kit for the given player
-     * @param player the Player to be searching for the Kit
-     * @return an Optional of Kit. If no kit is found, Optional.Empty() is returned
-     */
-    Optional<Kit> getPlayerKit(Player player);
 
     /**
      * Check wheter or not the war has a participants limit
