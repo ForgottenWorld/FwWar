@@ -4,12 +4,17 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import fr.mrmicky.fastboard.FastBoard;
+import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.KitWar;
 import me.kaotich00.fwwar.api.war.War;
+import me.kaotich00.fwwar.war.assault.AssaultWar;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.*;
 
@@ -66,6 +71,9 @@ public class SimpleScoreboardService {
             case BOLT_WAR_RANDOM:
             case ASSAULT_WAR_CLASSIC:
                 genericWarScoreboard(currentWar);
+                break;
+            case ASSAULT_WAR_CONQUEST:
+                siegeWarScoreboard();
                 break;
         }
     }
@@ -188,85 +196,61 @@ public class SimpleScoreboardService {
 
     }
 
-    /*public void updateWarScoreBoard() {
+    public void siegeWarScoreboard() {
 
-        Scoreboard scoreboard = this.warScoreBoard;
-        Objective objective = scoreboard.getObjective("trackWarStatus");
         FileConfiguration defaultConfig = Fwwar.getDefaultConfig();
+        AssaultWar currentWar = (AssaultWar) SimpleWarService.getInstance().getCurrentWar().get();
 
-        for (String s : scoreboard.getEntries()) {
-            scoreboard.resetScores(s);
-        }
+        for (Nation nation : currentWar.getParticipantsNations()) {
+            for (Town town : nation.getTowns()) {
+                for (Resident resident : town.getResidents()) {
+                    Player player = Bukkit.getPlayer(resident.getUUID());
+                    if (player != null) {
+                        FastBoard board = this.boards.get(player.getUniqueId());
 
-        int slot = 40;
-        int spacesLenght = 1;
+                        if (board != null) {
+                            List<String> lines = new ArrayList<>();
+                            lines.add(ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.STRIKETHROUGH + String.join("", Collections.nCopies(35, "-")));
+                            lines.add("");
+                            lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  War type: " + ChatColor.YELLOW + currentWar.getWarType().name());
+                            lines.add("");
+                            for (Nation participant : currentWar.getParticipantsNations()) {
+                                lines.add(org.bukkit.ChatColor.YELLOW + "  >> Nation: " + org.bukkit.ChatColor.GOLD + participant.getName());
+                                for (Town town2 : currentWar.getTownsForNation(participant)) {
+                                    int townHP = defaultConfig.getInt("war.town_max_hp");
+                                    Float remainingLife = townHP - SimplePlotService.getInstance().getCorePlotOfTown(town2.getUuid()).get().getConquestPercentage();
+                                    lines.add(org.bukkit.ChatColor.DARK_AQUA + "    >> Town: " + org.bukkit.ChatColor.AQUA + town2.getName() + " - " + remainingLife + "%");
+                                }
+                                lines.add("");
+                            }
 
-        Score score_header = objective.getScore(ChatColor.YELLOW + String.join("", Collections.nCopies(27, "-")));
-        score_header.setScore(slot);
-        slot--;
+                            lines.add(ChatColor.AQUA + "  Top players: ");
+                            if (currentWar.getKillCountsLeaderboard().size() == 0) {
+                                lines.add(ChatColor.GRAY + "  No records yet");
+                            }
+                            for (Map.Entry<UUID, Integer> entry : currentWar.getKillCountsLeaderboard().entrySet()) {
+                                String playerName = "";
+                                Player killer = Bukkit.getPlayer(entry.getKey());
+                                if (killer == null) {
+                                    OfflinePlayer killerOffline = Bukkit.getOfflinePlayer(entry.getKey());
+                                    playerName = killerOffline.getName();
+                                } else {
+                                    playerName = killer.getName();
+                                }
 
-        Score score_blank = objective.getScore(String.join("", Collections.nCopies(spacesLenght++, " ")));
-        score_blank.setScore(slot);
-        slot--;
+                                lines.add(ChatColor.DARK_AQUA + "  >> " + ChatColor.AQUA + "" + ChatColor.BOLD + playerName + ChatColor.GOLD + " - " + entry.getValue() + " kills");
+                            }
+                            lines.add("");
+                            lines.add(ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.STRIKETHROUGH + String.join("", Collections.nCopies(35, "-")));
 
-        Optional<War> optWar = SimpleWarService.getInstance().getCurrentWar();
-        if (optWar.isPresent()) {
-            War war = optWar.get();
-            for (Nation participant : oldWar.getParticipantNations()) {
-                Score score_nation_name = objective.getScore(org.bukkit.ChatColor.YELLOW + "Nation: " + org.bukkit.ChatColor.GOLD + participant.getName());
-                score_nation_name.setScore(slot);
-                slot = slot - 2;
-                for (Town town : oldWar.getParticipantTownsForNation(participant)) {
-                    int townHP = defaultConfig.getInt("war.town_max_hp");
-                    Float remainingLife = townHP - SimplePlotService.getInstance().getCorePlotOfTown(town.getUuid()).get().getConquestPercentage();
-                    Score score_town_name = objective.getScore(org.bukkit.ChatColor.DARK_AQUA + "Town: " + org.bukkit.ChatColor.AQUA + town.getName() + " - " + remainingLife + "%");
-                    score_town_name.setScore(slot);
-                    slot--;
-                }
-
-                score_blank = objective.getScore(String.join("", Collections.nCopies(spacesLenght++, " ")));
-                score_blank.setScore(slot);
-                slot--;
-            }
-        }
-
-        Score score_footer = objective.getScore(ChatColor.YELLOW + String.join("", Collections.nCopies(26, "-")));
-        score_footer.setScore(slot);
-
-    }*/
-
-    /*public void initWarScoreboard() {
-        ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
-        Scoreboard scoreboard = scoreboardManager.getNewScoreboard();
-        Objective objective = scoreboard.registerNewObjective("trackWarStatus","dummy", ChatColor.YELLOW + "Fw" + ChatColor.GOLD + ChatColor.BOLD + "War");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-        this.warScoreBoard = scoreboard;
-
-        OldWar oldWar = SimpleWarService.getInstance().getCurrentWar().get();
-        for(Nation participant: oldWar.getParticipantNations()) {
-            for(Town town: oldWar.getParticipantTownsForNation(participant)) {
-                for(Resident resident: town.getResidents()) {
-                    Player player = Bukkit.getPlayer(resident.getName());
-                    if(player != null) {
-                        player.setScoreboard(this.warScoreBoard);
-                        this.scoreboards.add(player.getUniqueId());
+                            board.updateLines(
+                                    lines
+                            );
+                        }
                     }
                 }
             }
         }
-
-        updateWarScoreBoard();
     }
-
-    public void destroyWarScoreboard() {
-        for(UUID uuid : this.scoreboards) {
-            Player player = Bukkit.getServer().getPlayer(uuid);
-            if(player != null) {
-                player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-            }
-        }
-        this.scoreboards = new ArrayList<>();
-    }*/
 
 }

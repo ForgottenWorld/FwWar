@@ -9,11 +9,19 @@ import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.message.Message;
+import me.kaotich00.fwwar.objects.plot.CorePlot;
+import me.kaotich00.fwwar.services.SimplePlotService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
+import me.kaotich00.fwwar.war.assault.SiegeWar;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public class AddCommand extends AdminCommand {
@@ -57,6 +65,26 @@ public class AddCommand extends AdminCommand {
         } catch (NotRegisteredException e) {
             Message.NATION_DOES_NOT_EXISTS.send(sender);
             return;
+        }
+
+        if(SimpleWarService.getInstance().getCurrentWar().get() instanceof SiegeWar) {
+            Set<Town> missingTowns = new HashSet<>();
+
+            SimplePlotService plotService = SimplePlotService.getInstance();
+            for (Town town : nation.getTowns()) {
+                Optional<CorePlot> townCorePlot = plotService.getCorePlotOfTown(town.getUuid());
+                if (!townCorePlot.isPresent()) {
+                    missingTowns.add(town);
+                }
+            }
+
+            if (missingTowns.size() > 0) {
+                Message.WAR_CANNOT_START_NOT_ENOUGH_CORE_PLOTS.send(sender);
+                for (Town town : missingTowns) {
+                    sender.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "  >> " + ChatColor.AQUA + "" + ChatColor.BOLD + town.getName());
+                }
+                return;
+            }
         }
 
         Double price = Double.parseDouble(args[2]);

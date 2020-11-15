@@ -4,6 +4,7 @@ import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.utils.WarTypes;
 import me.kaotich00.fwwar.war.assault.ClassicWar;
+import me.kaotich00.fwwar.war.assault.SiegeWar;
 import me.kaotich00.fwwar.war.bolt.FactionWar;
 import me.kaotich00.fwwar.war.bolt.RandomFactionWar;
 
@@ -19,6 +20,8 @@ public class WarFactory {
         switch (warType) {
             case ASSAULT_WAR_CLASSIC:
                 return new ClassicWar();
+            case ASSAULT_WAR_CONQUEST:
+                return new SiegeWar();
             case BOLT_WAR_FACTION:
                 return new FactionWar();
             case BOLT_WAR_RANDOM:

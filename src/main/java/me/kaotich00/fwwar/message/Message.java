@@ -50,6 +50,7 @@ public enum Message {
     WAR_PLAYER_DEFEATED("war_player_defeated", true),
     WAR_CANNOT_START_KIT_REQUIRED("war_cannot_start_kit_required", true),
     WAR_CANNOT_START_ARENA_REQUIRED("war_cannot_start_arena_required", true),
+    WAR_CANNOT_START_NOT_ENOUGH_CORE_PLOTS("war_cannot_start_not_enough_core_plot", true),
     WAR_WILL_BEGAN("war_will_began", true),
     WAR_CREATION_MENU("war_creation_menu", false),
     WAR_CREATION_BOLT_WAR("war_creation_bolt_war", false),

@@ -50,6 +50,7 @@ strings:
   war_player_defeated: "&cYou have been killed in the war. Teleporting to town spawn..."
   war_cannot_start_kit_required: "&cCannot start war, the following player have not chosen a kit. Please type &e/war chooseKit &cto select one"
   war_cannot_start_arena_required: "&cCannot start the war. You should create at least one arena."
+  war_cannot_start_not_enough_core_plot: "&cCannot add the nation. The following towns are missing the core plot:"
   war_will_began: "&aThe war will began in &6{0} &aseconds"
   war_town_defeated: "&cThe town &6{0} &c lost all of his citizen! The town is defeated."
   war_creation_menu: |+
