@@ -5,9 +5,9 @@ import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.Fwwar;
-import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.services.SimpleScoreboardService;
+import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.task.WarPlotConquestTask;
 import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
@@ -46,7 +46,7 @@ public class SiegeWar extends AssaultWar {
         TownyAPI townyAPI = TownyAPI.getInstance();
 
         // Check if the required amount of Nations is present
-        /*if(getParticipantsNations().size() < 2) {
+        if(getParticipantsNations().size() < 2) {
             Message.NOT_ENOUGH_NATIONS.broadcast();
             return;
         }
@@ -64,7 +64,7 @@ public class SiegeWar extends AssaultWar {
         if(!areThereEnemies) {
             Message.NO_ENEMY_NATION.broadcast();
             return;
-        }*/
+        }
 
         setWarStatus(WarStatus.STARTED);
         Message.WAR_STARTED.broadcast();
@@ -74,7 +74,7 @@ public class SiegeWar extends AssaultWar {
         FileConfiguration defaultConfig = Fwwar.getDefaultConfig();
         Long seconds = defaultConfig.getLong("war.plot_check_time") * 20;
 
-        warTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), this), seconds, seconds);
+        SimpleWarService.getInstance().setWarTaskId(Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), this), seconds, seconds));
     }
 
     @Override

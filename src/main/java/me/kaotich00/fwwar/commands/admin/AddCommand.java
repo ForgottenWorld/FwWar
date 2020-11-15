@@ -6,6 +6,7 @@ import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
+import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.message.Message;
@@ -17,6 +18,7 @@ import me.kaotich00.fwwar.war.assault.SiegeWar;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -84,6 +86,14 @@ public class AddCommand extends AdminCommand {
                     sender.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "  >> " + ChatColor.AQUA + "" + ChatColor.BOLD + town.getName());
                 }
                 return;
+            }
+
+            FileConfiguration defaultConfig = Fwwar.getDefaultConfig();
+
+            for(Town town: nation.getTowns()) {
+                plotService.getCorePlotOfTown(town.getUuid()).ifPresent(corePlot -> {
+                    corePlot.setConquestPercentage(0);
+                });
             }
         }
 

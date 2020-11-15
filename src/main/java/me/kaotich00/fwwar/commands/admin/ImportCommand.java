@@ -1,27 +1,14 @@
 package me.kaotich00.fwwar.commands.admin;
 
-import com.palmergames.bukkit.towny.TownyAPI;
-import com.palmergames.bukkit.towny.exceptions.EconomyException;
-import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
-import com.palmergames.bukkit.towny.object.Nation;
-import com.palmergames.bukkit.towny.object.Resident;
-import it.forgottenworld.fwechelonapi.FWEchelonApi;
-import it.forgottenworld.fwechelonapi.discourse.DiscoursePost;
-import it.forgottenworld.fwechelonapi.services.DiscourseService;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.integration.DiscourseImporter;
-import me.kaotich00.fwwar.integration.DiscourseParser;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
-import me.kaotich00.fwwar.utils.WarTypes;
-import me.kaotich00.fwwar.war.WarFactory;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.util.Map;
 
 public class ImportCommand extends AdminCommand {
 

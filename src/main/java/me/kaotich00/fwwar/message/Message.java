@@ -35,6 +35,7 @@ public enum Message {
     NATION_JOIN_WAR("war_nation_join_war", true),
     TOWN_CONQUER_STATUS("war_town_conquer_status", true),
     TOWN_DEFEATED("war_town_defeated", true),
+    TOWN_DEFEATED_SIEGE_WAR("war_town_defeated_siege_war", true),
     NATION_DEFEATED("war_nation_defeated", true),
     WAR_ENDED("war_ended", true),
     WAR_DOES_NOT_SUPPORT_KIT("war_does_not_support_kit", true),

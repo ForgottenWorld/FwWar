@@ -29,6 +29,12 @@ public interface War {
     void removeNation(Nation nation);
 
     /**
+     * Remove a given Town from the War.
+     * @param town the Town to be removed
+     */
+    void removeTown(Town town);
+
+    /**
      * Get a list of participants Nations to the war.
      * @return a List of Nation
      */

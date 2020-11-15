@@ -10,6 +10,7 @@ import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.plot.CorePlot;
 import me.kaotich00.fwwar.services.SimplePlotService;
+import me.kaotich00.fwwar.services.SimpleScoreboardService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.war.assault.AssaultWar;
 import org.bukkit.Bukkit;
@@ -19,6 +20,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class WarPlotConquestTask implements Runnable {
@@ -40,7 +42,10 @@ public class WarPlotConquestTask implements Runnable {
 
         boolean shouldWarEnd = false;
 
-        for(Town town: war.getParticipantsTowns()) {
+        Iterator<Town> iterator = war.getParticipantsTowns().iterator();
+        while(iterator.hasNext()) {
+            Town town = iterator.next();
+
             Nation nation = null;
             try {
                 nation = town.getNation();
@@ -107,18 +112,21 @@ public class WarPlotConquestTask implements Runnable {
                 corePlot.setConquestPercentage(corePlot.getConquestPercentage() + damage);
 
                 int townHP = defaultConfig.getInt("war.town_max_hp");
-                Message.TOWN_CONQUER_STATUS.broadcast(town.getName(), townHP - corePlot.getConquestPercentage());
+                //Message.TOWN_CONQUER_STATUS.broadcast(town.getName(), townHP - corePlot.getConquestPercentage());
 
                 if(corePlot.getConquestPercentage() >= townHP) {
                     try {
                         war.setTownDefeated(town.getNation(), town);
+                        war.removeTown(town);
+                        Message.TOWN_DEFEATED_SIEGE_WAR.broadcast(town.getName());
                     } catch (NotRegisteredException e) {
                         e.printStackTrace();
                     }
                 }
 
-                if(!war.getParticipantsNations().contains(nation)) {
+                if(war.getTownsForNation(nation).size() == 0) {
                     Message.NATION_DEFEATED.broadcast(nation.getName());
+                    war.removeNation(nation);
                 }
 
                 /* Check if the required amount of Nations is present */
@@ -146,6 +154,8 @@ public class WarPlotConquestTask implements Runnable {
 
         if(shouldWarEnd) {
             SimpleWarService.getInstance().stopWar();
+        } else {
+            SimpleScoreboardService.getInstance().updateScoreboards();
         }
     }
 

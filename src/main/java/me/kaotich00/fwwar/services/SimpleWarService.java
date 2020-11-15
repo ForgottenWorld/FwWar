@@ -71,6 +71,10 @@ public class SimpleWarService implements WarService {
         return this.warTaskId;
     }
 
+    public void setWarTaskId(int warTaskId) {
+        this.warTaskId = warTaskId;
+    }
+
     public void addKit(WarTypes warType, Kit kit){
         if(!this.kits.containsKey(warType)) {
             this.kits.put(warType, new HashMap<>());

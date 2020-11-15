@@ -53,6 +53,7 @@ strings:
   war_cannot_start_not_enough_core_plot: "&cCannot add the nation. The following towns are missing the core plot:"
   war_will_began: "&aThe war will began in &6{0} &aseconds"
   war_town_defeated: "&cThe town &6{0} &c lost all of his citizen! The town is defeated."
+  war_town_defeated_siege_war: "&cThe town &6{0} &c has been conquered."
   war_creation_menu: |+
     &e&m&l---------------------------------------------
     &a

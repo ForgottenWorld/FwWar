@@ -5,19 +5,28 @@ import com.palmergames.bukkit.towny.exceptions.EconomyException;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
+import com.palmergames.bukkit.towny.object.Town;
 import it.forgottenworld.fwechelonapi.FWEchelonApi;
 import it.forgottenworld.fwechelonapi.discourse.DiscoursePost;
 import it.forgottenworld.fwechelonapi.services.DiscourseService;
+import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.message.Message;
+import me.kaotich00.fwwar.objects.plot.CorePlot;
+import me.kaotich00.fwwar.services.SimplePlotService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarTypes;
 import me.kaotich00.fwwar.war.WarFactory;
+import me.kaotich00.fwwar.war.assault.SiegeWar;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public class DiscourseImporter {
 
@@ -68,6 +77,32 @@ public class DiscourseImporter {
                     Nation nation = townyAPI.getDataSource().getNation(nationName);
 
                     Message.IMPORTER_INFO.send(sender, "Adding nation " + ChatColor.GREEN + nation.getName() + ChatColor.GRAY + " to participants");
+
+                    if(SimpleWarService.getInstance().getCurrentWar().get() instanceof SiegeWar) {
+                        Set<Town> missingTowns = new HashSet<>();
+
+                        SimplePlotService plotService = SimplePlotService.getInstance();
+                        for (Town town : nation.getTowns()) {
+                            Optional<CorePlot> townCorePlot = plotService.getCorePlotOfTown(town.getUuid());
+                            if (!townCorePlot.isPresent()) {
+                                missingTowns.add(town);
+                            }
+                        }
+
+                        if (missingTowns.size() > 0) {
+                            Message.WAR_CANNOT_START_NOT_ENOUGH_CORE_PLOTS.send(sender);
+                            for (Town town : missingTowns) {
+                                sender.sendMessage(net.md_5.bungee.api.ChatColor.DARK_AQUA + "" + net.md_5.bungee.api.ChatColor.BOLD + "  >> " + net.md_5.bungee.api.ChatColor.AQUA + "" + net.md_5.bungee.api.ChatColor.BOLD + town.getName());
+                            }
+                            return;
+                        }
+
+                        for(Town town: nation.getTowns()) {
+                            plotService.getCorePlotOfTown(town.getUuid()).ifPresent(corePlot -> {
+                                corePlot.setConquestPercentage(0);
+                            });
+                        }
+                    }
 
                     Double price = Double.parseDouble(parsedValues.get("prezzo").replace("z", ""));
                     if(!nation.getAccount().canPayFromHoldings(price)) {

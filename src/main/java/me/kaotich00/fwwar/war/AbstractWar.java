@@ -32,6 +32,11 @@ public abstract class AbstractWar implements War {
     }
 
     @Override
+    public void removeTown(Town town) {
+        this.players.remove(town);
+    }
+
+    @Override
     public List<Nation> getParticipantsNations() {
         return nations;
     }
