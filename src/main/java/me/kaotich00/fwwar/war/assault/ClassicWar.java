@@ -1,4 +1,4 @@
-package me.kaotich00.fwwar.war.bolt;
+package me.kaotich00.fwwar.war.assault;
 
 import com.destroystokyo.paper.Title;
 import com.palmergames.bukkit.towny.TownyAPI;
@@ -10,44 +10,37 @@ import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.arena.Arena;
-import me.kaotich00.fwwar.objects.kit.Kit;
 import me.kaotich00.fwwar.services.SimpleArenaService;
 import me.kaotich00.fwwar.services.SimpleScoreboardService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.*;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class RandomFactionWar extends BoltWar {
+public class ClassicWar extends AssaultWar {
 
-    private Map<UUID, Kit> playerKits;
-
-    public RandomFactionWar() {
+    public ClassicWar() {
         this.setWarStatus(WarStatus.CREATED);
         this.nations = new ArrayList<>();
-        this.playerKits = new HashMap<>();
         this.players = new HashMap<>();
         this.deathQueue = new ArrayList<>();
         this.killCount = new HashMap<>();
+        this.townsForNation = new HashMap<>();
     }
 
     @Override
     public String getDescription() {
-        return "The faction kit war consists of two nations facing each other in a merciless combat with random kits! Pick a class and kill every opponent.";
+        return "Classic war, wins the nation who kills everyone in the enemy nation or the most players if the time runs out";
     }
 
     @Override
     public WarTypes getWarType() {
-        return WarTypes.BOLT_WAR_RANDOM;
+        return WarTypes.ASSAULT_WAR_CLASSIC;
     }
 
     @Override
@@ -60,8 +53,6 @@ public class RandomFactionWar extends BoltWar {
             setWarStatus(WarStatus.STARTED);
 
             Iterator<Town> iterator = this.players.keySet().iterator();
-            Kit kit = generateRandomKit();
-
             Nation firstNation = this.nations.get(0);
             Map<UUID, Location> playersToTeleport = new HashMap<>();
 
@@ -76,12 +67,6 @@ public class RandomFactionWar extends BoltWar {
                     Resident resident = TownyAPI.getInstance().getDataSource().getResident(player.getName());
 
                     if(player != null) {
-                        player.getInventory().clear();
-
-                        for(ItemStack item: kit.getItemsList()) {
-                            player.getInventory().addItem(item);
-                        }
-
                         Location playerSpawn = firstNation.equals(resident.getTown().getNation()) ? warArena.getLocation(LocationType.FIRST_NATION_SPAWN_POINT) : warArena.getLocation(LocationType.SECOND_NATION_SPAWN_POINT);
                         Location playerBattle = firstNation.equals(resident.getTown().getNation()) ? warArena.getLocation(LocationType.FIRST_NATION_BATTLE_POINT) : warArena.getLocation(LocationType.SECOND_NATION_BATTLE_POINT);
 
@@ -140,11 +125,12 @@ public class RandomFactionWar extends BoltWar {
                             }
                         }
 
-                        bossBar.setTitle(MessageUtils.formatSuccessMessage("The war will began in " + t.getSecondsLeft() + " seconds"));
+                        bossBar.setTitle(MessageUtils.formatSuccessMessage("The match will began in " + t.getSecondsLeft() + " seconds"));
                         double progress = bossBar.getProgress() - 0.03 < 0.0 ? 0.0 : bossBar.getProgress() - 0.03;
                         bossBar.setProgress(progress);
                     });
             timer.scheduleTimer();
+
         } catch (NotRegisteredException e) {
             e.printStackTrace();
         }
@@ -178,62 +164,69 @@ public class RandomFactionWar extends BoltWar {
 
     @Override
     public boolean supportKits() {
-        return true;
+        return false;
     }
 
     @Override
-    public void setPlayerKit(Player player, Kit kit) {
-        this.playerKits.put(player.getUniqueId(), kit);
+    public boolean hasParticipantsLimit() {
+        return false;
     }
 
     @Override
-    public Optional<Kit> getPlayerKit(Player player) {
-        return Optional.ofNullable(this.playerKits.get(player.getUniqueId()));
+    public int getMaxAllowedParticipants() {
+        return 0;
     }
 
     @Override
     public void handlePlayerDeath(Player player) {
         addPlayerToDeathQueue(player);
 
+        TownyAPI townyAPI = TownyAPI.getInstance();
+
+        boolean shouldWarEnd = false;
+
         try {
-            TownyAPI townyAPI = TownyAPI.getInstance();
-
             Resident resident = townyAPI.getDataSource().getResident(player.getName());
-            Town town = resident.getTown();
+            Town residentTown = resident.getTown();
+            Nation residentNation = residentTown.getNation();
 
-            List<UUID> participants = getParticipantsForTown(town);
+            removePlayerFromWar(residentTown, resident.getUUID());
 
-            if(participants == null) {
-                return;
+            if(getParticipantsForTown(residentTown) == null) {
+                Message.TOWN_DEFEATED.broadcast(residentTown.getName());
+                setTownDefeated(residentNation, residentTown);
             }
 
-            if (!participants.contains(player.getUniqueId())) {
-                return;
+            if(getTownsForNation(residentNation).size() == 0) {
+                Message.NATION_DEFEATED.broadcast(residentNation.getName());
             }
 
-            removePlayerFromWar(town, player.getUniqueId());
-            Message.WAR_PLAYER_DEFEATED.send(player);
+            /* Check if the required amount of Nations is present */
+            if(getParticipantsNations().size() < 2) {
+                shouldWarEnd = true;
+            } else {
+                /* Check if at least 2 Nations are considered enemies between each other */
+                boolean areThereEnemies = false;
+                for(Nation n: getParticipantsNations()) {
+                    for(Nation plausibleEnemy: getParticipantsNations()) {
+                        if(n.hasEnemy(plausibleEnemy)) {
+                            areThereEnemies = true;
+                        }
+                    }
+                }
 
-            boolean shouldRemoveNation = true;
-            for(Town t: town.getNation().getTowns()) {
-                if(getParticipantsTowns().contains(t)){
-                    shouldRemoveNation = false;
+                if(!areThereEnemies) {
+                    shouldWarEnd = true;
                 }
             }
 
-            if(shouldRemoveNation) {
-                removeNation(town.getNation());
-                Message.NATION_DEFEATED.broadcast(town.getNation().getName());
-            }
-
-            if(getParticipantsNations().size() < 2) {
-                SimpleScoreboardService.getInstance().removeScoreboards();
+            if(shouldWarEnd) {
                 SimpleWarService.getInstance().stopWar();
             }
-
         } catch (NotRegisteredException e) {
-        } catch (TownyException e) {
+            e.printStackTrace();
         }
+
     }
 
 }

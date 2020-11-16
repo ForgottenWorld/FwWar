@@ -1,5 +1,7 @@
 package me.kaotich00.fwwar.message;
 
+import me.kaotich00.fwwar.Fwwar;
+import me.kaotich00.fwwar.locale.LocalizationManager;
 import me.kaotich00.fwwar.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,84 +11,97 @@ import java.util.Collections;
 
 public enum Message {
 
-    PREFIX(ChatColor.DARK_GRAY + "[" +
-            ChatColor.YELLOW + "Fw" +
-            ChatColor.GOLD + ChatColor.BOLD + "War" +
-            ChatColor.DARK_GRAY + "]", false),
+    PREFIX("fwwar_prefix", false),
 
-    NOT_REGISTERED(MessageUtils.formatErrorMessage("You are not a citizen"), true),
-    NOT_PART_OF_A_TOWN(MessageUtils.formatErrorMessage("You are not part of a town!"), true),
-    NOT_A_MAJOR(MessageUtils.formatErrorMessage("You are not the major of the town!"), true),
+    HELP_MESSAGE("help_message", false),
 
-    CORE_PLOT_ALREADY_PRESENT(MessageUtils.formatErrorMessage("Your town already has a Core Plot!"), true),
-    CORE_PLOT_SUCCESSFULLY_SET(MessageUtils.formatSuccessMessage("Successfully set town core Plot!"), true),
-    NOT_A_TOWN_BLOCK(MessageUtils.formatErrorMessage("You are not in a town block"), true),
-    NOT_YOUR_TOWN_BLOCK(MessageUtils.formatErrorMessage("This is not your town"), true),
-    NOT_AN_OUTPOST(MessageUtils.formatErrorMessage("The core plot must be in an outpost"), true),
+    NOT_REGISTERED("not_registered", true),
+    NOT_PART_OF_A_TOWN("not_part_of_a_town", true),
+    NOT_A_MAJOR("not_a_major", true),
+
+    CORE_PLOT_ALREADY_PRESENT("core_plot_already_present", true),
+    CORE_PLOT_SUCCESSFULLY_SET("core_plot_successfully_set", true),
+    NOT_A_TOWN_BLOCK("not_a_town_block", true),
+    NOT_YOUR_TOWN_BLOCK("not_your_town_block", true),
+    NOT_AN_OUTPOST("not_an_outpost", true),
 
     /* War related */
-    WAR_NOT_FOUND(MessageUtils.formatErrorMessage("There is no war open at the moment"), true),
-    WAR_ALREADY_PRESENT(MessageUtils.formatErrorMessage("A war is already open at the moment"), true),
-    WAR_STARTED(MessageUtils.formatSuccessMessage("The war has been started!"), true),
-    NOT_ENOUGH_NATIONS(MessageUtils.formatErrorMessage("Not enough nations to start the war. Can't start"), true),
-    NO_ENEMY_NATION(MessageUtils.formatErrorMessage("There are no enemy nations in this war. Can't start."), true),
-    NATION_CANNOT_JOIN_WAR(ChatColor.GOLD + "{}" + MessageUtils.formatErrorMessage(" can't join the war. No towns found with core block!"), true),
-    NATION_JOIN_WAR("Nation " + ChatColor.GOLD + "{}" + MessageUtils.formatSuccessMessage(" joined the war!"), true),
-    TOWN_CONQUER_STATUS(MessageUtils.formatSuccessMessage("{} is under attack! {}% reamining before defeat"), true),
-    NATION_DEFEATED(MessageUtils.formatErrorMessage("The Nation {} has been defeated"), true),
-    WAR_ENDED(MessageUtils.formatSuccessMessage("The war has ended!"), true),
-    WAR_DOES_NOT_SUPPORT_KIT(MessageUtils.formatErrorMessage("The current war does not support kits."), true),
-    WAR_AT_LEAST_TWO_NATION(MessageUtils.formatErrorMessage("There must be at least two nations to confirm the war. To add one use the command ") + ChatColor.YELLOW + "/war add <nation>" , true),
-    FACTION_WAR_NOT_ENOUGH_KITS(MessageUtils.formatErrorMessage("There must be at least one kit to confirm the war. You can modify them via the command ") + ChatColor.YELLOW + "/war kit", true),
-    WAR_CONFIRMED(MessageUtils.formatSuccessMessage("War successfully confirmed, from now on, you will not be able to modify anything. Type ") + ChatColor.YELLOW + "/war start" + MessageUtils.formatSuccessMessage(" when you will need to start the war."), true),
-    WAR_ALREADY_CONFIRMED(MessageUtils.formatErrorMessage("The war is confirmed, you can no longer edit anything."), true),
-    WAR_ALREADY_STARTED(MessageUtils.formatErrorMessage("The war is started, you can no longer edit anything."), true),
-    WAR_MUST_BE_CONFIRMED(MessageUtils.formatErrorMessage("The war must be confirmed."), true),
-    WAR_MUST_BE_STARTED(MessageUtils.formatErrorMessage("The war must be started."), true),
-    WAR_CANNOT_DROP_ITEMS(MessageUtils.formatErrorMessage("You cannot drop items during the war."), true),
-    WAR_CANNOT_CHOOSE_KIT(MessageUtils.formatErrorMessage("Cannot choose kit at the moment."), true),
-    WAR_PLAYER_DEFEATED(MessageUtils.formatErrorMessage("You have been killed in the war. Teleporting to town spawn..."), true),
-    WAR_CANNOT_START_KIT_REQUIRED(MessageUtils.formatErrorMessage("Cannot start war, the following player have not chosen a kit. Please type ") + ChatColor.YELLOW + " /war chooseKit" + MessageUtils.formatErrorMessage(" to select one"), true),
-    WAR_CANNOT_START_ARENA_REQUIRED(MessageUtils.formatErrorMessage("Cannot start the war. You should create at least one arena."), true),
-    WAR_WILL_BEGAN(MessageUtils.formatSuccessMessage("The war will began in {} seconds"), true),
+    WAR_NOT_FOUND("war_not_found", true),
+    WAR_ALREADY_PRESENT("war_already_present", true),
+    WAR_STARTED("war_started", true),
+    NOT_ENOUGH_NATIONS("war_not_enough_nations", true),
+    NO_ENEMY_NATION("war_no_enemy_nation", true),
+    NATION_CANNOT_JOIN_WAR("war_nation_cannot_join_war", true),
+    NATION_JOIN_WAR("war_nation_join_war", true),
+    TOWN_CONQUER_STATUS("war_town_conquer_status", true),
+    TOWN_DEFEATED("war_town_defeated", true),
+    TOWN_DEFEATED_SIEGE_WAR("war_town_defeated_siege_war", true),
+    NATION_DEFEATED("war_nation_defeated", true),
+    WAR_ENDED("war_ended", true),
+    WAR_DOES_NOT_SUPPORT_KIT("war_does_not_support_kit", true),
+    WAR_AT_LEAST_TWO_NATION("war_at_least_two_nation", true),
+    FACTION_WAR_NOT_ENOUGH_KITS("war_faction_not_enough_kits", true),
+    WAR_CONFIRMED("war_confirmed", true),
+    WAR_ALREADY_CONFIRMED("war_already_confirmed", true),
+    WAR_ALREADY_STARTED("war_already_started", true),
+    WAR_MUST_BE_CONFIRMED("war_must_be_confirmed", true),
+    WAR_MUST_BE_STARTED("war_must_be_started", true),
+    WAR_CANNOT_DROP_ITEMS("war_cannot_drop_items", true),
+    WAR_CANNOT_CHOOSE_KIT("war_cannot_choose_kit", true),
+    WAR_PLAYER_DEFEATED("war_player_defeated", true),
+    WAR_CANNOT_START_KIT_REQUIRED("war_cannot_start_kit_required", true),
+    WAR_CANNOT_START_ARENA_REQUIRED("war_cannot_start_arena_required", true),
+    WAR_CANNOT_START_NOT_ENOUGH_CORE_PLOTS("war_cannot_start_not_enough_core_plot", true),
+    WAR_WILL_BEGAN("war_will_began", true),
+    WAR_CREATION_MENU("war_creation_menu", false),
+    WAR_CREATION_BOLT_WAR("war_creation_bolt_war", false),
+    WAR_CREATION_BOLT_WAR_FACTION("war_creation_bolt_war_faction", false),
+    WAR_CREATION_BOLT_WAR_RANDOM("war_creation_bolt_war_random", false),
+    WAR_CREATION_ASSAULT_WAR("war_creation_assault_war", false),
+    WAR_CREATION_ASSAULT_WAR_CLASSIC("war_creation_assault_war_classic", false),
+    WAR_CREATION_ASSAULT_WAR_SIEGE("war_creation_assault_war_siege", false),
 
-    KIT_ALREADY_EXIST(MessageUtils.formatErrorMessage("A kit for the name ") + ChatColor.GOLD + "{}" + MessageUtils.formatErrorMessage(" already exists"), true),
-    KIT_CREATED(MessageUtils.formatSuccessMessage("Successfully created kit ") + ChatColor.GOLD + "{}" + MessageUtils.formatSuccessMessage(". You will be able to edit it in a few seconds."), true),
-    KIT_MODIFIED(MessageUtils.formatSuccessMessage("Successfully modified kit "), true),
-    NO_KIT(MessageUtils.formatErrorMessage("No kits to be found."), true),
+    KIT_ALREADY_EXIST("kit_already_exists", true),
+    KIT_CREATED("kit_created", true),
+    KIT_MODIFIED("kit_modified", true),
+    NO_KIT("no_kit", true),
+    KIT_SELECTED("kit_selected", true),
+    KIT_MENU("kit_menu", false),
+    KIT_NAME_SELECTION("kit_name_selection", false),
+    KIT_EDITOR("kit_editor", false),
 
-    ARENA_ALREADY_EXISTS(MessageUtils.formatErrorMessage("An arena with the name {} already exists."), true),
-    ARENA_NOT_FOUND(MessageUtils.formatErrorMessage("Arena {} not found."), true),
-    ARENA_CREATED(ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.STRIKETHROUGH + String.join("", Collections.nCopies(45, "-")) +
-            ChatColor.GREEN + "Arena " +
-            ChatColor.GOLD + "{} " +
-            ChatColor.GREEN + "was successfully created!" + "\n \n" +
-            ChatColor.GRAY + " Type " +
-            ChatColor.GREEN + "/war arena edit {}" +
-            ChatColor.GRAY + " to setup the Arena.\n" +
-            ChatColor.YELLOW + ChatColor.BOLD + ChatColor.STRIKETHROUGH + String.join("", Collections.nCopies(45, "-")), false),
-    ARENA_CREATION_STEP_COMPLETED(ChatColor.GOLD + "{} " + MessageUtils.formatSuccessMessage("set."), true),
-    ARENA_CREATION_STEP(ChatColor.GRAY + "Right click on a block to select " + ChatColor.GOLD + "{}", true),
+    ARENA_ALREADY_EXISTS("arena_already_exists", true),
+    ARENA_NOT_FOUND("arena_not_found", true),
+    ARENA_CREATED("arena_created", false),
+    ARENA_CREATION_STEP_COMPLETED("arena_creation_step_completed", true),
+    ARENA_CREATION_STEP("arena_creation_step", true),
+    ARENA_CREATION_COMPLETED("arena_creation_completed", true),
+    ARENA_DELETED("arena_deleted", true),
 
-    NATION_ALREADY_PRESENT(MessageUtils.formatErrorMessage("The nation you specified is already part of the war"), true),
-    NATION_NOT_PRESENT(MessageUtils.formatErrorMessage("The nation you specified is not part of the war"), true),
-    NATION_DOES_NOT_EXISTS(MessageUtils.formatErrorMessage("The nation you specified is not registered on Towny"), true),
-    NATION_SUCCESSFULLY_ADDED(MessageUtils.formatSuccessMessage("Successfully added Nation {} to participants"), true),
-    NATION_SUCCESSFULLY_REMOVED(MessageUtils.formatSuccessMessage("Successfully removed Nation {} from participants"), true),
-    CANNOT_ADD_MORE_NATIONS(MessageUtils.formatErrorMessage("The maximum number of allowed nations has been reached. Consider deleting one."), true),
+    NATION_ALREADY_PRESENT("nation_already_present", true),
+    NATION_NOT_PRESENT("nation_not_present", true),
+    NATION_DOES_NOT_EXISTS("nation_does_not_exists", true),
+    NATION_SUCCESSFULLY_ADDED("nation_successfully_added", true),
+    NATION_SUCCESSFULLY_REMOVED("nation_successfully_removed", true),
+    NATION_NOT_ENOUGH_MONEY("nation_not_enough_money", true),
+    NATION_PAYED_ENTRY( "nation_payed_entry", true),
+    CANNOT_ADD_MORE_NATIONS("nation_cannot_add_more_nations", true),
 
-    NO_LONGER_PART_OF_WAR(MessageUtils.formatErrorMessage("Sorry, it seems like you are no longer part of the war."), true),
-    KIT_SELECTED(MessageUtils.formatSuccessMessage("Successfully selected kit ") + ChatColor.GOLD + "{}", true),
+    NO_LONGER_PART_OF_WAR("no_longer_part_of_war", true),
 
     /* Miscellaneous */
-    CONFIG_RELOADED(MessageUtils.formatSuccessMessage("Successfully reloaded config.yml"), true);
+    CONFIG_RELOADED("config_reloaded", true),
+    ECHELON_MISSING("echelon_missing", true),
+    IMPORTER_INFO("importer_info", false);
 
     private final String message;
     private final boolean showPrefix;
+    private final LocalizationManager localizationManager;
 
     Message(String message, boolean showPrefix) {
         this.message = MessageUtils.rewritePlaceholders(message);
         this.showPrefix = showPrefix;
+        this.localizationManager = Fwwar.getLocalizationManager();
     }
 
     public void send(CommandSender sender, Object... objects) {
@@ -102,15 +117,15 @@ public enum Message {
     }
 
     private String format(Object... objects) {
-        String string = this.message;
+        String string = localizationManager.localize(this.message);
         if(this.showPrefix) {
-            string = PREFIX.message + " " + this.message;
+            string = localizationManager.localize(PREFIX.message) + " " + string;
         }
         for (int i = 0; i < objects.length; i++) {
             Object o = objects[i];
             string = string.replace("{" + i + "}", String.valueOf(o));
         }
-        return string;
+        return ChatColor.translateAlternateColorCodes('&', string);
     }
 
 }

@@ -1,17 +1,29 @@
 package me.kaotich00.fwwar.commands.admin;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.exceptions.EconomyException;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
+import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.message.Message;
+import me.kaotich00.fwwar.objects.plot.CorePlot;
+import me.kaotich00.fwwar.services.SimplePlotService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
+import me.kaotich00.fwwar.war.assault.SiegeWar;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public class AddCommand extends AdminCommand {
@@ -57,6 +69,54 @@ public class AddCommand extends AdminCommand {
             return;
         }
 
+        if(SimpleWarService.getInstance().getCurrentWar().get() instanceof SiegeWar) {
+            Set<Town> missingTowns = new HashSet<>();
+
+            SimplePlotService plotService = SimplePlotService.getInstance();
+            for (Town town : nation.getTowns()) {
+                Optional<CorePlot> townCorePlot = plotService.getCorePlotOfTown(town.getUuid());
+                if (!townCorePlot.isPresent()) {
+                    missingTowns.add(town);
+                }
+            }
+
+            if (missingTowns.size() > 0) {
+                Message.WAR_CANNOT_START_NOT_ENOUGH_CORE_PLOTS.send(sender);
+                for (Town town : missingTowns) {
+                    sender.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "  >> " + ChatColor.AQUA + "" + ChatColor.BOLD + town.getName());
+                }
+                return;
+            }
+
+            FileConfiguration defaultConfig = Fwwar.getDefaultConfig();
+
+            for(Town town: nation.getTowns()) {
+                plotService.getCorePlotOfTown(town.getUuid()).ifPresent(corePlot -> {
+                    corePlot.setConquestPercentage(0);
+                });
+            }
+        }
+
+        Double price = Double.parseDouble(args[2]);
+        try {
+            if(!nation.getAccount().canPayFromHoldings(price)) {
+                Message.NATION_NOT_ENOUGH_MONEY.send(sender, nation.getName());
+                return;
+            }
+
+            nation.getAccount().withdraw(price, "Joining the war");
+            Message.NATION_PAYED_ENTRY.send(sender, nation.getName(), price);
+
+            for(Resident resident: nation.getResidents()) {
+                Player player = resident.getPlayer();
+                if(player != null) {
+                    Message.NATION_PAYED_ENTRY.send(player, nation.getName(), price);
+                }
+            }
+        } catch (EconomyException e) {
+            return;
+        }
+
         currentWar.addNation(nation);
 
         for(Town town: nation.getTowns()) {
@@ -77,7 +137,7 @@ public class AddCommand extends AdminCommand {
 
     @Override
     public String getUsage() {
-        return "/war add <nation>";
+        return "/war add <nation> <price>";
     }
 
     @Override
@@ -87,7 +147,7 @@ public class AddCommand extends AdminCommand {
 
     @Override
     public Integer getRequiredArgs() {
-        return 2;
+        return 3;
     }
 
 }

@@ -1,6 +1,7 @@
 package me.kaotich00.fwwar.listener;
 
 import me.kaotich00.fwwar.services.SimpleArenaService;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,6 +17,10 @@ public class ArenaCreationListener  implements Listener {
             return;
         }
 
+        if(event.getItem() == null || event.getItem().getType() != Material.WOODEN_SHOVEL) {
+            return;
+        }
+
         if(!event.getHand().equals(EquipmentSlot.HAND)) {
             return;
         }
@@ -25,8 +30,10 @@ public class ArenaCreationListener  implements Listener {
             return;
         }
 
+        event.setCancelled(true);
+
         SimpleArenaService simpleArenaService = SimpleArenaService.getInstance();
-        simpleArenaService.arenaCreationHandler(player, event.getClickedBlock().getLocation());
+        simpleArenaService.arenaCreationHandler(player, event.getClickedBlock().getLocation().add(0,1,0));
     }
 
 }

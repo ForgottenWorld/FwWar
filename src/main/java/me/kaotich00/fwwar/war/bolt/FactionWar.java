@@ -1,5 +1,6 @@
 package me.kaotich00.fwwar.war.bolt;
 
+import com.destroystokyo.paper.Title;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
@@ -13,12 +14,14 @@ import me.kaotich00.fwwar.objects.kit.Kit;
 import me.kaotich00.fwwar.services.SimpleArenaService;
 import me.kaotich00.fwwar.services.SimpleScoreboardService;
 import me.kaotich00.fwwar.services.SimpleWarService;
-import me.kaotich00.fwwar.utils.LocationType;
-import me.kaotich00.fwwar.utils.WarStatus;
-import me.kaotich00.fwwar.utils.WarTypes;
+import me.kaotich00.fwwar.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -102,20 +105,58 @@ public class FactionWar extends BoltWar {
                 }
             }
 
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Fwwar.getPlugin(Fwwar.class), () -> {
-                Message.WAR_STARTED.broadcast();
-                SimpleScoreboardService.getInstance().initScoreboards();
+            String bossBarName = "fwwar.startwar";
+            BossBar bossBar = Bukkit.getServer().createBossBar(
+                    NamespacedKey.minecraft(bossBarName),
+                    ChatColor.GREEN + "The war will began in 30 seconds",
+                    BarColor.GREEN,
+                    BarStyle.SEGMENTED_10
+            );
+            bossBar.setProgress(1.0);
 
-                for(Map.Entry<UUID, Location> entry: playersToTeleport.entrySet()) {
-                    UUID playerUUID = entry.getKey();
-                    Location location = entry.getValue();
+            FwWarTimer timer = new FwWarTimer(Fwwar.getPlugin(Fwwar.class),
+                    30,
+                    () -> {
+                        for(Map.Entry<UUID, Location> entry: playersToTeleport.entrySet()) {
+                            UUID playerUUID = entry.getKey();
+                            Player player = Bukkit.getPlayer(playerUUID);
+                            if(player != null) {
+                                bossBar.addPlayer(player);
+                            }
+                        }
+                    },
+                    () -> {
+                        Message.WAR_STARTED.broadcast();
+                        SimpleScoreboardService.getInstance().initScoreboards();
 
-                    Player player = Bukkit.getPlayer(playerUUID);
-                    if(player != null) {
-                        player.teleport(location);
-                    }
-                }
-            }, 600L);
+                        for(Map.Entry<UUID, Location> entry: playersToTeleport.entrySet()) {
+                            UUID playerUUID = entry.getKey();
+                            Location location = entry.getValue();
+
+                            Player player = Bukkit.getPlayer(playerUUID);
+                            if(player != null) {
+                                bossBar.removePlayer(player);
+                                player.teleport(location);
+                            }
+                        }
+                    },
+                    (t) -> {
+                        if( t.getSecondsLeft() <= 5) {
+                            for(Map.Entry<UUID, Location> entry: playersToTeleport.entrySet()) {
+                                UUID playerUUID = entry.getKey();
+
+                                Player player = Bukkit.getPlayer(playerUUID);
+                                if(player != null) {
+                                    player.sendTitle(new Title(MessageUtils.formatSuccessMessage(String.valueOf(t.getSecondsLeft())), "", 1, 18, 1));
+                                }
+                            }
+                        }
+
+                        bossBar.setTitle(MessageUtils.formatSuccessMessage("The match will began in " + t.getSecondsLeft() + " seconds"));
+                        double progress = bossBar.getProgress() - 0.03 < 0.0 ? 0.0 : bossBar.getProgress() - 0.03;
+                        bossBar.setProgress(progress);
+                    });
+            timer.scheduleTimer();
 
         } catch (NotRegisteredException e) {
             e.printStackTrace();

@@ -3,7 +3,10 @@ package me.kaotich00.fwwar.services;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.arena.Arena;
 import me.kaotich00.fwwar.utils.LocationType;
+import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -65,27 +68,36 @@ public class SimpleArenaService {
         switch(step) {
             case FIRST_NATION_SPAWN_POINT:
                 arena.setLocation(LocationType.FIRST_NATION_SPAWN_POINT, location);
-
+                location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
+                spawnEffectAtBlock(location);
                 Message.ARENA_CREATION_STEP_COMPLETED.send(sender, "First nation spawn point");
                 break;
 
             case FIRST_NATION_BATTLE_POINT:
                 arena.setLocation(LocationType.FIRST_NATION_BATTLE_POINT, location);
-
+                location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
+                spawnEffectAtBlock(location);
                 Message.ARENA_CREATION_STEP_COMPLETED.send(sender, "First nation battle point");
                 break;
 
             case SECOND_NATION_SPAWN_POINT:
                 arena.setLocation(LocationType.SECOND_NATION_SPAWN_POINT, location);
-
+                location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
+                spawnEffectAtBlock(location);
                 Message.ARENA_CREATION_STEP_COMPLETED.send(sender, "Second nation spawn point");
                 break;
 
             case SECOND_NATION_BATTLE_POINT:
                 arena.setLocation(LocationType.SECOND_NATION_BATTLE_POINT, location);
-
+                location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
+                spawnEffectAtBlock(location);
                 Message.ARENA_CREATION_STEP_COMPLETED.send(sender, "Second nation battle point");
                 break;
+        }
+
+        if(arena.getGameLocations().size() == 4) {
+            Message.ARENA_CREATION_COMPLETED.send(sender);
+            location.getWorld().playSound(location, Sound.ENTITY_PLAYER_LEVELUP,1,1);
         }
 
         this.playerCreationArena.remove(sender.getUniqueId());
@@ -99,6 +111,16 @@ public class SimpleArenaService {
 
     public boolean isPlayerInCreationMode(Player player) {
         return this.playerCreationArena.containsKey(player.getUniqueId());
+    }
+
+    public void spawnEffectAtBlock(Location loc) {
+        loc.add(0.5,0.5,0.5);
+        Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(255, 69, 0), 5);
+        loc.getWorld().spawnParticle(Particle.REDSTONE,loc,10,dustOptions);
+    }
+
+    public void deleteArena(Arena arena) {
+        this.arenas.remove(arena);
     }
 
 }

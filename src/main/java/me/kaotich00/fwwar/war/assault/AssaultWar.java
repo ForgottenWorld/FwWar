@@ -1,59 +1,45 @@
 package me.kaotich00.fwwar.war.assault;
 
-public class AssaultWar {
+import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Town;
+import me.kaotich00.fwwar.war.AbstractWar;
 
-    /**
-     * Start war if all conditions are met
-     * @param sender
-     */
-    /*public void startWar(CommandSender sender) {
-        War war = this.currentWar;
+import java.util.*;
 
-        TownyAPI townyAPI = TownyAPI.getInstance();
+public abstract class AssaultWar extends AbstractWar {
 
-        for(Nation nation: townyAPI.getDataSource().getNations()) {
-            if(!nation.isNeutral()) {
-                boolean canJoin = war.addParticipant(nation);
-                if(canJoin) {
-                    Message.NATION_JOIN_WAR.broadcast(nation.getName());
-                } else {
-                    Message.NATION_CANNOT_JOIN_WAR.broadcast(nation.getName());
-                }
-            }
-        }
+    protected HashMap<Nation, List<Town>> townsForNation;
 
-        // Check if the required amount of Nations is present
-        if(war.getParticipantNations().size() < 2) {
-            Message.NOT_ENOUGH_NATIONS.broadcast();
-            return;
-        }
+    @Override
+    public void addNation(Nation nation) {
+        super.addNation(nation);
 
-        // Check if at least 2 Nations are considered enemies between each other
-        boolean areThereEnemies = false;
-        for(Nation nation: war.getParticipantNations()) {
-            for(Nation plausibleEnemy: war.getParticipantNations()) {
-                if(nation.hasEnemy(plausibleEnemy)) {
-                    areThereEnemies = true;
-                }
-            }
-        }
+        this.townsForNation.put(nation, new ArrayList<>(nation.getTowns()));
+    }
 
-        if(!areThereEnemies) {
-            Message.NO_ENEMY_NATION.broadcast();
-            return;
-        }
+    @Override
+    public void removeNation(Nation nation) {
+        super.removeNation(nation);
 
-        Message.WAR_STARTED.broadcast();
-        Bukkit.getServer().broadcastMessage(oldWar.getPrintableParticipants());
+        this.townsForNation.remove(nation);
+    }
 
-        this.currentWar = oldWar;
-        SimpleScoreboardService.getInstance().initWarScoreboard();
+    public void setTownDefeated(Nation nation, Town town) {
+        this.townsForNation.get(nation).remove(town);
+    }
 
-        FileConfiguration defaultConfig = Fwwar.getDefaultConfig();
-        Long seconds = defaultConfig.getLong("war.plot_check_time") * 20;
+    public List<Town> getTownsForNation(Nation nation) {
+        return this.townsForNation.get(nation);
+    }
 
-        warTaskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), oldWar), seconds, seconds);
+    @Override
+    public int getMaxAllowedParticipants() {
+        return 0;
+    }
 
-    }*/
+    @Override
+    public boolean hasParticipantsLimit() {
+        return false;
+    }
 
 }

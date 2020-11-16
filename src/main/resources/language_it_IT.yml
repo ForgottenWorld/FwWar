@@ -1,0 +1,176 @@
+strings:
+  fwwar_prefix: "&8[&eFw&6&lWar&8]"
+  help_message: |+
+    &a&l&m---------------------------------------------
+    &7
+    Ciao, qua di seguito puoi trovare la lista dei comandi disponibili:
+    &8 >> &e/war new &6- Crea una nuova guerra
+    &8 >> &e/war add [nazione] [prezzo] &6- Aggiungi una nazione alla guerra specificando il prezzo di ingresso
+    &8 >> &e/war remove [nazione] &6- Rimuove una nazione dalla guerra
+    &8 >> &e/war kit &6- Apre il menu dei kit
+    &8 >> &e/war confirm &6- Conferma una guerra se tutta la preparazione e' stata rispettata
+    &8 >> &e/war start &6- Inizia la guerra se e' confermata
+    &8 >> &e/war stop &6- Ferma immediatamente la guerra se è startata
+    &8 >> &2/war info &6- Mostra le informazioni principali sulla guerra in corso
+    &8 >> &b/war arena new <nome> &3- Crea una nuova arena
+    &8 >> &b/war arena edit <nome> &3- Modifica un'arena
+    &8 >> &b/war arena delete <nome> &3- Elimina un'arena
+    &a
+    &l&m---------------------------------------------
+
+  not_registered: "&cNon sei un cittadino"
+  not_part_of_a_town: "&cNon fai parte di una citta'"
+  not_a_major: "&cNon sei il sindaco della citta'"
+
+  core_plot_already_present: "&cLa tua citta' ha già un Core Plot!"
+  core_plot_successfully_set: "&aHai settato il Core Plot!"
+  not_a_town_block: "&cNon sei in un blocco della citta'"
+  not_your_town_block: "&cQuesta non e' la tua citta'"
+  not_an_outpost: "&cIl core plot deve essere in un outpost"
+
+  war_not_found: "&cNon c'e' nessuna guerra in questo momento"
+  war_already_present: "&cUna guerra e' gia' presente in questo momento"
+  war_started: "&aLa guerra e' iniziata!"
+  war_not_enough_nations: "&cNon ci sono abbastanza nazioni per iniziare la guerra. Non si puo' iniziare"
+  war_no_enemy_nation: "&cNon ci sono nazioni nemiche in questa guerra. Non si puo'iniziare"
+  war_nation_cannot_join_war: "&La nazione &6{0} &cnon puo' unirsi alla guerra. Nessun Core Plot rilevato!"
+  war_nation_join_war: "&La nazione &6{0} &asi unisce alla guerra!"
+  war_town_conquer_status: "&a{0} e' sotto attacco! {1}% rimangono prima della sconfitta"
+  war_nation_defeated: "&cLa Nazione &6{0} &ce' stata SCONFITTA"
+  war_ended: "&aLa guerra e' finita!"
+  war_does_not_support_kit: "&cLa guerra attuale non supporta i kit."
+  war_at_least_two_nation: "&cCi devono essere almeno due nazioni per la guerra. Per aggiungerne una usa il comando &e/war add <nazione> <prezzo>"
+  war_faction_not_enough_kits: "&cCi deve essere almeno un kit per confermare la guerra. Puoi modificarlo con questo comando &e/war kit"
+  war_confirmed: "&aLa Guerra e' stata confermata, da adesso in poi, non potrai piu' modificare nulla. Scrivi &e/war start &a quando necessiterai di iniziare la guerra."
+  war_already_confirmed: "&cLa Guerra e' confermata, non puoi piu' modificare nulla."
+  war_already_started: "&cLa Guerra e' iniziata, non puoi piu' editare nulla."
+  war_must_be_confirmed: "&cLa guerra deve essere confermata"
+  war_must_be_started: "&cLa guerra deve iniziare"
+  war_cannot_drop_items: "&cNon puoi droppare oggetti in guerra"
+  war_cannot_choose_kit: "&cNon puoi selezionare il kit al momento"
+  war_player_defeated: "&cSei stato ucciso in guerra. Teletrasporto allo spawn cittadino..."
+  war_cannot_start_kit_required: "&cLa guerra non puo' iniziare, il seguente player non ha selezionato un kit. Per piacere scrivi &e/war chooseKit &cper selezionarne uno"
+  war_cannot_start_arena_required: "&cNon puoi iniziare la guerra senza arena. Dovresti crearne almeno una."
+  war_cannot_start_not_enough_core_plot: "&cImpossibile aggiungere la nazione, le seguenti citta' non hanno impostato un core plot:"
+  war_will_began: "&aLa guerra iniziera' fra &6{0} &asecondi"
+  war_town_defeated: "&cLa citta' &6{0} &c ha perso tutti i suoi cittadini! La citta' e' stata sconfitta in guerra."
+  war_town_defeated_siege_war: "&cLa citta' &6{0} &c e' stata conquistata."
+  war_creation_menu: |+
+    &e&m&l---------------------------------------------
+    &a
+    &l Benvenuto nel menu creazione della guerra
+    &7 Seleziona una delle seguenti metodologie:
+    &e&l [1] &6&lGuerra lampo
+    &e&l [2] &6&lGuerra d'assalto
+    &e
+    &m&l---------------------------------------------"
+  war_creation_bolt_war: |+
+    &3&m&l---------------------------------------------
+    &a
+    &l Hai selezionato &6Guerra lampo!
+    &7 Seleziona una modalita' per la guerra lampo:
+    &b&l [1] &3&lKit fazione
+    &b&l [2] &3&lKit random
+    &3
+    &m&l---------------------------------------------
+  war_creation_bolt_war_faction: |+
+    &a&m&l---------------------------------------------
+    &a
+    &l Creazione completata per la guerra &6Kit fazione
+    &7
+     Ora che hai creato la guerra, segui gli step seguenti:
+    &b&l 1) &7Aggiungi le nazioni partecipanti con il comando &e/war add <nazione> <prezzo>
+    &b&l 2) &7Crea o modifica i kit con il comando &e/war kit
+    &b&l 3) &7Quando hai completato i due punti precedenti conferma la guerra con il comando &e/war confirm
+    &a
+    &m&l---------------------------------------------
+  war_creation_bolt_war_random: |+
+    &a&m&l---------------------------------------------
+    &a
+    &l Creazione completata per la guerra &6Kit random
+    &7
+     Ora che hai creato la guerra, segui gli step seguenti:
+    &b&l 1) &7Aggiungi le nazioni partecipanti con il comando &e/war add <nazione> <prezzo>
+    &b&l 2) &7Conferma la guerra con il comando &e/war confirm
+    &a
+    &m&l---------------------------------------------
+  war_creation_assault_war: |+
+    &3&m&l---------------------------------------------
+    &a
+    &l Hai selezionato &6Guerra d'assalto!
+    &7 Seleziona una modalità per la guerra d'assalto:
+    &b&l [1] &3&lGuerra classica (navale,aeronavale,campale)
+    &b&l [2] &b&lGuerra d'assedio
+    &3&m
+    &l---------------------------------------------"
+  war_creation_assault_war_classic: |+
+    &a&m&l---------------------------------------------
+    &a
+    &l &6Guerra classica &acreata con successo
+    &7
+     Ora che hai creato la guerra, segui gli step seguenti:
+    &b&l 1) &7Aggiungi le nazioni partecipanti con il comando &e/war add <nazione> <prezzo>
+    &b&l 2) &7Conferma la guerra con il comando &e/war confirm
+    &a&m
+    &l---------------------------------------------
+  war_creation_assault_war_siege: |+
+    &a&m&l---------------------------------------------
+    &a
+    &l&6Guerra d'assedio &acreata con successo
+    &7
+     Ora che hai creato la guerra, segui gli step seguenti:
+    &b&l 1) &7Aggiungi le nazioni partecipanti con il comando &e/war add <nazione> <prezzo>
+    &b&l 2) &7Conferma la guerra con il comando &e/war confirm
+    &a&m
+    &l---------------------------------------------
+
+  kit_already_exists: "&cUn kit con questo nome &6{0} &cesiste gia'"
+  kit_created: "&aKit creato con successo &6{0} &aRiuscirai ad editarlo fra qualche secondo."
+  kit_modified: "&aHai modificato il kit con successo"
+  no_kit: "&cNessun kit trovato."
+  kit_selected: "&aKit selezionato con successo: &6{0}"
+  kit_menu: |+
+    &e&m&l---------------------------------------------
+    &a
+    &l Benvenuto nel menu dei kit
+    &7 Cosa vuoi fare?
+    &6&l [1] &6&lCreare un nuovo kit
+    &6&l [2] &6&lModificare un kit esistente
+    &e
+    &m&l---------------------------------------------
+  kit_editor: |+
+    &e&m&l---------------------------------------------
+    &a
+    &l Benvenuto nel menu modifica dei kit
+    &7&l Per piacere digita il &anome &7del kit che vorresti modificare
+    &7&l Kit disponibili:
+  kit_name_selection: "&7Per piacere digita un nome riconoscibile per il kit, tipo &6'Tank' &7oppure &6'Healer'"
+
+  arena_already_exists: "&cUn arena con questo nome &6{0} &cesiste gia'"
+  arena_not_found: "&cArena &6{0} &cnon trovata."
+  arena_created: |+
+    &e&l&m---------------------------------------------
+    &a
+    L'Arena &6{0} &ae' stata creata con successo
+    &7Digita &a/war arena edit {1} &7per impostare i punti.
+    &e
+    &l&m---------------------------------------------
+  arena_creation_step_completed: "&6{0} &aimpostata."
+  arena_creation_step: "&7Tasto destro su un blocco con una &6PALA DI LEGNO &7per selezionare &6{0}"
+  arena_creation_completed: "&aCreazione della Arena completata!"
+  arena_deleted: "&aCancellata con successo l'arena &6{0}"
+
+  nation_already_present: "&cLa nazione che hai specificato e' gia' parte della guerra"
+  nation_not_present: "&cLa nazione che hai specificato non e' parte della guerra"
+  nation_does_not_exists: "&cLa nazione che hai specificato non esiste in Towny"
+  nation_successfully_added: "&aAggiunta con successo la Nazione &6{0} &aai partecipanti"
+  nation_successfully_removed: "&aRimossa con successo la Nazione &6{0} &adai partecipanti"
+  nation_not_enough_money: "&cLa Nazione &6{0} &cnon puo' permettersi di partecipare alla guerra."
+  nation_payed_entry: "&7La Nazione &a{0} &7ha appena pagato &a{1} &7per entrare nella guerra."
+  nation_cannot_add_more_nations: "&cIl numero massimo di nazioni concesse e' stato raggiunto. Prendi in considerazione di rimuovarne una."
+
+  no_longer_part_of_war: "&cCi dispiace, sembra che tu non faccia piu' parte della guerra."
+
+  config_reloaded: "&aRicaricato con successo il file config.yml"
+  echelon_missing: "&cFwEchelon non trovato"
+  importer_info: "&e(Importatore) -> &7{0}"

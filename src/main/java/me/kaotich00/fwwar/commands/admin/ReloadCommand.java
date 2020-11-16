@@ -1,7 +1,9 @@
 package me.kaotich00.fwwar.commands.admin;
 
+import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.config.ConfigurationManager;
+import me.kaotich00.fwwar.locale.LocalizationManager;
 import me.kaotich00.fwwar.message.Message;
 import org.bukkit.command.CommandSender;
 
@@ -14,6 +16,8 @@ public class ReloadCommand extends AdminCommand {
         ConfigurationManager configManager = ConfigurationManager.getInstance();
         configManager.reloadDefaultConfig();
         Message.CONFIG_RELOADED.send(sender);
+
+        Fwwar.getLocalizationManager().reload();
     }
 
     @Override

@@ -46,12 +46,7 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
 
         @Override
         public String getPromptText(ConversationContext context) {
-            String promptMessage = ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-")) + "\n" +
-                    ChatColor.GREEN + ChatColor.BOLD + " \n Welcome to the kit menu!\n" +
-                    ChatColor.GRAY + " What do you wanna do? \n" +
-                    ChatColor.YELLOW + "" + ChatColor.BOLD + "\n [1] " + ChatColor.GOLD + ChatColor.BOLD + "Create a new kit\n" +
-                    ChatColor.YELLOW + "" + ChatColor.BOLD + " [2] " + ChatColor.GOLD + ChatColor.BOLD + "Modify an existing kit\n" +
-                    ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "\n" + String.join("", Collections.nCopies(45, "-"));
+            String promptMessage = Message.KIT_MENU.asString();
             return promptMessage;
         }
 
@@ -87,7 +82,7 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
 
         @Override
         public String getPromptText(ConversationContext context) {
-            String promptMessage = MessageUtils.formatSuccessMessage(ChatColor.GRAY + "Please choose a recognizable name for the kit, such as 'Tank', 'Healer' ecc...");
+            String promptMessage = Message.KIT_NAME_SELECTION.asString();
             return promptMessage;
         }
 
@@ -124,10 +119,7 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
 
         @Override
         public String getPromptText(ConversationContext context) {
-            String promptMessage = ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "" + String.join("", Collections.nCopies(45, "-")) + "\n" +
-                    ChatColor.GREEN + "" + ChatColor.BOLD + " Welcome to the kit editor!\n" +
-                    ChatColor.GRAY + "" + ChatColor.BOLD + " Please type the " + ChatColor.GREEN + " name " + ChatColor.GRAY + " of the kit you would like to modify \n" +
-                    ChatColor.GRAY + "" + ChatColor.BOLD + " Available kits: \n";
+            String promptMessage = Message.KIT_EDITOR.asString();
 
             SimpleWarService warService = SimpleWarService.getInstance();
             War war = warService.getCurrentWar().get();

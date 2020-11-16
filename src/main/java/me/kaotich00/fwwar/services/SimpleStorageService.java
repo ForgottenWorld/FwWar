@@ -49,7 +49,6 @@ public class SimpleStorageService {
                 simplePlotService.setCorePlotOfTown(UUID.fromString(key), (CorePlot) data.get("coreplots." + key));
             }
         }
-
     }
 
 }

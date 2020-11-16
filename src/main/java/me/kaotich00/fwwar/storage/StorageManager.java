@@ -46,6 +46,7 @@ public class StorageManager {
         List<Arena> arenas = SimpleArenaService.getInstance().getArenas();
 
         FileConfiguration data = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), saveArenasFile));
+        data.set("arenas", null);
         for(Arena arena: arenas) {
             for(Map.Entry<LocationType,Location> entry: arena.getGameLocations().entrySet()) {
                 LocationType locationType = entry.getKey();
@@ -68,7 +69,7 @@ public class StorageManager {
         if(data != null && data.getConfigurationSection("arenas") != null) {
             for (String key : data.getConfigurationSection("arenas").getKeys(false)) {
                 Arena arena = simpleArenaManager.newArena(key);
-                Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " >> Loaded Arena " + arena.getName());
+                Bukkit.getConsoleSender().sendMessage("    >> Loaded Arena " + arena.getName());
 
                 for (String key2 : data.getConfigurationSection("arenas." + key).getKeys(false)) {
                     LocationType locationType = LocationType.valueOf(key2);
@@ -118,7 +119,7 @@ public class StorageManager {
 
                 simpleWarService.addKit(warType, kit);
 
-                Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " >> Loaded Kit " + kit.getName());
+                Bukkit.getConsoleSender().sendMessage("    >> Loaded Kit " + kit.getName());
             }
         }
 

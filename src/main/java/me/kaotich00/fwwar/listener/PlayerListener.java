@@ -3,10 +3,10 @@ package me.kaotich00.fwwar.listener;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
-import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.Fwwar;
+import me.kaotich00.fwwar.api.war.KitWar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.services.SimpleScoreboardService;
@@ -66,7 +66,7 @@ public class PlayerListener implements Listener {
                 return;
             }
 
-            boolean hasKit = currentWar.getPlayerKit(player).isPresent();
+            boolean hasKit = ((KitWar)currentWar).getPlayerKit(player).isPresent();
 
             if(hasKit) {
                 return;

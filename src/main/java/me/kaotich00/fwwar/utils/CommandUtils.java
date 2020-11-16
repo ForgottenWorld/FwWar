@@ -16,8 +16,10 @@ public class CommandUtils {
     public static final String WAR_CHOOSE_KIT_COMMAND = "chooseKit";
     public static final String WAR_STOP_COMMAND = "stop";
     public static final String WAR_INFO_COMMAND = "info";
+    public static final String WAR_IMPORT_COMMAND = "import";
 
     public static final String WAR_ARENA_COMMAND = "arena";
     public static final String ARENA_NEW_COMMAND = "new";
     public static final String ARENA_EDIT_COMMAND = "edit";
+    public static final String ARENA_DELETE_COMMAND = "delete";
 }

@@ -1,14 +1,17 @@
 package me.kaotich00.fwwar;
 
 import me.kaotich00.fwwar.commands.WarCommandManager;
+import me.kaotich00.fwwar.integration.DiscourseParser;
 import me.kaotich00.fwwar.listener.ArenaCreationListener;
 import me.kaotich00.fwwar.listener.PlayerListener;
+import me.kaotich00.fwwar.locale.LocalizationManager;
 import me.kaotich00.fwwar.objects.plot.CorePlot;
 import me.kaotich00.fwwar.services.SimpleStorageService;
 import me.kaotich00.fwwar.storage.StorageManager;
 import me.kaotich00.fwwar.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,26 +24,36 @@ public final class Fwwar extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Loading configuration...");
+
+        ConsoleCommandSender sender = Bukkit.getConsoleSender();
+
+        sender.sendMessage(ChatColor.GRAY + "" + ChatColor.STRIKETHROUGH + "=====================[" + ChatColor.YELLOW + " Fw" + ChatColor.GOLD + "War " + ChatColor.GRAY + "]======================");
+
+        sender.sendMessage(ChatColor.GRAY + "   >> " + ChatColor.RESET + " Loading configuration...");
         loadConfiguration();
 
-        Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Registering commands...");
+        sender.sendMessage(ChatColor.GRAY + "   >> " + ChatColor.RESET + " Loading localization...");
+        LocalizationManager.getInstance(this).loadLanguageFile();
+
+        sender.sendMessage(ChatColor.GRAY + "   >> " + ChatColor.RESET + " Registering commands...");
         registerCommands();
 
-        Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Registering serializable objects...");
+        sender.sendMessage(ChatColor.GRAY + "   >> " + ChatColor.RESET + " Registering serializable objects...");
         ConfigurationSerialization.registerClass(CorePlot.class);
 
-        Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Registering listeners...");
+        sender.sendMessage(ChatColor.GRAY + "   >> " + ChatColor.RESET + " Registering listeners...");
         registerListeners();
 
-        Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Loading core plots...");
+        sender.sendMessage(ChatColor.GRAY + "   >> " + ChatColor.RESET + " Loading core plots...");
         SimpleStorageService.getInstance(this).loadCorePlots();
 
-        Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Loading Arenas...");
+        sender.sendMessage(ChatColor.GRAY + "   >> " + ChatColor.RESET + " Loading Arenas...");
         StorageManager.getInstance(this).loadArenas();
 
-        Bukkit.getConsoleSender().sendMessage(MessageUtils.getPluginPrefix() + ChatColor.RESET + " Loading Kits...");
+        sender.sendMessage(ChatColor.GRAY + "   >> " + ChatColor.RESET + " Loading Kits...");
         StorageManager.getInstance(this).loadKits();
+
+        sender.sendMessage(ChatColor.GRAY + "" + ChatColor.STRIKETHROUGH +  "====================================================");
     }
 
     @Override
@@ -81,6 +94,10 @@ public final class Fwwar extends JavaPlugin {
     public void registerListeners() {
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new ArenaCreationListener(), this);
+    }
+
+    public static LocalizationManager getLocalizationManager() {
+        return LocalizationManager.getInstance(Fwwar.getPlugin(Fwwar.class));
     }
 
 }

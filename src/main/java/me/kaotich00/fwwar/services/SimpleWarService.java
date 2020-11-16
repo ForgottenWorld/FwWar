@@ -5,6 +5,8 @@ import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.kit.Kit;
 import me.kaotich00.fwwar.utils.WarTypes;
+import me.kaotich00.fwwar.war.assault.SiegeWar;
+import org.bukkit.Bukkit;
 
 import java.util.*;
 
@@ -55,10 +57,22 @@ public class SimpleWarService implements WarService {
         Message.WAR_ENDED.broadcast();
         currentWar.stopWar();
         SimpleScoreboardService.getInstance().removeScoreboards();
+
+        if(currentWar instanceof SiegeWar) {
+            Bukkit.getScheduler().cancelTask(SimpleWarService.getInstance().getWarTaskId());
+        }
+    }
+
+    public void deleteWar() {
+        this.currentWar = null;
     }
 
     public int getWarTaskId() {
         return this.warTaskId;
+    }
+
+    public void setWarTaskId(int warTaskId) {
+        this.warTaskId = warTaskId;
     }
 
     public void addKit(WarTypes warType, Kit kit){
