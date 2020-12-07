@@ -2,6 +2,7 @@ package me.kaotich00.fwwar.api.war;
 
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
+import me.kaotich00.fwwar.objects.arena.Arena;
 import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
 import org.bukkit.entity.Player;
@@ -171,5 +172,17 @@ public interface War {
      * @return a List of player UUIDs
      */
     List<UUID> getParticipantPlayers();
+
+    /**
+     * Set the arena for the current war
+     * @param arena the Arena
+     */
+    void setArena(Arena arena);
+
+    /**
+     * Return the Arena where the current war will be played
+     * @return an Optional of Arena
+     */
+    Optional<Arena> getArena();
 
 }

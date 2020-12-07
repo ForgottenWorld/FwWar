@@ -17,6 +17,7 @@ public class CommandUtils {
     public static final String WAR_STOP_COMMAND = "stop";
     public static final String WAR_INFO_COMMAND = "info";
     public static final String WAR_IMPORT_COMMAND = "import";
+    public static final String WAR_CHOOSE_ARENA = "chooseArena";
 
     public static final String WAR_ARENA_COMMAND = "arena";
     public static final String ARENA_NEW_COMMAND = "new";

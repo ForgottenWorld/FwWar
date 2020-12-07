@@ -3,6 +3,7 @@ package me.kaotich00.fwwar.war;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.api.war.War;
+import me.kaotich00.fwwar.objects.arena.Arena;
 import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.entity.Player;
 
@@ -15,6 +16,7 @@ public abstract class AbstractWar implements War {
     protected List<Nation> nations;
     protected Map<Town, List<UUID>> players;
     protected List<UUID> deathQueue;
+    protected Arena arena;
 
     @Override
     public void setWarStatus(WarStatus warStatus) {
@@ -135,4 +137,13 @@ public abstract class AbstractWar implements War {
         return playerList;
     }
 
+    @Override
+    public void setArena(Arena arena) {
+        this.arena = arena;
+    }
+
+    @Override
+    public Optional<Arena> getArena() {
+        return Optional.ofNullable(arena);
+    }
 }

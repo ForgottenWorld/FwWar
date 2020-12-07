@@ -55,6 +55,7 @@ strings:
   war_will_began: "&aLa guerra iniziera' fra &6{0} &asecondi"
   war_town_defeated: "&cLa citta' &6{0} &c ha perso tutti i suoi cittadini! La citta' e' stata sconfitta in guerra."
   war_town_defeated_siege_war: "&cLa citta' &6{0} &c e' stata conquistata."
+  war_must_select_arena: "&cErrore. Devi prima selezionare un arena in cui la guerra dovrà essere disputata con il comando &6/war chooseArena <name>"
   war_creation_menu: |+
     &e&m&l---------------------------------------------
     &a
@@ -120,7 +121,8 @@ strings:
     &7
      Ora che hai creato la guerra, segui gli step seguenti:
     &b&l 1) &7Aggiungi le nazioni partecipanti con il comando &e/war add <nazione> <prezzo>
-    &b&l 2) &7Conferma la guerra con il comando &e/war confirm
+    &b&l 2) &7Scegli l'arena dove dev'essere disputata con &e/war chooseArena <nome>
+    &b&l 3) &7Conferma la guerra con il comando &e/war confirm
     &a&m
     &l---------------------------------------------
 
@@ -159,6 +161,7 @@ strings:
   arena_creation_step: "&7Tasto destro su un blocco con una &6PALA DI LEGNO &7per selezionare &6{0}"
   arena_creation_completed: "&aCreazione della Arena completata!"
   arena_deleted: "&aCancellata con successo l'arena &6{0}"
+  arena_selected: "&aSelezionata con successo &6{0} &acome arena per la guerra attuale"
 
   nation_already_present: "&cLa nazione che hai specificato e' gia' parte della guerra"
   nation_not_present: "&cLa nazione che hai specificato non e' parte della guerra"

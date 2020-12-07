@@ -49,6 +49,7 @@ public class WarCommandManager implements TabExecutor {
         this.commandRegistry.put(CommandUtils.WAR_INFO_COMMAND, new InfoCommand());
         this.commandRegistry.put(CommandUtils.WAR_ARENA_COMMAND, new ArenaCommand());
         this.commandRegistry.put(CommandUtils.WAR_IMPORT_COMMAND, new ImportCommand());
+        this.commandRegistry.put(CommandUtils.WAR_CHOOSE_ARENA, new ChooseArenaCommand());
     }
 
     private Command getCommand(String name) {
@@ -104,9 +105,14 @@ public class WarCommandManager implements TabExecutor {
                     }
                     break;
                 case CommandUtils.WAR_ARENA_COMMAND:
-                    suggestions.add("add");
+                    suggestions.add("new");
                     suggestions.add("edit");
                     suggestions.add("delete");
+                    break;
+                case CommandUtils.WAR_CHOOSE_ARENA:
+                    for(Arena arena: SimpleArenaService.getInstance().getArenas()) {
+                        suggestions.add(arena.getName());
+                    }
                     break;
             }
         }

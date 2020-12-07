@@ -1,4 +1,4 @@
-strings:
+ strings:
   fwwar_prefix: "&8[&eFw&6&lWar&8]"
   help_message: |+
    &a&l&m------------------------------------------
@@ -54,6 +54,7 @@ strings:
   war_will_began: "&aThe war will began in &6{0} &aseconds"
   war_town_defeated: "&cThe town &6{0} &c lost all of his citizen! The town is defeated."
   war_town_defeated_siege_war: "&cThe town &6{0} &c has been conquered."
+  war_must_select_arena: "&cError. You must first select an Arena for this war with the command &6/war chooseArena <name>"
   war_creation_menu: |+
     &e&m&l---------------------------------------------
     &a
@@ -61,7 +62,7 @@ strings:
     &7
     Start by selecting one of the following war types:
     &e&l [1] &6&lBolt war
-    &e&l [2] &6&lAssault war &c[Currently unavailable]
+    &e&l [2] &6&lAssault war
     &e
     &m&l---------------------------------------------"
   war_creation_bolt_war: |+
@@ -119,7 +120,8 @@ strings:
     &7
     Now that you have created the war, you may proceed as follows:
     &b&l 1) &7Add participant nations with command &e/war add <nation> <price>
-    &b&l 2) &7When you finished all of the above type &e/war confirm
+    &b&l 2) &7Choose the arena with the command &e/war chooseArena <arena>
+    &b&l 3) &7When you finished all of the above type &e/war confirm
     &a
     &m&l---------------------------------------------
 
@@ -155,6 +157,7 @@ strings:
   arena_creation_step: "&7Right click on a block with a &6WOODEN SHOVEL &7to select &6{0}"
   arena_creation_completed: "&aArena creation completed!"
   arena_deleted: "&aSuccessfully deleted arena &6{0}"
+  arena_selected: "&aSuccessfully set &6{0} &aas the arena for the current war"
 
   nation_already_present: "&cThe nation you specified is already part of the war"
   nation_not_present: "&cThe nation you specified is not part of the war"

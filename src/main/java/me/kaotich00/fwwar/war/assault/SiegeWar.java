@@ -45,6 +45,11 @@ public class SiegeWar extends AssaultWar {
     public void startWar() {
         TownyAPI townyAPI = TownyAPI.getInstance();
 
+        if(!getArena().isPresent()) {
+            Message.WAR_MUST_SELECT_ARENA.broadcast();
+            return;
+        }
+
         // Check if the required amount of Nations is present
         if(getParticipantsNations().size() < 2) {
             Message.NOT_ENOUGH_NATIONS.broadcast();

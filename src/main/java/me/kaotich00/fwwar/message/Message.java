@@ -60,6 +60,7 @@ public enum Message {
     WAR_CREATION_ASSAULT_WAR("war_creation_assault_war", false),
     WAR_CREATION_ASSAULT_WAR_CLASSIC("war_creation_assault_war_classic", false),
     WAR_CREATION_ASSAULT_WAR_SIEGE("war_creation_assault_war_siege", false),
+    WAR_MUST_SELECT_ARENA("war_must_select_arena", true),
 
     KIT_ALREADY_EXIST("kit_already_exists", true),
     KIT_CREATED("kit_created", true),
@@ -77,6 +78,7 @@ public enum Message {
     ARENA_CREATION_STEP("arena_creation_step", true),
     ARENA_CREATION_COMPLETED("arena_creation_completed", true),
     ARENA_DELETED("arena_deleted", true),
+    ARENA_SELECTED("arena_selected", true),
 
     NATION_ALREADY_PRESENT("nation_already_present", true),
     NATION_NOT_PRESENT("nation_not_present", true),
