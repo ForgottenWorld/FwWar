@@ -42,6 +42,11 @@ strings:
   war_at_least_two_nation: "&cCi devono essere almeno due nazioni per la guerra. Per aggiungerne una usa il comando &e/war add <nazione> <prezzo>"
   war_faction_not_enough_kits: "&cCi deve essere almeno un kit per confermare la guerra. Puoi modificarlo con questo comando &e/war kit"
   war_confirmed: "&aLa Guerra e' stata confermata, da adesso in poi, non potrai piu' modificare nulla. Scrivi &e/war start &a quando necessiterai di iniziare la guerra."
+  war_confirm_title: "&eCiao, sei parte della prossima guerra!"
+  war_confirm_subtitle: "&bControlla la chat"
+  war_confirm_chat_message: "&3 Ciao &6{0}&3, fai parte della prossima guerra. &bEssendo una guerra a kit, devi scegliere un kit da usare in battaglia."
+  war_choose_kit_button: "[CLICCA QUA PER SCEGLIERE UN KIT]"
+  war_choose_kit_tooltip: "Clicca per scegliere un kit"
   war_already_confirmed: "&cLa Guerra e' confermata, non puoi piu' modificare nulla."
   war_already_started: "&cLa Guerra e' iniziata, non puoi piu' editare nulla."
   war_must_be_confirmed: "&cLa guerra deve essere confermata"
@@ -124,6 +129,19 @@ strings:
     &b&l 2) &7Scegli l'arena dove dev'essere disputata con &e/war chooseArena <nome>
     &b&l 3) &7Conferma la guerra con il comando &e/war confirm
     &a&m
+    &l---------------------------------------------
+  war_info_command: |+
+    &e&m&l---------------------------------------------
+    &a
+    &7 Informazioni sulla guerra
+    &e
+     Tipologia guerra: &a&l{0}
+    &e
+     Stato della guerra: &a&l{1}
+    &7
+     Lista delle nazioni partecipanti:
+    &r{2}
+    &e&m
     &l---------------------------------------------
 
   kit_already_exists: "&cUn kit con questo nome &6{0} &cesiste gia'"

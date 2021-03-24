@@ -29,7 +29,7 @@ public class ChooseKitCommand extends UserCommand {
             return;
         }
 
-        War currentWar = SimpleWarService.getInstance().getWar().get();
+        War currentWar = warService.getWar().get();
 
         if(!currentWar.getWarStatus().equals(WarStatus.CONFIRMED)) {
             Message.WAR_CANNOT_CHOOSE_KIT.send(sender);

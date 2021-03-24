@@ -4,10 +4,7 @@ import me.kaotich00.fwwar.api.services.KitService;
 import me.kaotich00.fwwar.objects.kit.Kit;
 import me.kaotich00.fwwar.utils.WarTypes;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class SimpleKitService implements KitService {
 
@@ -43,8 +40,9 @@ public class SimpleKitService implements KitService {
         this.kits.get(warType).put(kitName, kit);
     }
 
-    public Collection<Kit> getKitsForType(WarTypes warType) {
-        return this.kits.get(warType).values();
+    public List<Kit> getKitsForType(WarTypes warType) {
+        if(this.kits.get(warType) == null) return Collections.EMPTY_LIST;
+        return new ArrayList<>(this.kits.get(warType).values());
     }
 
     public Optional<Kit> getKitForName(WarTypes warType, String name) {

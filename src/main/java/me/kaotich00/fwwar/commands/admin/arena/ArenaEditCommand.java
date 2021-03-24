@@ -40,7 +40,7 @@ public class ArenaEditCommand extends AdminCommand {
 
     @Override
     public String getUsage() {
-        return "/planetwar arena edit <name>";
+        return "/war arena edit <name>";
     }
 
     @Override

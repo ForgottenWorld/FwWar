@@ -23,7 +23,7 @@ public class MessageUtils {
     }
 
     public static String chatDelimiter() {
-        return ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-"));
+        return ChatColor.YELLOW + "\n" + ChatColor.STRIKETHROUGH + "\n" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-"));
     }
 
     public static String formatSuccessMessage(String message) {

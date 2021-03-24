@@ -6,6 +6,7 @@ import me.kaotich00.fwwar.commands.api.UserCommand;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.war.ParticipantNation;
 import me.kaotich00.fwwar.services.SimpleWarService;
+import me.kaotich00.fwwar.utils.MessageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -27,20 +28,11 @@ public class InfoCommand extends UserCommand {
 
         War war = warService.getWar().get();
 
-        StringBuilder promptMessage = new StringBuilder(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "" + String.join("", Collections.nCopies(45, "-")) + "\n" +
-                ChatColor.GRAY + "" + " \n Info on the current war:\n" +
-                ChatColor.YELLOW + "\n" + " War type: " + ChatColor.GREEN + "" + ChatColor.BOLD + war.getWarType().name() + "\n" +
-                ChatColor.YELLOW + "\n" + " War status: " + ChatColor.GREEN + "" + ChatColor.BOLD + war.getWarStatus().name() + "\n" +
-                ChatColor.GRAY + "\n" + " List of participating nations: \n");
-
+        StringBuilder participantsList = new StringBuilder();
         for(ParticipantNation nation: war.getParticipants()) {
-           promptMessage.append("\n " + ChatColor.AQUA + " >> " + ChatColor.DARK_AQUA + "" + ChatColor.BOLD).append(nation.getNation().getName());
+            participantsList.append("\n " + ChatColor.AQUA + " >> " + ChatColor.DARK_AQUA + "" + ChatColor.BOLD).append(nation.getNation().getName());
         }
-
-        promptMessage.append(ChatColor.YELLOW + "\n" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "\n").append(String.join("", Collections.nCopies(45, "-")));
-
-        sender.sendMessage(promptMessage.toString());
-
+        Message.WAR_INFO_COMMAND.send(sender, war.getWarType().name(), war.getWarStatus().name(), participantsList.toString());
     }
 
     @Override

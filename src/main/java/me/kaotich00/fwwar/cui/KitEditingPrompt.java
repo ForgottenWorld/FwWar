@@ -14,6 +14,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -133,7 +134,8 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
 
             War war = optWar.get();
 
-            for(Kit kit : kitService.getKitsForType(war.getWarType())) {
+            Collection<Kit> kitsList = kitService.getKitsForType(war.getWarType());
+            for(Kit kit : kitsList) {
                 promptMessage.append(ChatColor.YELLOW + "" + ChatColor.BOLD + "\n [").append(kit.getName()).append("] \n");
             }
 

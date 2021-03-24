@@ -7,6 +7,7 @@ import me.kaotich00.fwwar.objects.war.ParticipantNation;
 import me.kaotich00.fwwar.objects.war.ParticipantTown;
 import me.kaotich00.fwwar.services.SimpleKitService;
 import me.kaotich00.fwwar.services.SimpleWarService;
+import me.kaotich00.fwwar.utils.MessageUtils;
 import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
 import net.md_5.bungee.api.ChatColor;
@@ -72,24 +73,19 @@ public class ConfirmCommand extends AdminCommand {
                     Player participantPlayer = Bukkit.getPlayer(playerUUID);
 
                     if(participantPlayer != null) {
-                        participantPlayer.sendTitle(ChatColor.YELLOW + "Hi, you are part of the upcoming war!", ChatColor.GOLD + "Check the chat right now", 15, 200, 15);
-                        String startMessage = ChatColor.GREEN + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-")) + "\n" +
-                                ChatColor.DARK_AQUA + " \n Hi " + participantPlayer.getName() + ", you will be part of the next war." +
-                                ChatColor.AQUA + " Therefore you must choose a kit to use during the battle.";
+                        participantPlayer.sendTitle(Message.WAR_CONFIRM_TITLE.asString(), Message.WAR_CONFIRM_SUBTITLE.asString(), 15, 200, 15);
+                        String startMessage = MessageUtils.chatDelimiter() + "\n" + Message.WAR_CONFIRM_CHAT_MESSAGE.asString(participantPlayer.getName());
 
-
-                        TextComponent clickMessage = new TextComponent("\n\n [CLICK HERE TO CHOOSE A KIT]\n");
+                        TextComponent clickMessage = new TextComponent("\n\n " + Message.WAR_CHOOSE_KIT_BUTTON.asString());
                         clickMessage.setColor(ChatColor.YELLOW);
                         clickMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/war chooseKit"));
-                        clickMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to choose a kit").color(ChatColor.GREEN).italic(true).create()));
-
-                        String endMessage = ChatColor.GREEN + "\n" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-"));
+                        clickMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Message.WAR_CHOOSE_KIT_TOOLTIP.asString()).color(ChatColor.GREEN).italic(true).create()));
 
                         ComponentBuilder message = new ComponentBuilder();
                         message
                                 .append(startMessage)
                                 .append(clickMessage)
-                                .append(endMessage);
+                                .append(MessageUtils.chatDelimiter());
 
                         participantPlayer.sendMessage(message.create());
                     }

@@ -84,7 +84,7 @@ public class ClassicWar extends AssaultWar {
             String bossBarName = "fwwar.startwar";
             BossBar bossBar = Bukkit.getServer().createBossBar(
                     NamespacedKey.minecraft(bossBarName),
-                    ChatColor.GREEN + "The war will began in 30 seconds",
+                    Message.WAR_WILL_BEGAN.asString("30"),
                     BarColor.GREEN,
                     BarStyle.SEGMENTED_10
             );
@@ -128,7 +128,7 @@ public class ClassicWar extends AssaultWar {
                             }
                         }
 
-                        bossBar.setTitle(MessageUtils.formatSuccessMessage("The match will began in " + t.getSecondsLeft() + " seconds"));
+                        bossBar.setTitle(Message.WAR_WILL_BEGAN.asString(t.getSecondsLeft()));
                         double progress = Math.max(bossBar.getProgress() - 0.03, 0.0);
                         bossBar.setProgress(progress);
                     });
