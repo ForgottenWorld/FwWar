@@ -11,20 +11,18 @@ import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.plot.CorePlot;
+import me.kaotich00.fwwar.objects.war.ParticipantNation;
+import me.kaotich00.fwwar.objects.war.ParticipantTown;
 import me.kaotich00.fwwar.services.SimplePlotService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.war.assault.SiegeWar;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class AddCommand extends AdminCommand {
 
@@ -34,31 +32,26 @@ public class AddCommand extends AdminCommand {
 
         SimpleWarService warService = SimpleWarService.getInstance();
 
-        if(!warService.getCurrentWar().isPresent()) {
+        if(!warService.getWar().isPresent()) {
             Message.WAR_NOT_FOUND.send(sender);
             return;
         }
 
-        War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+        War war = warService.getWar().get();
 
-        if(currentWar.getWarStatus().equals(WarStatus.CONFIRMED)) {
+        if(war.getWarStatus().equals(WarStatus.CONFIRMED)) {
             Message.WAR_ALREADY_CONFIRMED.send(sender);
             return;
         }
 
-        if(currentWar.hasParticipantsLimit()) {
-            if (currentWar.getMaxAllowedParticipants() < currentWar.getParticipantsNations().size() + 1) {
+        if(war.hasParticipantsLimit()) {
+            if (war.getMaxAllowedParticipants() < war.getParticipants().size() + 1) {
                 Message.CANNOT_ADD_MORE_NATIONS.send(sender);
                 return;
             }
         }
 
         String nationName = args[1];
-
-        if(currentWar.getParticipantsNations().stream().filter(nation -> nation.getName().equalsIgnoreCase(nationName)).findFirst().isPresent()) {
-            Message.NATION_ALREADY_PRESENT.send(sender);
-            return;
-        }
 
         TownyAPI townyAPI = TownyAPI.getInstance();
         Nation nation;
@@ -69,7 +62,12 @@ public class AddCommand extends AdminCommand {
             return;
         }
 
-        if(SimpleWarService.getInstance().getCurrentWar().get() instanceof SiegeWar) {
+        if(war.getParticipant(nation.getUuid()) != null) {
+            Message.NATION_ALREADY_PRESENT.send(sender);
+            return;
+        }
+
+        if(war instanceof SiegeWar) {
             Set<Town> missingTowns = new HashSet<>();
 
             SimplePlotService plotService = SimplePlotService.getInstance();
@@ -87,8 +85,6 @@ public class AddCommand extends AdminCommand {
                 }
                 return;
             }
-
-            FileConfiguration defaultConfig = Fwwar.getDefaultConfig();
 
             for(Town town: nation.getTowns()) {
                 plotService.getCorePlotOfTown(town.getUuid()).ifPresent(corePlot -> {
@@ -117,12 +113,17 @@ public class AddCommand extends AdminCommand {
             return;
         }
 
-        currentWar.addNation(nation);
+        war.addParticipant(nation);
 
         for(Town town: nation.getTowns()) {
+            ParticipantNation participantNation = war.getParticipant(nation.getUuid());
+            participantNation.addTown(town);
+
             for(Resident resident: town.getResidents()) {
+                ParticipantTown participantTown = participantNation.getTown(town.getUuid());
                 UUID residentUUID = resident.getUUID();
-                currentWar.addPlayerToWar(town, residentUUID);
+
+                participantTown.addPlayer(residentUUID);
             }
         }
 
@@ -132,7 +133,7 @@ public class AddCommand extends AdminCommand {
 
     @Override
     public String getInfo() {
-        return super.getInfo();
+        return "";
     }
 
     @Override
@@ -142,12 +143,22 @@ public class AddCommand extends AdminCommand {
 
     @Override
     public String getName() {
-        return super.getName();
+        return "add";
     }
 
     @Override
     public Integer getRequiredArgs() {
         return 3;
+    }
+
+    @Override
+    public List<String> getSuggestions(String[] args) {
+        List<String> suggestions = new ArrayList<>();
+        TownyAPI townyAPI = TownyAPI.getInstance();
+        for(Nation nation: townyAPI.getDataSource().getNations()) {
+            suggestions.add(nation.getName());
+        }
+        return suggestions;
     }
 
 }

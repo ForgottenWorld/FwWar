@@ -27,8 +27,7 @@ public class DiscourseParser {
     private String cleanContent(String content) {
         String strRegEx = "<[^>]*>";
 
-        String cleanContent = content.replaceAll(strRegEx, "");
-        return cleanContent;
+        return content.replaceAll(strRegEx, "");
     }
 
     private Map<String,String> parseValues(String content) {

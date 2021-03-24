@@ -6,6 +6,7 @@ import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.gui.kit.KitEditGui;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.kit.Kit;
+import me.kaotich00.fwwar.services.SimpleKitService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.MessageUtils;
 import org.bukkit.Bukkit;
@@ -14,10 +15,11 @@ import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
+import java.util.Optional;
 
 public class KitEditingPrompt implements ConversationAbandonedListener{
 
-    private ConversationFactory conversationFactory;
+    private final ConversationFactory conversationFactory;
 
     public KitEditingPrompt(Fwwar plugin) {
         this.conversationFactory = new ConversationFactory(plugin)
@@ -46,8 +48,7 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
 
         @Override
         public String getPromptText(ConversationContext context) {
-            String promptMessage = Message.KIT_MENU.asString();
-            return promptMessage;
+            return Message.KIT_MENU.asString();
         }
 
         @Override
@@ -56,7 +57,7 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
                 case 1:
                     return new NewKitPrompt();
                 case 2:
-                    if(SimpleWarService.getInstance().getKitsForType(SimpleWarService.getInstance().getCurrentWar().get().getWarType()).size() == 0) {
+                    if(SimpleKitService.getInstance().getKitsForType(SimpleWarService.getInstance().getWar().get().getWarType()).size() == 0) {
                         Message.NO_KIT.send((Player) context.getForWhom());
                     } else {
                         return new KitEditPrompt();
@@ -82,16 +83,20 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
 
         @Override
         public String getPromptText(ConversationContext context) {
-            String promptMessage = Message.KIT_NAME_SELECTION.asString();
-            return promptMessage;
+            return Message.KIT_NAME_SELECTION.asString();
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             SimpleWarService warService = SimpleWarService.getInstance();
-            War currentWar = warService.getCurrentWar().get();
+            SimpleKitService kitService = SimpleKitService.getInstance();
 
-            boolean doesKitExists = warService.getKitForName(currentWar.getWarType(), input).isPresent();
+            Optional<War> optWar = warService.getWar();
+            if(!optWar.isPresent()) return Prompt.END_OF_CONVERSATION;
+
+            War war = optWar.get();
+
+            boolean doesKitExists = kitService.getKitForName(war.getWarType(), input).isPresent();
 
             if(doesKitExists) {
                 Message.KIT_ALREADY_EXIST.send((Player) context.getForWhom(), input);
@@ -99,7 +104,7 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
             }
 
             Kit kit = new Kit(input);
-            warService.addKit(currentWar.getWarType(), kit);
+            kitService.addKit(war.getWarType(), kit);
 
             Message.KIT_CREATED.send((Player) context.getForWhom(), input);
 
@@ -119,17 +124,21 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
 
         @Override
         public String getPromptText(ConversationContext context) {
-            String promptMessage = Message.KIT_EDITOR.asString();
+            StringBuilder promptMessage = new StringBuilder(Message.KIT_EDITOR.asString());
 
+            SimpleKitService kitService = SimpleKitService.getInstance();
             SimpleWarService warService = SimpleWarService.getInstance();
-            War war = warService.getCurrentWar().get();
+            Optional<War> optWar = warService.getWar();
+            if(!optWar.isPresent()) return "";
 
-            for(Kit kit : warService.getKitsForType(war.getWarType())) {
-                promptMessage += ChatColor.YELLOW + "" + ChatColor.BOLD + "\n ["+kit.getName()+"] \n";
+            War war = optWar.get();
+
+            for(Kit kit : kitService.getKitsForType(war.getWarType())) {
+                promptMessage.append(ChatColor.YELLOW + "" + ChatColor.BOLD + "\n [").append(kit.getName()).append("] \n");
             }
 
-            promptMessage += ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + "\n" + String.join("", Collections.nCopies(45, "-"));
-            return promptMessage;
+            promptMessage.append(MessageUtils.chatDelimiter());
+            return promptMessage.toString();
         }
 
         @Override
@@ -144,7 +153,13 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
 
         @Override
         protected boolean isInputValid(ConversationContext context, String input) {
-            return SimpleWarService.getInstance().getKitForName(SimpleWarService.getInstance().getCurrentWar().get().getWarType(), input).isPresent();
+            SimpleWarService warService = SimpleWarService.getInstance();
+            Optional<War> optWar = warService.getWar();
+            if(!optWar.isPresent()) return false;
+
+            War war = optWar.get();
+
+            return SimpleKitService.getInstance().getKitForName(war.getWarType(), input).isPresent();
         }
 
         @Override

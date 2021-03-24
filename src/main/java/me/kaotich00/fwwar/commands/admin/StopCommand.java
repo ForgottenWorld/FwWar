@@ -7,6 +7,8 @@ import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.command.CommandSender;
 
+import java.util.List;
+
 public class StopCommand extends AdminCommand {
 
     @Override
@@ -15,12 +17,12 @@ public class StopCommand extends AdminCommand {
 
         SimpleWarService warService = SimpleWarService.getInstance();
 
-        if(!warService.getCurrentWar().isPresent()) {
+        if(!warService.getWar().isPresent()) {
             Message.WAR_NOT_FOUND.send(sender);
             return;
         }
 
-        War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+        War currentWar = SimpleWarService.getInstance().getWar().get();
 
         if(!currentWar.getWarStatus().equals(WarStatus.STARTED)) {
             Message.WAR_MUST_BE_STARTED.send(sender);
@@ -32,7 +34,7 @@ public class StopCommand extends AdminCommand {
 
     @Override
     public String getInfo() {
-        return super.getInfo();
+        return "";
     }
 
     @Override
@@ -42,12 +44,17 @@ public class StopCommand extends AdminCommand {
 
     @Override
     public String getName() {
-        return super.getName();
+        return "stop";
     }
 
     @Override
     public Integer getRequiredArgs() {
         return 1;
+    }
+
+    @Override
+    public List<String> getSuggestions(String[] args) {
+        return null;
     }
 
 }

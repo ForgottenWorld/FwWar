@@ -6,6 +6,8 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.message.Message;
+import me.kaotich00.fwwar.objects.war.ParticipantNation;
+import me.kaotich00.fwwar.objects.war.ParticipantTown;
 import me.kaotich00.fwwar.services.SimpleScoreboardService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.task.WarPlotConquestTask;
@@ -23,10 +25,6 @@ public class SiegeWar extends AssaultWar {
 
     public SiegeWar() {
         this.setWarStatus(WarStatus.CREATED);
-        this.nations = new ArrayList<>();
-        this.players = new HashMap<>();
-        this.deathQueue = new ArrayList<>();
-        this.killCount = new HashMap<>();
         this.townsForNation = new HashMap<>();
         this.warTaskId = 0;
     }
@@ -51,16 +49,16 @@ public class SiegeWar extends AssaultWar {
         }
 
         // Check if the required amount of Nations is present
-        if(getParticipantsNations().size() < 2) {
+        if(getParticipants().size() < 2) {
             Message.NOT_ENOUGH_NATIONS.broadcast();
             return;
         }
 
         // Check if at least 2 Nations are considered enemies between each other
         boolean areThereEnemies = false;
-        for(Nation nation: getParticipantsNations()) {
-            for(Nation plausibleEnemy: getParticipantsNations()) {
-                if(nation.hasEnemy(plausibleEnemy)) {
+        for(ParticipantNation nation: getParticipants()) {
+            for(ParticipantNation plausibleEnemy: getParticipants()) {
+                if(nation.getNation().hasEnemy(plausibleEnemy.getNation())) {
                     areThereEnemies = true;
                 }
             }
@@ -77,26 +75,24 @@ public class SiegeWar extends AssaultWar {
         SimpleScoreboardService.getInstance().initScoreboards();
 
         FileConfiguration defaultConfig = Fwwar.getDefaultConfig();
-        Long seconds = defaultConfig.getLong("war.plot_check_time") * 20;
+        long seconds = defaultConfig.getLong("war.plot_check_time") * 20;
 
         SimpleWarService.getInstance().setWarTaskId(Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Fwwar.getPlugin(Fwwar.class), new WarPlotConquestTask(Fwwar.getPlugin(Fwwar.class), this), seconds, seconds));
     }
 
     @Override
     public void stopWar() {
-        Iterator<Town> iterator = this.players.keySet().iterator();
-
-        while(iterator.hasNext()) {
-            Town town = iterator.next();
-            List<UUID> residents = this.players.get(town);
-
-            for(UUID uuid: residents) {
-                Player player = Bukkit.getPlayer(uuid);
-                if(player != null) {
-                    try {
-                        player.teleport(town.getSpawn());
-                    } catch (TownyException e) {
-                        e.printStackTrace();
+        for(ParticipantNation nation: this.getParticipants()) {
+            for (ParticipantTown participantTown : nation.getTowns()) {
+                Town town = participantTown.getTown();
+                for (UUID uuid : participantTown.getPlayers()) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    if (player != null) {
+                        try {
+                            player.teleport(town.getSpawn());
+                        } catch (TownyException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -112,7 +108,6 @@ public class SiegeWar extends AssaultWar {
 
     @Override
     public void handlePlayerDeath(Player player) {
-        return;
     }
 
 }

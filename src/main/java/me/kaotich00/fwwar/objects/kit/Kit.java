@@ -8,7 +8,7 @@ import java.util.List;
 public class Kit {
 
     String name;
-    private List<ItemStack> itemsList;
+    private final List<ItemStack> itemsList;
 
     public Kit(String name) {
         this.name = name;

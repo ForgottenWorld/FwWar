@@ -9,6 +9,8 @@ import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
+import java.util.List;
+
 
 public class ImportCommand extends AdminCommand {
 
@@ -18,8 +20,8 @@ public class ImportCommand extends AdminCommand {
 
         String topicId = args[1];
 
-        if(SimpleWarService.getInstance().getCurrentWar().isPresent()) {
-            War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+        if(SimpleWarService.getInstance().getWar().isPresent()) {
+            War currentWar = SimpleWarService.getInstance().getWar().get();
             WarStatus warStatus = currentWar.getWarStatus();
 
             if(!warStatus.equals(WarStatus.ENDED)) {
@@ -42,7 +44,7 @@ public class ImportCommand extends AdminCommand {
 
     @Override
     public String getInfo() {
-        return super.getInfo();
+        return "";
     }
 
     @Override
@@ -52,12 +54,17 @@ public class ImportCommand extends AdminCommand {
 
     @Override
     public String getName() {
-        return super.getName();
+        return "import";
     }
 
     @Override
     public Integer getRequiredArgs() {
         return 2;
+    }
+
+    @Override
+    public List<String> getSuggestions(String[] args) {
+        return null;
     }
 
 }

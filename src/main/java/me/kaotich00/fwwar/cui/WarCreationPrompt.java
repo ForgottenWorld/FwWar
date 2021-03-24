@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 public class WarCreationPrompt implements ConversationAbandonedListener {
 
-    private ConversationFactory conversationFactory;
+    private final ConversationFactory conversationFactory;
 
     public WarCreationPrompt(Fwwar plugin) {
         this.conversationFactory = new ConversationFactory(plugin)

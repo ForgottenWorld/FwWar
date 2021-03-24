@@ -9,10 +9,11 @@ import com.palmergames.bukkit.towny.object.Town;
 import it.forgottenworld.fwechelonapi.FWEchelonApi;
 import it.forgottenworld.fwechelonapi.discourse.DiscoursePost;
 import it.forgottenworld.fwechelonapi.services.DiscourseService;
-import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.plot.CorePlot;
+import me.kaotich00.fwwar.objects.war.ParticipantNation;
+import me.kaotich00.fwwar.objects.war.ParticipantTown;
 import me.kaotich00.fwwar.services.SimplePlotService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarTypes;
@@ -21,7 +22,6 @@ import me.kaotich00.fwwar.war.assault.SiegeWar;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -78,7 +78,7 @@ public class DiscourseImporter {
 
                     Message.IMPORTER_INFO.send(sender, "Adding nation " + ChatColor.GREEN + nation.getName() + ChatColor.GRAY + " to participants");
 
-                    if(SimpleWarService.getInstance().getCurrentWar().get() instanceof SiegeWar) {
+                    if(SimpleWarService.getInstance().getWar().get() instanceof SiegeWar) {
                         Set<Town> missingTowns = new HashSet<>();
 
                         SimplePlotService plotService = SimplePlotService.getInstance();
@@ -113,14 +113,19 @@ public class DiscourseImporter {
                     nation.getAccount().withdraw(price, "Joining the war");
 
                     Message.IMPORTER_INFO.send(sender, ChatColor.GREEN + "Successfully added nation " + ChatColor.GOLD + nationName);
-                    importedWar.addNation(nation);
+                    importedWar.addParticipant(nation);
 
                     String[] participants = parsedValues.get("partecipanti").replace("[", "").replace("]", "").split(",");
                     for(String playerName: participants) {
                         Message.IMPORTER_INFO.send(sender, "Adding resident " + ChatColor.GREEN + playerName + ChatColor.GRAY + " to participants");
                         Resident resident = townyAPI.getDataSource().getResident(playerName);
 
-                        importedWar.addPlayerToWar(resident.getTown(), resident.getUUID());
+                        ParticipantNation participantNation = importedWar.getParticipant(resident.getTown().getNation().getUuid());
+                        if(participantNation == null) continue;
+                        ParticipantTown participantTown = participantNation.getTown(resident.getTown().getUuid());
+                        if(participantTown == null) continue;
+                        participantTown.addPlayer(resident.getUUID());
+
                         Message.IMPORTER_INFO.send(sender, ChatColor.GREEN + "Successfully added " + ChatColor.GREEN + playerName + ChatColor.GREEN + " to participants");
                     }
                 } catch (NotRegisteredException e) {

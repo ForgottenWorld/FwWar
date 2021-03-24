@@ -8,9 +8,8 @@ import java.util.Map;
 
 public class Arena {
 
-    private String name;
-
-    private Map<LocationType, Location> gameLocations;
+    private final String name;
+    private final Map<LocationType, Location> gameLocations;
 
     public Arena(String name) {
         this.name = name;

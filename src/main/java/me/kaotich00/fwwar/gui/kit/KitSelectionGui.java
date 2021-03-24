@@ -8,6 +8,7 @@ import me.kaotich00.fwwar.api.war.KitWar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.kit.Kit;
+import me.kaotich00.fwwar.services.SimpleKitService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -23,14 +24,17 @@ import java.util.Optional;
 
 public class KitSelectionGui {
 
-    private Player player;
+    private final Player player;
 
     public KitSelectionGui(Player player) {
         this.player = player;
     }
 
     public Gui prepareGui() {
-        War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+        Optional<War> optWar = SimpleWarService.getInstance().getWar();
+        if(!optWar.isPresent()) return null;
+
+        War war = optWar.get();
         Gui mainGUI = new Gui(6, ChatColor.YELLOW + "Click on a kit to choose it");
 
         OutlinePane background = new OutlinePane(0, 0, 9, 6, Pane.Priority.LOWEST);
@@ -40,7 +44,7 @@ public class KitSelectionGui {
         mainGUI.addPane(background);
 
         OutlinePane kits = new OutlinePane(1, 1, 7, 4, Pane.Priority.HIGH);
-        for(Kit kit: SimpleWarService.getInstance().getKitsForType(currentWar.getWarType())) {
+        for(Kit kit: SimpleKitService.getInstance().getKitsForType(war.getWarType())) {
             ItemStack kitItem = kitBuilder(kit);
             kits.addItem(new GuiItem(kitItem, event -> {
                 event.setCancelled(true);
@@ -51,9 +55,9 @@ public class KitSelectionGui {
                 ItemStack itemStack = inventory.getItem(rawSlot);
                 String kitName = itemStack.getItemMeta().getDisplayName();
 
-                Optional<Kit> optSelectedKit = SimpleWarService.getInstance().getKitForName(currentWar.getWarType(), kitName);
+                Optional<Kit> optSelectedKit = SimpleKitService.getInstance().getKitForName(war.getWarType(), kitName);
                 optSelectedKit.ifPresent(selectedKit -> {
-                    ((KitWar)currentWar).setPlayerKit(player, selectedKit);
+                    ((KitWar)war).setPlayerKit(player, selectedKit);
                     Message.KIT_SELECTED.send(player, kitName);
                 });
 

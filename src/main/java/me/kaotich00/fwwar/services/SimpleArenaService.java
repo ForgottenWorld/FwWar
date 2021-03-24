@@ -22,9 +22,9 @@ public class SimpleArenaService {
         SECOND_NATION_BATTLE_POINT
     }
 
-    private List<Arena> arenas;
-    private Map<UUID, Arena> playerCreationArena;
-    private Map<UUID, CreationStep> playerCreationStep;
+    private final List<Arena> arenas;
+    private final Map<UUID, Arena> playerCreationArena;
+    private final Map<UUID, CreationStep> playerCreationStep;
 
     private SimpleArenaService() {
         if (instance != null){

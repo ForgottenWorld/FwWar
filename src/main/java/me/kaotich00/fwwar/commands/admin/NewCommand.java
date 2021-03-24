@@ -10,14 +10,16 @@ import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class NewCommand extends AdminCommand {
 
     @Override
     public void onCommand(CommandSender sender, String[] args) {
         super.onCommand(sender, args);
 
-        if(SimpleWarService.getInstance().getCurrentWar().isPresent()) {
-            War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+        if(SimpleWarService.getInstance().getWar().isPresent()) {
+            War currentWar = SimpleWarService.getInstance().getWar().get();
             WarStatus warStatus = currentWar.getWarStatus();
 
             if(!warStatus.equals(WarStatus.ENDED)) {
@@ -32,7 +34,7 @@ public class NewCommand extends AdminCommand {
 
     @Override
     public String getInfo() {
-        return super.getInfo();
+        return "";
     }
 
     @Override
@@ -42,12 +44,17 @@ public class NewCommand extends AdminCommand {
 
     @Override
     public String getName() {
-        return super.getName();
+        return "new";
     }
 
     @Override
     public Integer getRequiredArgs() {
         return 1;
+    }
+
+    @Override
+    public List<String> getSuggestions(String[] args) {
+        return null;
     }
 
 }

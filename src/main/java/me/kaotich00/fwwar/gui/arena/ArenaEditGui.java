@@ -20,8 +20,8 @@ import java.util.List;
 
 public class ArenaEditGui {
 
-    private Arena arena;
-    private Player player;
+    private final Arena arena;
+    private final Player player;
 
     public ArenaEditGui(Arena arena, Player player) {
         this.arena = arena;

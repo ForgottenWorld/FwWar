@@ -2,7 +2,6 @@ package me.kaotich00.fwwar.objects.plot;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

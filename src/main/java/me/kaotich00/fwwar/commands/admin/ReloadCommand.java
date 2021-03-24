@@ -3,9 +3,10 @@ package me.kaotich00.fwwar.commands.admin;
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.config.ConfigurationManager;
-import me.kaotich00.fwwar.locale.LocalizationManager;
 import me.kaotich00.fwwar.message.Message;
 import org.bukkit.command.CommandSender;
+
+import java.util.List;
 
 public class ReloadCommand extends AdminCommand {
 
@@ -22,7 +23,7 @@ public class ReloadCommand extends AdminCommand {
 
     @Override
     public String getInfo() {
-        return super.getInfo();
+        return "";
     }
 
     @Override
@@ -32,12 +33,17 @@ public class ReloadCommand extends AdminCommand {
 
     @Override
     public String getName() {
-        return super.getName();
+        return "reload";
     }
 
     @Override
     public Integer getRequiredArgs() {
         return 1;
+    }
+
+    @Override
+    public List<String> getSuggestions(String[] args) {
+        return null;
     }
 
 }

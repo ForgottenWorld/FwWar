@@ -1,7 +1,6 @@
 package me.kaotich00.fwwar;
 
 import me.kaotich00.fwwar.commands.WarCommandManager;
-import me.kaotich00.fwwar.integration.DiscourseParser;
 import me.kaotich00.fwwar.listener.ArenaCreationListener;
 import me.kaotich00.fwwar.listener.PlayerListener;
 import me.kaotich00.fwwar.locale.LocalizationManager;
@@ -17,6 +16,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public final class Fwwar extends JavaPlugin {
 
@@ -88,7 +88,7 @@ public final class Fwwar extends JavaPlugin {
     }
 
     public void registerCommands() {
-        getCommand("war").setExecutor(new WarCommandManager(this));
+        Objects.requireNonNull(getCommand("war")).setExecutor(new WarCommandManager());
     }
 
     public void registerListeners() {

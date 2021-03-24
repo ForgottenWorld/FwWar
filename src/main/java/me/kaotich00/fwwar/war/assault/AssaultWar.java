@@ -4,22 +4,24 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.war.AbstractWar;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public abstract class AssaultWar extends AbstractWar {
 
     protected HashMap<Nation, List<Town>> townsForNation;
 
     @Override
-    public void addNation(Nation nation) {
-        super.addNation(nation);
+    public void addParticipant(Nation nation) {
+        super.addParticipant(nation);
 
         this.townsForNation.put(nation, new ArrayList<>(nation.getTowns()));
     }
 
     @Override
-    public void removeNation(Nation nation) {
-        super.removeNation(nation);
+    public void removeParticipant(Nation nation) {
+        super.removeParticipant(nation);
 
         this.townsForNation.remove(nation);
     }

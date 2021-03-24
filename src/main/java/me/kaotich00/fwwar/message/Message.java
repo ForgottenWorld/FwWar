@@ -7,8 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.util.Collections;
-
 public enum Message {
 
     PREFIX("fwwar_prefix", false),
@@ -120,12 +118,12 @@ public enum Message {
 
     private String format(Object... objects) {
         String string = localizationManager.localize(this.message);
-        if(this.showPrefix) {
-            string = localizationManager.localize(PREFIX.message) + " " + string;
-        }
         for (int i = 0; i < objects.length; i++) {
             Object o = objects[i];
             string = string.replace("{" + i + "}", String.valueOf(o));
+        }
+        if(this.showPrefix) {
+            string = localizationManager.localize(PREFIX.message) + " " + string;
         }
         return ChatColor.translateAlternateColorCodes('&', string);
     }
