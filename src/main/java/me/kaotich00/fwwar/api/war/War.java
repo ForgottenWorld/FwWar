@@ -64,6 +64,12 @@ public interface War {
     List<ParticipantNation> getParticipants();
 
     /**
+     * Check whether or not the war has enough participants
+     * @return true if the war has enough participants, false otherwise
+     */
+    boolean hasEnoughParticipants();
+
+    /**
      * Check if the given nation is in the war
      * @return true if present, false otherwise
      */

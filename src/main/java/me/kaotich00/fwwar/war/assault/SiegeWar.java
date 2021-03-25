@@ -102,11 +102,6 @@ public class SiegeWar extends AssaultWar {
     }
 
     @Override
-    public boolean supportKits() {
-        return false;
-    }
-
-    @Override
     public void handlePlayerDeath(Player player) {
     }
 
