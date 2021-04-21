@@ -123,4 +123,13 @@ public class SimpleArenaService {
         this.arenas.remove(arena);
     }
 
+    public Arena getRandomArena() {
+        Random random = new Random();
+
+        List<Arena> arenas = getArenas();
+        int size = arenas.size();
+
+        return arenas.get(size > 1 ? random.nextInt(size - 1) : 0);
+    }
+
 }

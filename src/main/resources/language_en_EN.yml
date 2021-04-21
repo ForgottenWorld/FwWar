@@ -53,6 +53,7 @@
   war_cannot_drop_items: "&cYou cannot drop items during the war."
   war_cannot_choose_kit: "&cCannot choose kit at the moment."
   war_player_defeated: "&cYou have been killed in the war. Teleporting to town spawn..."
+  war_player_death: "&eThe player &2{0}&e of city &2{1}&e has fallen in the war."
   war_cannot_start_kit_required: "&cCannot start war, the following player have not chosen a kit. Please type &e/war chooseKit &cto select one"
   war_cannot_start_arena_required: "&cCannot start the war. You should create at least one arena."
   war_cannot_start_not_enough_core_plot: "&cCannot add the nation. The following towns are missing the core plot:"

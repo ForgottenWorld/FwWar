@@ -52,6 +52,7 @@ public enum Message {
     WAR_CANNOT_DROP_ITEMS("war_cannot_drop_items", true),
     WAR_CANNOT_CHOOSE_KIT("war_cannot_choose_kit", true),
     WAR_PLAYER_DEFEATED("war_player_defeated", true),
+    WAR_PLAYER_DEATH("war_player_death", true),
     WAR_CANNOT_START_KIT_REQUIRED("war_cannot_start_kit_required", true),
     WAR_CANNOT_START_ARENA_REQUIRED("war_cannot_start_arena_required", true),
     WAR_CANNOT_START_NOT_ENOUGH_CORE_PLOTS("war_cannot_start_not_enough_core_plot", true),

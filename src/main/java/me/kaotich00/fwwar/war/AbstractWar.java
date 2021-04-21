@@ -109,6 +109,28 @@ public abstract class AbstractWar implements War {
         return new ArrayList<>(this.participants.values());
     }
 
+    public boolean hasEnoughParticipants() {
+        boolean shouldWarEnd = false;
+        if(getParticipants().size() < 2) {
+            shouldWarEnd = true;
+        } else {
+            /* Check if at least 2 Nations are considered enemies between each other */
+            boolean areThereEnemies = false;
+            for(ParticipantNation n: getParticipants()) {
+                for(ParticipantNation plausibleEnemy: getParticipants()) {
+                    if(n.getNation().hasEnemy(plausibleEnemy.getNation())) {
+                        areThereEnemies = true;
+                    }
+                }
+            }
+
+            if(!areThereEnemies) {
+                shouldWarEnd = true;
+            }
+        }
+        return shouldWarEnd;
+    }
+
     @Override
     public Optional<Arena> getArena() {
         return Optional.ofNullable(arena);

@@ -17,6 +17,7 @@ import me.kaotich00.fwwar.services.SimpleScoreboardService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.*;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
@@ -46,15 +47,13 @@ public class ClassicWar extends AssaultWar {
     @Override
     public void startWar() {
         try {
-            Random random = new Random();
-            SimpleArenaService arenaService = SimpleArenaService.getInstance();
-            Arena warArena = arenaService.getArenas().get(arenaService.getArenas().size() > 1 ? random.nextInt(arenaService.getArenas().size() - 1) : 0);
+            Arena warArena = SimpleArenaService.getInstance().getRandomArena();
 
             setWarStatus(WarStatus.STARTED);
 
             Map<UUID, Location> playersToTeleport = new HashMap<>();
             Nation firstNation = null;
-            for(ParticipantNation participantNation: this.getNations()) {
+            for(ParticipantNation participantNation: this.getParticipants()) {
 
                 if(firstNation == null)
                     firstNation = participantNation.getNation();
@@ -65,9 +64,10 @@ public class ClassicWar extends AssaultWar {
 
                     for(UUID uuid: residents) {
                         Player player = Bukkit.getPlayer(uuid);
-                        Resident resident = TownyAPI.getInstance().getDataSource().getResident(player.getName());
 
                         if(player != null) {
+                            Resident resident = TownyAPI.getInstance().getDataSource().getResident(player.getName());
+
                             Location playerSpawn = firstNation.equals(resident.getTown().getNation()) ? warArena.getLocation(LocationType.FIRST_NATION_SPAWN_POINT) : warArena.getLocation(LocationType.SECOND_NATION_SPAWN_POINT);
                             Location playerBattle = firstNation.equals(resident.getTown().getNation()) ? warArena.getLocation(LocationType.FIRST_NATION_BATTLE_POINT) : warArena.getLocation(LocationType.SECOND_NATION_BATTLE_POINT);
 
@@ -140,7 +140,7 @@ public class ClassicWar extends AssaultWar {
 
     @Override
     public void stopWar() {
-        for(ParticipantNation participantNation: this.getNations()) {
+        for(ParticipantNation participantNation: this.getParticipants()) {
             for(ParticipantTown participantTown: participantNation.getTowns()) {
                 Set<UUID> residents = participantTown.getPlayers();
                 Town town = participantTown.getTown();
@@ -148,9 +148,6 @@ public class ClassicWar extends AssaultWar {
                 for(UUID uuid: residents) {
                     Player player = Bukkit.getPlayer(uuid);
                     if(player != null) {
-                        player.getInventory().clear();
-                        player.getInventory().setArmorContents(null);
-
                         try {
                             player.teleport(town.getSpawn());
                         } catch (TownyException e) {
@@ -165,37 +162,27 @@ public class ClassicWar extends AssaultWar {
     }
 
     @Override
-    public boolean supportKits() {
-        return false;
-    }
-
-    @Override
-    public boolean hasParticipantsLimit() {
-        return false;
-    }
-
-    @Override
-    public int getMaxAllowedParticipants() {
-        return 0;
-    }
-
-    @Override
     public void handlePlayerDeath(Player player) {
+
         getDeathQueue().addPlayer(player);
 
-        TownyAPI townyAPI = TownyAPI.getInstance();
-
-        boolean shouldWarEnd = false;
-
         try {
+            TownyAPI townyAPI = TownyAPI.getInstance();
+
             Resident resident = townyAPI.getDataSource().getResident(player.getName());
             Town residentTown = resident.getTown();
             Nation residentNation = residentTown.getNation();
 
-            if(hasTown(residentTown))
-                getNation(residentNation.getUuid()).getTown(residentTown.getUuid()).removePlayer(resident.getUUID());
+            if(!hasResident(resident)) return;
 
-            if(getNation(residentNation.getUuid()).getTown(residentTown.getUuid()).getPlayers().size() == 0) {
+            getParticipant(residentNation.getUuid())
+                    .getTown(residentTown.getUuid())
+                    .removePlayer(resident.getUUID());
+
+            Message.WAR_PLAYER_DEFEATED.send(player);
+            Message.WAR_PLAYER_DEATH.broadcast(resident.getPlayer().getName(), residentTown.getName());
+
+            if(getParticipant(residentNation.getUuid()).getTown(residentTown.getUuid()).getPlayers().size() == 0) {
                 Message.TOWN_DEFEATED.broadcast(residentTown.getName());
                 setTownDefeated(residentNation, residentTown);
             }
@@ -204,28 +191,9 @@ public class ClassicWar extends AssaultWar {
                 Message.NATION_DEFEATED.broadcast(residentNation.getName());
             }
 
-            /* Check if the required amount of Nations is present */
-            if(getNations().size() < 2) {
-                shouldWarEnd = true;
-            } else {
-                /* Check if at least 2 Nations are considered enemies between each other */
-                boolean areThereEnemies = false;
-                for(ParticipantNation n: getNations()) {
-                    for(ParticipantNation plausibleEnemy: getNations()) {
-                        if(n.getNation().hasEnemy(plausibleEnemy.getNation())) {
-                            areThereEnemies = true;
-                        }
-                    }
-                }
-
-                if(!areThereEnemies) {
-                    shouldWarEnd = true;
-                }
-            }
-
-            if(shouldWarEnd) {
+            if(!hasEnoughParticipants())
                 SimpleWarService.getInstance().stopWar();
-            }
+
         } catch (NotRegisteredException e) {
             e.printStackTrace();
         }

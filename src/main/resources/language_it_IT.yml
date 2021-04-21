@@ -54,6 +54,7 @@ strings:
   war_cannot_drop_items: "&cNon puoi droppare oggetti in guerra"
   war_cannot_choose_kit: "&cNon puoi selezionare il kit al momento"
   war_player_defeated: "&cSei stato ucciso in guerra. Teletrasporto allo spawn cittadino..."
+  war_player_death: "&eIl giocatore &2{0}&e della citta' &2{1}&e e' caduto in guerra"
   war_cannot_start_kit_required: "&cLa guerra non puo' iniziare, il seguente player non ha selezionato un kit. Per piacere scrivi &e/war chooseKit &cper selezionarne uno"
   war_cannot_start_arena_required: "&cNon puoi iniziare la guerra senza arena. Dovresti crearne almeno una."
   war_cannot_start_not_enough_core_plot: "&cImpossibile aggiungere la nazione, le seguenti citta' non hanno impostato un core plot:"

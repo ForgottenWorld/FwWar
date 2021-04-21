@@ -44,4 +44,9 @@ public abstract class AssaultWar extends AbstractWar {
         return false;
     }
 
+    @Override
+    public boolean supportKits() {
+        return false;
+    }
+
 }

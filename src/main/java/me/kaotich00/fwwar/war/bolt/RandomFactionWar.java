@@ -14,10 +14,12 @@ import me.kaotich00.fwwar.objects.kit.Kit;
 import me.kaotich00.fwwar.objects.war.ParticipantNation;
 import me.kaotich00.fwwar.objects.war.ParticipantTown;
 import me.kaotich00.fwwar.services.SimpleArenaService;
+import me.kaotich00.fwwar.services.SimpleKitService;
 import me.kaotich00.fwwar.services.SimpleScoreboardService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.*;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
@@ -50,18 +52,16 @@ public class RandomFactionWar extends BoltWar {
     @Override
     public void startWar() {
         try {
-            Random random = new Random();
-            SimpleArenaService arenaService = SimpleArenaService.getInstance();
-            Arena warArena = arenaService.getArenas().get(arenaService.getArenas().size() > 1 ? random.nextInt(arenaService.getArenas().size() - 1) : 0);
+            Arena warArena = SimpleArenaService.getInstance().getRandomArena();
 
             setWarStatus(WarStatus.STARTED);
 
-            Kit kit = generateRandomKit();
+            Kit kit = SimpleKitService.getInstance().generateRandomKit();
 
             Nation firstNation = null;
             Map<UUID, Location> playersToTeleport = new HashMap<>();
 
-            for(ParticipantNation participantNation: this.getNations()) {
+            for(ParticipantNation participantNation: this.getParticipants()) {
 
                 if (firstNation == null)
                     firstNation = participantNation.getNation();
@@ -153,32 +153,6 @@ public class RandomFactionWar extends BoltWar {
     }
 
     @Override
-    public void stopWar() {
-        for(ParticipantNation participantNation: this.getNations()) {
-            for(ParticipantTown participantTown: participantNation.getTowns()) {
-                Set<UUID> residents = participantTown.getPlayers();
-                Town town = participantTown.getTown();
-
-                for(UUID uuid: residents) {
-                    Player player = Bukkit.getPlayer(uuid);
-                    if(player != null) {
-                        player.getInventory().clear();
-                        player.getInventory().setArmorContents(null);
-
-                        try {
-                            player.teleport(town.getSpawn());
-                        } catch (TownyException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        }
-
-        setWarStatus(WarStatus.ENDED);
-    }
-
-    @Override
     public boolean supportKits() {
         return true;
     }
@@ -191,50 +165,6 @@ public class RandomFactionWar extends BoltWar {
     @Override
     public Optional<Kit> getPlayerKit(Player player) {
         return Optional.ofNullable(this.playerKits.get(player.getUniqueId()));
-    }
-
-    @Override
-    public void handlePlayerDeath(Player player) {
-        getDeathQueue().addPlayer(player);
-
-        try {
-            TownyAPI townyAPI = TownyAPI.getInstance();
-
-            Resident resident = townyAPI.getDataSource().getResident(player.getName());
-            Town town = resident.getTown();
-
-            Set<UUID> participants = null;
-            if(hasTown(town))
-                participants = getNation(town.getNation().getUuid()).getTown(town.getUuid()).getPlayers();
-
-            if(participants == null) {
-                return;
-            }
-
-            if (!participants.contains(player.getUniqueId())) {
-                return;
-            }
-
-            getNation(town.getNation().getUuid()).getTown(town.getUuid()).removePlayer(player.getUniqueId());
-            Message.WAR_PLAYER_DEFEATED.send(player);
-
-            boolean shouldRemoveNation = true;
-            if(getNation(town.getNation().getUuid()).getTowns().size() > 0){
-                shouldRemoveNation = false;
-            }
-
-            if(shouldRemoveNation) {
-                removeNation(town.getNation());
-                Message.NATION_DEFEATED.broadcast(town.getNation().getName());
-            }
-
-            if(getNations().size() < 2) {
-                SimpleScoreboardService.getInstance().removeScoreboards();
-                SimpleWarService.getInstance().stopWar();
-            }
-
-        } catch (TownyException ignored) {
-        }
     }
 
 }
