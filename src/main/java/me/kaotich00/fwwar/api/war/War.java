@@ -141,4 +141,8 @@ public interface War {
 
     DeathQueue getDeathQueue();
 
+    void addTown(Town town);
+
+    void addPlayer(Player player);
+
 }

@@ -70,9 +70,11 @@ public class SimpleScoreboardService {
         War war = optWar.get();
         switch(war.getWarType()) {
             case BOLT_WAR_FACTION:
-                updateFactionKitScoreboard(war);
+                factionKitScoreboard(war);
                 break;
             case BOLT_WAR_RANDOM:
+                boltWarRandomScoreboard(war);
+                break;
             case ASSAULT_WAR_CLASSIC:
                 genericWarScoreboard(war);
                 break;
@@ -111,7 +113,15 @@ public class SimpleScoreboardService {
         }
     }
 
-    private void updateFactionKitScoreboard(War war) {
+    private void factionKitScoreboard(War war) {
+
+        List<String> scoreboardData = new ArrayList<>();
+        for(ParticipantNation nation: war.getNations()) {
+            scoreboardData.add(ChatColor.GRAY + " >> " + ChatColor.GOLD + "" + nation.getNation().getName());
+            for (ParticipantTown town : nation.getTowns()) {
+                scoreboardData.add(ChatColor.GRAY + "  >> " + ChatColor.AQUA + "" + town.getTown().getName() + " - " + town.getPlayers().size() + " rimasti");
+            }
+        }
 
         for(ParticipantNation nation: war.getNations()) {
             for(ParticipantTown town: nation.getTowns()) {
@@ -123,27 +133,9 @@ public class SimpleScoreboardService {
                         if(board!= null) {
                             List<String> lines = new ArrayList<>();
                             lines.add("");
-                            lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  War type: " + ChatColor.YELLOW + "Faction War");
+                            lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  Classe: " + ChatColor.YELLOW + ((KitWar)war).getPlayerKit(player).get().getName());
                             lines.add("");
-                            lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  Your class: " + ChatColor.YELLOW + ((KitWar)war).getPlayerKit(player).get().getName());
-                            lines.add("");
-                            lines.add(ChatColor.AQUA + "  Top players: ");
-                            if (war.getKillCounter().getLeaderboard().size() == 0) {
-                                lines.add(ChatColor.GRAY + "  No records yet");
-                            }
-                            for (Map.Entry<UUID, Integer> entry : war.getKillCounter().getLeaderboard().entrySet()) {
-                                String playerName = "";
-                                Player killer = Bukkit.getPlayer(entry.getKey());
-                                if (killer == null) {
-                                    OfflinePlayer killerOffline = Bukkit.getOfflinePlayer(entry.getKey());
-                                    playerName = killerOffline.getName();
-                                } else {
-                                    playerName = killer.getName();
-                                }
-
-                                lines.add(ChatColor.DARK_AQUA + "  >> " + ChatColor.AQUA + "" + ChatColor.BOLD + playerName + ChatColor.GOLD + " - " + entry.getValue() + " kills");
-                            }
-                            lines.add("");
+                            lines.addAll(scoreboardData);
 
                             board.updateLines(
                                     lines
@@ -154,6 +146,37 @@ public class SimpleScoreboardService {
             }
         }
 
+    }
+
+    private void boltWarRandomScoreboard(War war) {
+        List<String> scoreboardData = new ArrayList<>();
+        for(ParticipantNation nation: war.getNations()) {
+            scoreboardData.add(ChatColor.GRAY + " >> " + ChatColor.GOLD + "" + nation.getNation().getName());
+            for (ParticipantTown town : nation.getTowns()) {
+                scoreboardData.add(ChatColor.GRAY + "  >> " + ChatColor.AQUA + "" + town.getTown().getName() + " - " + town.getPlayers().size() + " rimasti");
+            }
+        }
+
+        for(ParticipantNation nation: war.getNations()) {
+            for(ParticipantTown town: nation.getTowns()) {
+                for(Resident resident: town.getTown().getResidents()) {
+                    Player player = Bukkit.getPlayer(resident.getUUID());
+                    if(player != null) {
+                        FastBoard board = this.boards.get(player.getUniqueId());
+
+                        if(board!= null) {
+                            List<String> lines = new ArrayList<>();
+                            lines.add("");
+                            lines.addAll(scoreboardData);
+
+                            board.updateLines(
+                                    lines
+                            );
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void genericWarScoreboard(War currentWar) {

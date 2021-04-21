@@ -104,8 +104,6 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        event.getDrops().clear();
-
         if(!(event.getEntity().getKiller() instanceof Player)) return;
 
         Player killer = event.getEntity().getKiller();
@@ -126,23 +124,23 @@ public class PlayerListener implements Listener {
         } catch (NotRegisteredException ignored) {
         }
 
+        event.getDrops().clear();
         war.handlePlayerDeath(player);
 
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event){
-
-        SimpleScoreboardService.getInstance().removeScoreboardForPlayer(event.getPlayer());
-
-        Player player = event.getPlayer();
-
         SimpleWarService simpleWarService = SimpleWarService.getInstance();
 
         Optional<War> optCurrentWar = simpleWarService.getWar();
         if(!optCurrentWar.isPresent()) {
             return;
         }
+
+        Player player = event.getPlayer();
+
+        SimpleScoreboardService.getInstance().removeScoreboardForPlayer(player);
 
         War currentWar = optCurrentWar.get();
 
@@ -151,12 +149,10 @@ public class PlayerListener implements Listener {
         }
 
         currentWar.handlePlayerDeath(player);
-
     }
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event){
-        Player player = event.getPlayer();
 
         SimpleWarService simpleWarService = SimpleWarService.getInstance();
 
@@ -164,6 +160,8 @@ public class PlayerListener implements Listener {
         if(!optCurrentWar.isPresent()) {
             return;
         }
+
+        Player player = event.getPlayer();
 
         War currentWar = optCurrentWar.get();
 

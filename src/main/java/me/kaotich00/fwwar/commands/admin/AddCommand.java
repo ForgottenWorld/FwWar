@@ -116,12 +116,14 @@ public class AddCommand extends AdminCommand {
         for(Town town: nation.getTowns()) {
             ParticipantNation participantNation = war.getNation(nation.getUuid());
             participantNation.addTown(town);
+            war.addTown(town);
 
             for(Resident resident: town.getResidents()) {
                 ParticipantTown participantTown = participantNation.getTown(town.getUuid());
                 UUID residentUUID = resident.getUUID();
 
                 participantTown.addPlayer(residentUUID);
+                war.addPlayer(resident.getPlayer());
             }
         }
 

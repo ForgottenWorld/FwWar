@@ -12,6 +12,7 @@ import me.kaotich00.fwwar.objects.war.KillCounter;
 import me.kaotich00.fwwar.objects.war.ParticipantNation;
 import me.kaotich00.fwwar.objects.war.ParticipantTown;
 import me.kaotich00.fwwar.utils.WarStatus;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -149,5 +150,15 @@ public abstract class AbstractWar implements War {
     @Override
     public KillCounter getKillCounter() {
         return this.killCounter;
+    }
+
+    @Override
+    public void addTown(Town town) {
+        this.townsContainer.add(town.getUuid());
+    }
+
+    @Override
+    public void addPlayer(Player player) {
+        this.playersContainer.add(player.getUniqueId());
     }
 }

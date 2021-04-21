@@ -42,8 +42,8 @@
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
-                            <!--<outputDirectory>C:\Users\Simone\Desktop\Jatuldar\Server locale\plugins</outputDirectory>-->
-                            <outputDirectory>C:\Users\Simone\Desktop\Minecraft\Server paper\plugins</outputDirectory>
+                            <outputDirectory>C:\Users\Simone\Desktop\Jatuldar\Server locale\plugins</outputDirectory>
+                            <!--<outputDirectory>C:\Users\Simone\Desktop\Minecraft\Server paper\plugins</outputDirectory>-->
                         </configuration>
                     </execution>
                 </executions>
