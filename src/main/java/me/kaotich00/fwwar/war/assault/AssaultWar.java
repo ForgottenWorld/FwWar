@@ -4,7 +4,9 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.war.AbstractWar;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public abstract class AssaultWar extends AbstractWar {
 
@@ -39,6 +41,11 @@ public abstract class AssaultWar extends AbstractWar {
 
     @Override
     public boolean hasParticipantsLimit() {
+        return false;
+    }
+
+    @Override
+    public boolean supportKits() {
         return false;
     }
 

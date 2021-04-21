@@ -1,15 +1,28 @@
 package me.kaotich00.fwwar.war.bolt;
 
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.exceptions.TownyException;
+import com.palmergames.bukkit.towny.object.Resident;
+import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.api.war.KitWar;
+import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.kit.Kit;
+import me.kaotich00.fwwar.objects.war.ParticipantNation;
+import me.kaotich00.fwwar.objects.war.ParticipantTown;
+import me.kaotich00.fwwar.services.SimpleWarService;
+import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.war.AbstractWar;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class BoltWar extends AbstractWar implements KitWar {
@@ -24,85 +37,64 @@ public abstract class BoltWar extends AbstractWar implements KitWar {
         return true;
     }
 
-    protected Kit generateRandomKit() {
+    @Override
+    public void stopWar() {
+        for(ParticipantNation participantNation: this.getNations()) {
+            for(ParticipantTown participantTown: participantNation.getTowns()) {
+                Set<UUID> residents = participantTown.getPlayers();
+                Town town = participantTown.getTown();
 
-        String kitName = "Random Kit";
-        Kit randomKit = new Kit(kitName);
+                for(UUID uuid: residents) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    if(player != null) {
+                        player.getInventory().clear();
+                        player.getInventory().setArmorContents(null);
 
-        Material[] allowedHelmets = {Material.DIAMOND_HELMET, Material.GOLDEN_HELMET, Material.CHAINMAIL_HELMET, Material.IRON_HELMET, Material.LEATHER_HELMET, Material.NETHERITE_HELMET, Material.TURTLE_HELMET};
-        Material[] allowedChestplates = {Material.CHAINMAIL_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.IRON_CHESTPLATE, Material.LEATHER_CHESTPLATE, Material.NETHERITE_CHESTPLATE};
-        Material[] allowedLeggings= {Material.CHAINMAIL_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.IRON_LEGGINGS, Material.LEATHER_LEGGINGS, Material.NETHERITE_LEGGINGS};
-        Material[] allowedBoots = {Material.CHAINMAIL_BOOTS, Material.DIAMOND_BOOTS, Material.GOLDEN_BOOTS, Material.IRON_BOOTS, Material.LEATHER_BOOTS, Material.NETHERITE_BOOTS};
-
-        Material[] allowedSwords = {Material.DIAMOND_SWORD, Material.GOLDEN_SWORD, Material.IRON_SWORD, Material.NETHERITE_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD};
-        Material[] allowedAxes = {Material.DIAMOND_AXE, Material.GOLDEN_AXE, Material.IRON_AXE, Material.NETHERITE_AXE, Material.STONE_AXE, Material.WOODEN_AXE};
-        Enchantment[] allowedCrossbowEnchants = {Enchantment.MULTISHOT, Enchantment.QUICK_CHARGE};
-
-        Material[] allowedFood = {Material.COOKED_PORKCHOP, Material.COOKED_CHICKEN, Material.COOKED_BEEF, Material.COOKED_COD, Material.COOKED_MUTTON, Material.COOKED_RABBIT, Material.COOKED_SALMON};
-
-        PotionType[] allowedBuffPotions = {PotionType.REGEN, PotionType.SPEED, PotionType.INVISIBILITY};
-        Material[] allowedPotionType = {Material.POTION, Material.SPLASH_POTION};
-
-        PotionType[] allowedDebuffPotions = {PotionType.WEAKNESS, PotionType.SLOWNESS, PotionType.POISON};
-
-        /* Armor enchants */
-        ItemStack helmet = new ItemStack(allowedHelmets[ThreadLocalRandom.current().nextInt(allowedHelmets.length - 1)]);
-        helmet.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, ThreadLocalRandom.current().nextInt(1, 4));
-        randomKit.addItemToKit(helmet);
-
-        ItemStack chestplate = new ItemStack(allowedChestplates[ThreadLocalRandom.current().nextInt(allowedChestplates.length - 1)]);
-        chestplate.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, ThreadLocalRandom.current().nextInt(1, 4));
-        randomKit.addItemToKit(chestplate);
-
-        ItemStack leggings = new ItemStack(allowedLeggings[ThreadLocalRandom.current().nextInt(allowedLeggings.length - 1)]);
-        leggings.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, ThreadLocalRandom.current().nextInt(1, 4));
-        randomKit.addItemToKit(leggings);
-
-        ItemStack boots = new ItemStack(allowedBoots[ThreadLocalRandom.current().nextInt(allowedBoots.length - 1)]);
-        boots.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, ThreadLocalRandom.current().nextInt(1, 4));
-        randomKit.addItemToKit(boots);
-
-        ItemStack sword = new ItemStack(allowedSwords[ThreadLocalRandom.current().nextInt(allowedSwords.length - 1)]);
-        sword.addEnchantment(Enchantment.DAMAGE_ALL, ThreadLocalRandom.current().nextInt(1, 4));
-        randomKit.addItemToKit(sword);
-
-        ItemStack axe = new ItemStack(allowedAxes[ThreadLocalRandom.current().nextInt(allowedAxes.length - 1)]);
-        axe.addEnchantment(Enchantment.DAMAGE_ALL, ThreadLocalRandom.current().nextInt(1, 4));
-        randomKit.addItemToKit(axe);
-
-        ItemStack crossbow = new ItemStack(Material.CROSSBOW);
-        crossbow.addEnchantment(allowedCrossbowEnchants[ThreadLocalRandom.current().nextInt(0, allowedCrossbowEnchants.length - 1)], 1);
-        randomKit.addItemToKit(crossbow);
-
-        ItemStack arrows = new ItemStack(Material.ARROW, ThreadLocalRandom.current().nextInt(64));
-        randomKit.addItemToKit(arrows);
-
-        ItemStack food = new ItemStack(allowedFood[ThreadLocalRandom.current().nextInt(allowedFood.length - 1)], 64);
-        randomKit.addItemToKit(food);
-
-        ItemStack instantHealth = new ItemStack(Material.SPLASH_POTION, ThreadLocalRandom.current().nextInt(3, 8));
-        PotionMeta meta = (PotionMeta) instantHealth.getItemMeta();
-        meta.setBasePotionData(new PotionData(PotionType.INSTANT_HEAL, false, true));
-        instantHealth.setItemMeta(meta);
-        randomKit.addItemToKit(instantHealth);
-
-        for(int i = 0; i < 3; i ++) {
-            ItemStack randomPotion = new ItemStack(allowedPotionType[ThreadLocalRandom.current().nextInt(allowedPotionType.length - 1)], 1);
-            PotionMeta randomMeta = (PotionMeta) randomPotion.getItemMeta();
-            randomMeta.setBasePotionData(new PotionData(allowedBuffPotions[ThreadLocalRandom.current().nextInt(allowedBuffPotions.length - 1)], ThreadLocalRandom.current().nextInt(0, 1) == 1 ? true : false, ThreadLocalRandom.current().nextInt(0, 1) == 1 ? true : false));
-            randomPotion.setItemMeta(randomMeta);
-            randomKit.addItemToKit(randomPotion);
+                        try {
+                            player.teleport(town.getSpawn());
+                        } catch (TownyException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
         }
 
-        for(int i = 0; i < 3; i ++) {
-            ItemStack randomPotion = new ItemStack(Material.SPLASH_POTION, 1);
-            PotionMeta randomMeta = (PotionMeta) randomPotion.getItemMeta();
-            randomMeta.setBasePotionData(new PotionData(allowedDebuffPotions[ThreadLocalRandom.current().nextInt(allowedDebuffPotions.length - 1)], ThreadLocalRandom.current().nextInt(0, 1) == 1 ? true : false, ThreadLocalRandom.current().nextInt(0, 1) == 1 ? true : false));
-            randomPotion.setItemMeta(randomMeta);
-            randomKit.addItemToKit(randomPotion);
-        }
+        setWarStatus(WarStatus.ENDED);
+    }
 
-        return randomKit;
+    @Override
+    public void handlePlayerDeath(Player player) {
+        getDeathQueue().addPlayer(player);
+
+        try {
+            TownyAPI townyAPI = TownyAPI.getInstance();
+
+            Resident resident = townyAPI.getDataSource().getResident(player.getName());
+            Town town = resident.getTown();
+
+            if(!hasResident(resident)) return;
+
+            getNation(town.getNation().getUuid())
+                    .getTown(town.getUuid())
+                    .removePlayer(player.getUniqueId());
+
+            Message.WAR_PLAYER_DEFEATED.send(player);
+            Message.WAR_PLAYER_DEATH.broadcast(player.getName(), town.getName());
+
+            boolean shouldRemoveNation = getNation(town.getNation().getUuid()).getTowns().size() == 0;
+
+            if(shouldRemoveNation) {
+                removeNation(town.getNation());
+                Message.NATION_DEFEATED.broadcast(town.getNation().getName());
+            }
+
+            if(!hasEnoughParticipants())
+                SimpleWarService.getInstance().stopWar();
+
+        } catch (
+                TownyException ignored) {
+        }
     }
 
 }

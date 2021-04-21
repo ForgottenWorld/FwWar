@@ -3,7 +3,11 @@ package me.kaotich00.fwwar.commands.admin;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.message.Message;
+import me.kaotich00.fwwar.objects.war.ParticipantNation;
+import me.kaotich00.fwwar.objects.war.ParticipantTown;
+import me.kaotich00.fwwar.services.SimpleKitService;
 import me.kaotich00.fwwar.services.SimpleWarService;
+import me.kaotich00.fwwar.utils.MessageUtils;
 import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.utils.WarTypes;
 import net.md_5.bungee.api.ChatColor;
@@ -15,7 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class ConfirmCommand extends AdminCommand {
@@ -26,12 +30,12 @@ public class ConfirmCommand extends AdminCommand {
 
         SimpleWarService warService = SimpleWarService.getInstance();
 
-        if(!warService.getCurrentWar().isPresent()) {
+        if(!warService.getWar().isPresent()) {
             Message.WAR_NOT_FOUND.send(sender);
             return;
         }
 
-        War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+        War currentWar = SimpleWarService.getInstance().getWar().get();
 
         if(currentWar.getWarStatus().equals(WarStatus.CONFIRMED)) {
             Message.WAR_ALREADY_CONFIRMED.send(sender);
@@ -43,13 +47,13 @@ public class ConfirmCommand extends AdminCommand {
             return;
         }
 
-        if(currentWar.getParticipantsNations().size() < 1) {
+        if(currentWar.getNations().size() < 1) {
             Message.WAR_AT_LEAST_TWO_NATION.send(sender);
             return;
         }
 
         if(currentWar.getWarType().equals(WarTypes.BOLT_WAR_FACTION)) {
-            if(SimpleWarService.getInstance().getKitsForType(currentWar.getWarType()).size() == 0) {
+            if(SimpleKitService.getInstance().getKitsForType(currentWar.getWarType()).size() == 0) {
                 Message.FACTION_WAR_NOT_ENOUGH_KITS.send(sender);
                 return;
             }
@@ -62,30 +66,29 @@ public class ConfirmCommand extends AdminCommand {
             return;
         }
 
-        for(UUID playerUUID: currentWar.getParticipantPlayers()) {
-            Player participantPlayer = Bukkit.getPlayer(playerUUID);
+        for(ParticipantNation participantNation: currentWar.getNations()) {
+            for(ParticipantTown participantTown: participantNation.getTowns()) {
+                for(UUID playerUUID: participantTown.getPlayers()) {
+                    Player participantPlayer = Bukkit.getPlayer(playerUUID);
 
-            if(participantPlayer != null) {
-                participantPlayer.sendTitle(ChatColor.YELLOW + "Hi, you are part of the upcoming war!", ChatColor.GOLD + "Check the chat right now", 15, 200, 15);
-                String startMessage = ChatColor.GREEN + "" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-")) + "\n" +
-                        ChatColor.DARK_AQUA + " \n Hi " + participantPlayer.getName() + ", you will be part of the next war." +
-                        ChatColor.AQUA + " Therefore you must choose a kit to use during the battle.";
+                    if(participantPlayer != null) {
+                        participantPlayer.sendTitle(Message.WAR_CONFIRM_TITLE.asString(), Message.WAR_CONFIRM_SUBTITLE.asString(), 15, 200, 15);
+                        String startMessage = MessageUtils.chatDelimiter() + "\n" + Message.WAR_CONFIRM_CHAT_MESSAGE.asString(participantPlayer.getName());
 
+                        TextComponent clickMessage = new TextComponent("\n\n " + Message.WAR_CHOOSE_KIT_BUTTON.asString());
+                        clickMessage.setColor(ChatColor.YELLOW);
+                        clickMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/war chooseKit"));
+                        clickMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Message.WAR_CHOOSE_KIT_TOOLTIP.asString()).color(ChatColor.GREEN).italic(true).create()));
 
-                TextComponent clickMessage = new TextComponent("\n\n [CLICK HERE TO CHOOSE A KIT]\n");
-                clickMessage.setColor(ChatColor.YELLOW);
-                clickMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/war chooseKit"));
-                clickMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to choose a kit").color(ChatColor.GREEN).italic(true).create()));
+                        ComponentBuilder message = new ComponentBuilder();
+                        message
+                                .append(startMessage)
+                                .append(clickMessage)
+                                .append(MessageUtils.chatDelimiter());
 
-                String endMessage = ChatColor.GREEN + "\n" + ChatColor.STRIKETHROUGH + "" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-"));
-
-                ComponentBuilder message = new ComponentBuilder();
-                message
-                        .append(startMessage)
-                        .append(clickMessage)
-                        .append(endMessage);
-
-                participantPlayer.sendMessage(message.create());
+                        participantPlayer.sendMessage(message.create());
+                    }
+                }
             }
         }
 
@@ -93,7 +96,7 @@ public class ConfirmCommand extends AdminCommand {
 
     @Override
     public String getInfo() {
-        return super.getInfo();
+        return "";
     }
 
     @Override
@@ -103,12 +106,17 @@ public class ConfirmCommand extends AdminCommand {
 
     @Override
     public String getName() {
-        return super.getName();
+        return "confirm";
     }
 
     @Override
     public Integer getRequiredArgs() {
         return 1;
+    }
+
+    @Override
+    public List<String> getSuggestions(String[] args) {
+        return null;
     }
 
 }

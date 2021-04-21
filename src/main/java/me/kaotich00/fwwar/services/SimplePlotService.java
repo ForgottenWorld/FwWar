@@ -11,7 +11,7 @@ public class SimplePlotService {
 
     private static SimplePlotService instance;
 
-    private HashMap<UUID, CorePlot> plotMap;
+    private final HashMap<UUID, CorePlot> plotMap;
 
     private SimplePlotService() {
         if(instance != null) {

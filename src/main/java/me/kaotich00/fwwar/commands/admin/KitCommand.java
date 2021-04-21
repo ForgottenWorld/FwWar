@@ -4,12 +4,13 @@ import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.cui.KitEditingPrompt;
-import me.kaotich00.fwwar.cui.WarCreationPrompt;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class KitCommand extends AdminCommand {
 
@@ -19,12 +20,12 @@ public class KitCommand extends AdminCommand {
 
         SimpleWarService warService = SimpleWarService.getInstance();
 
-        if(!warService.getCurrentWar().isPresent()) {
+        if(!warService.getWar().isPresent()) {
             Message.WAR_NOT_FOUND.send(sender);
             return;
         }
 
-        War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+        War currentWar = SimpleWarService.getInstance().getWar().get();
 
         if(currentWar.getWarStatus().equals(WarStatus.CONFIRMED)) {
             Message.WAR_ALREADY_CONFIRMED.send(sender);
@@ -48,7 +49,7 @@ public class KitCommand extends AdminCommand {
 
     @Override
     public String getInfo() {
-        return super.getInfo();
+        return "";
     }
 
     @Override
@@ -58,12 +59,17 @@ public class KitCommand extends AdminCommand {
 
     @Override
     public String getName() {
-        return super.getName();
+        return "kit";
     }
 
     @Override
     public Integer getRequiredArgs() {
         return 1;
+    }
+
+    @Override
+    public List<String> getSuggestions(String[] args) {
+        return null;
     }
 
 }

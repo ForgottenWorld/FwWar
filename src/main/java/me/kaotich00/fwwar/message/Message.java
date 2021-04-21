@@ -7,8 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.util.Collections;
-
 public enum Message {
 
     PREFIX("fwwar_prefix", false),
@@ -42,6 +40,11 @@ public enum Message {
     WAR_AT_LEAST_TWO_NATION("war_at_least_two_nation", true),
     FACTION_WAR_NOT_ENOUGH_KITS("war_faction_not_enough_kits", true),
     WAR_CONFIRMED("war_confirmed", true),
+    WAR_CONFIRM_TITLE("war_confirm_title", false),
+    WAR_CONFIRM_SUBTITLE("war_confirm_subtitle", false),
+    WAR_CONFIRM_CHAT_MESSAGE("war_confirm_chat_message", false),
+    WAR_CHOOSE_KIT_BUTTON("war_choose_kit_button", false),
+    WAR_CHOOSE_KIT_TOOLTIP("war_choose_kit_tooltip", false),
     WAR_ALREADY_CONFIRMED("war_already_confirmed", true),
     WAR_ALREADY_STARTED("war_already_started", true),
     WAR_MUST_BE_CONFIRMED("war_must_be_confirmed", true),
@@ -49,6 +52,7 @@ public enum Message {
     WAR_CANNOT_DROP_ITEMS("war_cannot_drop_items", true),
     WAR_CANNOT_CHOOSE_KIT("war_cannot_choose_kit", true),
     WAR_PLAYER_DEFEATED("war_player_defeated", true),
+    WAR_PLAYER_DEATH("war_player_death", true),
     WAR_CANNOT_START_KIT_REQUIRED("war_cannot_start_kit_required", true),
     WAR_CANNOT_START_ARENA_REQUIRED("war_cannot_start_arena_required", true),
     WAR_CANNOT_START_NOT_ENOUGH_CORE_PLOTS("war_cannot_start_not_enough_core_plot", true),
@@ -61,6 +65,7 @@ public enum Message {
     WAR_CREATION_ASSAULT_WAR_CLASSIC("war_creation_assault_war_classic", false),
     WAR_CREATION_ASSAULT_WAR_SIEGE("war_creation_assault_war_siege", false),
     WAR_MUST_SELECT_ARENA("war_must_select_arena", true),
+    WAR_INFO_COMMAND("war_info_command", false),
 
     KIT_ALREADY_EXIST("kit_already_exists", true),
     KIT_CREATED("kit_created", true),
@@ -120,12 +125,12 @@ public enum Message {
 
     private String format(Object... objects) {
         String string = localizationManager.localize(this.message);
-        if(this.showPrefix) {
-            string = localizationManager.localize(PREFIX.message) + " " + string;
-        }
         for (int i = 0; i < objects.length; i++) {
             Object o = objects[i];
             string = string.replace("{" + i + "}", String.valueOf(o));
+        }
+        if(this.showPrefix) {
+            string = localizationManager.localize(PREFIX.message) + " " + string;
         }
         return ChatColor.translateAlternateColorCodes('&', string);
     }

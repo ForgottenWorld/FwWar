@@ -5,17 +5,18 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.*;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class LocalizationManager {
 
     private static LocalizationManager instance;
-    private Fwwar plugin;
-    private String defaultLanguageFile = "language_en_EN.yml";
+    private final Fwwar plugin;
+    private final String defaultLanguageFile = "language_en_EN.yml";
 
-    private Map<String, String> strings;
+    private final Map<String, String> strings;
 
     private LocalizationManager(Fwwar plugin) {
         if (instance != null){
@@ -47,7 +48,7 @@ public class LocalizationManager {
         }
 
         FileConfiguration data = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), localizationFile));
-        for (String key : data.getConfigurationSection("strings").getKeys(false)) {
+        for (String key : Objects.requireNonNull(data.getConfigurationSection("strings")).getKeys(false)) {
             this.strings.put(key, data.getString("strings." + key));
         }
     }

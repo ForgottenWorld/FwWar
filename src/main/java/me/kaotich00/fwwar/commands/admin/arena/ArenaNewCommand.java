@@ -6,6 +6,7 @@ import me.kaotich00.fwwar.objects.arena.Arena;
 import me.kaotich00.fwwar.services.SimpleArenaService;
 import org.bukkit.command.CommandSender;
 
+import java.util.List;
 import java.util.Optional;
 
 public class ArenaNewCommand extends AdminCommand {
@@ -30,7 +31,7 @@ public class ArenaNewCommand extends AdminCommand {
 
     @Override
     public String getInfo() {
-        return super.getInfo();
+        return "";
     }
 
     @Override
@@ -40,12 +41,17 @@ public class ArenaNewCommand extends AdminCommand {
 
     @Override
     public String getName() {
-        return super.getName();
+        return "new";
     }
 
     @Override
     public Integer getRequiredArgs() {
         return 3;
+    }
+
+    @Override
+    public List<String> getSuggestions(String[] args) {
+        return null;
     }
 
 }

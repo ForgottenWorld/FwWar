@@ -1,51 +1,62 @@
 package me.kaotich00.fwwar.war;
 
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.api.war.War;
+import me.kaotich00.fwwar.objects.war.DeathQueue;
 import me.kaotich00.fwwar.objects.arena.Arena;
+import me.kaotich00.fwwar.objects.war.KillCounter;
+import me.kaotich00.fwwar.objects.war.ParticipantNation;
+import me.kaotich00.fwwar.objects.war.ParticipantTown;
 import me.kaotich00.fwwar.utils.WarStatus;
-import org.bukkit.entity.Player;
 
 import java.util.*;
 
 public abstract class AbstractWar implements War {
 
+    /**
+     * The status for the war, it can assume the following values:
+     *  - CREATED: The war has been created and it's in setup mode
+     *  - CONFIRMED: All participants have been confirmed
+     *  - STARTED: The war has started and is in progress
+     *  - ENDED: The war has ended
+     */
     protected WarStatus warStatus;
-    protected Map<UUID, Integer> killCount;
-    protected List<Nation> nations;
-    protected Map<Town, List<UUID>> players;
-    protected List<UUID> deathQueue;
+    /*
+        This Map is updated with current
+        participating town and nations, which means
+        that when a town or nation are defeated, they
+        will be removed from the map
+     */
+    protected Map<UUID, ParticipantNation> participants;
+    /*
+        Those are container used to simplify
+        search operations, making them O(1)
+    */
+    protected Set<UUID> nationsContainer;
+    protected Set<UUID> townsContainer;
+    protected Set<UUID> playersContainer;
+
+    /* Queue handler for PlayerDeathEvent */
+    protected DeathQueue deathQueue;
+
+    /* Kill counter handler for scoreboard Leaderboard */
+    protected KillCounter killCounter;
+
+    /* The Arena in which the war will be disputed */
     protected Arena arena;
 
-    @Override
-    public void setWarStatus(WarStatus warStatus) {
-        this.warStatus = warStatus;
-    }
+    public AbstractWar() {
+        this.participants = new HashMap<>();
+        this.deathQueue = new DeathQueue();
+        this.killCounter = new KillCounter();
 
-    @Override
-    public void addNation(Nation nation) {
-        this.nations.add(nation);
-    }
-
-    @Override
-    public void removeNation(Nation nation) {
-        this.nations.remove(nation);
-    }
-
-    @Override
-    public void removeTown(Town town) {
-        this.players.remove(town);
-    }
-
-    @Override
-    public List<Nation> getParticipantsNations() {
-        return nations;
-    }
-
-    @Override
-    public Set<Town> getParticipantsTowns() {
-        return this.players.keySet();
+        this.nationsContainer = new HashSet<>();
+        this.townsContainer = new HashSet<>();
+        this.playersContainer = new HashSet<>();
     }
 
     @Override
@@ -54,87 +65,75 @@ public abstract class AbstractWar implements War {
     }
 
     @Override
-    public void incrementPlayerKillCount(Player player, int incrementBy) {
-        if(!this.killCount.containsKey(player.getUniqueId())) {
-            this.killCount.put(player.getUniqueId(), 0);
-        }
-        this.killCount.put(player.getUniqueId(), this.killCount.get(player.getUniqueId()) + incrementBy);
+    public void setWarStatus(WarStatus warStatus) {
+        this.warStatus = warStatus;
     }
 
     @Override
-    public int getPlayerKillCount(Player player){
-        return this.killCount.get(player.getUniqueId());
+    public void addNation(Nation nation) {
+        if(this.participants.containsKey(nation.getUuid()))
+            return;
+
+        this.participants.put(nation.getUuid(), new ParticipantNation(nation));
+        this.nationsContainer.add(nation.getUuid());
     }
 
     @Override
-    public LinkedHashMap<UUID, Integer> getKillCountsLeaderboard(){
-        LinkedHashMap<UUID, Integer> sortedMap = new LinkedHashMap<>();
-        ArrayList<Integer> list = new ArrayList<>();
+    public void removeNation(Nation nation) {
+        this.participants.remove(nation.getUuid());
+        this.nationsContainer.remove(nation.getUuid());
+    }
 
-        for (Map.Entry<UUID, Integer> entry : killCount.entrySet()) {
-            list.add(entry.getValue());
-        }
-        Collections.sort(list, Comparator.comparingInt(o -> (int) o).reversed());
-        for (Integer kills : list) {
-            for (Map.Entry<UUID, Integer> entry : killCount.entrySet()) {
-                if (entry.getValue().equals(kills)) {
-                    sortedMap.put(entry.getKey(), kills);
+    @Override
+    public ParticipantNation getNation(UUID nationUUID) {
+        return this.participants.get(nationUUID);
+    }
+
+    @Override
+    public boolean hasNation(Nation nation) {
+        return this.nationsContainer.contains(nation.getUuid());
+    }
+
+    @Override
+    public boolean hasTown(Town town) {
+        return this.townsContainer.contains(town.getUuid());
+    }
+
+    @Override
+    public boolean hasResident(Resident resident) {
+        return this.playersContainer.contains(resident.getUUID());
+    }
+
+    @Override
+    public List<ParticipantNation> getNations() {
+        return new ArrayList<>(this.participants.values());
+    }
+
+    public boolean hasEnoughParticipants() {
+        boolean shouldWarEnd = false;
+        if(getNations().size() < 2) {
+            shouldWarEnd = true;
+        } else {
+            /* Check if at least 2 Nations are considered enemies between each other */
+            boolean areThereEnemies = false;
+            for(ParticipantNation n: getNations()) {
+                for(ParticipantNation plausibleEnemy: getNations()) {
+                    if(n.getNation().hasEnemy(plausibleEnemy.getNation())) {
+                        areThereEnemies = true;
+                    }
                 }
             }
+
+            if(!areThereEnemies) {
+                shouldWarEnd = true;
+            }
         }
-        return sortedMap;
+        return shouldWarEnd;
     }
 
     @Override
-    public void addPlayerToWar(Town town, UUID playerUUID) {
-        if(!this.players.containsKey(town)) {
-            this.players.put(town, new ArrayList<>());
-        }
-        this.players.get(town).add(playerUUID);
-    }
-
-    @Override
-    public void removePlayerFromWar(Town town, UUID playerUUID) {
-        if(!this.players.containsKey(town)) {
-            this.players.put(town, new ArrayList<>());
-        }
-        this.players.get(town).remove(playerUUID);
-
-        if(this.players.get(town).size() == 0) {
-            this.players.remove(town);
-        }
-    }
-
-    @Override
-    public List<UUID> getParticipantsForTown(Town town) {
-        return this.players.get(town);
-    }
-
-    @Override
-    public void addPlayerToDeathQueue(Player player) {
-        this.deathQueue.add(player.getUniqueId());
-    }
-
-    @Override
-    public void removePlayerFromDeathQueue(Player player) {
-        this.deathQueue.remove(player.getUniqueId());
-    }
-
-    @Override
-    public boolean isPlayerInDeathQueue(Player player) {
-        return this.deathQueue.contains(player.getUniqueId());
-    }
-
-    @Override
-    public List<UUID> getParticipantPlayers() {
-        List<UUID> playerList = new ArrayList<>();
-
-        for(Map.Entry<Town, List<UUID>> entry : this.players.entrySet()) {
-            List<UUID> currentList = entry.getValue();
-            playerList.addAll(currentList);
-        }
-
-        return playerList;
+    public Optional<Arena> getArena() {
+        return Optional.ofNullable(arena);
     }
 
     @Override
@@ -143,7 +142,12 @@ public abstract class AbstractWar implements War {
     }
 
     @Override
-    public Optional<Arena> getArena() {
-        return Optional.ofNullable(arena);
+    public DeathQueue getDeathQueue() {
+        return this.deathQueue;
+    }
+
+    @Override
+    public KillCounter getKillCounter() {
+        return this.killCounter;
     }
 }

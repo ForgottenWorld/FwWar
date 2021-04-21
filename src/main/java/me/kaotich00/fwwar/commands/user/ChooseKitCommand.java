@@ -14,6 +14,8 @@ import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class ChooseKitCommand extends UserCommand {
 
     @Override
@@ -22,12 +24,12 @@ public class ChooseKitCommand extends UserCommand {
 
         SimpleWarService warService = SimpleWarService.getInstance();
 
-        if(!warService.getCurrentWar().isPresent()) {
+        if(!warService.getWar().isPresent()) {
             Message.WAR_NOT_FOUND.send(sender);
             return;
         }
 
-        War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+        War currentWar = warService.getWar().get();
 
         if(!currentWar.getWarStatus().equals(WarStatus.CONFIRMED)) {
             Message.WAR_CANNOT_CHOOSE_KIT.send(sender);
@@ -38,15 +40,14 @@ public class ChooseKitCommand extends UserCommand {
 
         Player player = (Player) sender;
 
-        Town playerTown = null;
+        Resident resident = null;
         try {
-            Resident resident = townyAPI.getDataSource().getResident(player.getName());
-            playerTown = resident.getTown();
+            resident = townyAPI.getDataSource().getResident(player.getName());
         } catch (NotRegisteredException e) {
             e.printStackTrace();
         }
 
-        if(!currentWar.getParticipantsForTown(playerTown).contains(player.getUniqueId())) {
+        if(!currentWar.hasResident(resident)){
             Message.NO_LONGER_PART_OF_WAR.send(sender);
             return;
         }
@@ -59,7 +60,7 @@ public class ChooseKitCommand extends UserCommand {
 
     @Override
     public String getInfo() {
-        return super.getInfo();
+        return "";
     }
 
     @Override
@@ -69,12 +70,17 @@ public class ChooseKitCommand extends UserCommand {
 
     @Override
     public String getName() {
-        return super.getName();
+        return "chooseKit";
     }
 
     @Override
     public Integer getRequiredArgs() {
         return 1;
+    }
+
+    @Override
+    public List<String> getSuggestions(String[] args) {
+        return null;
     }
 
 }

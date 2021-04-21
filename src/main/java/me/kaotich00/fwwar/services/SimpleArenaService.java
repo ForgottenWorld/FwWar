@@ -22,9 +22,9 @@ public class SimpleArenaService {
         SECOND_NATION_BATTLE_POINT
     }
 
-    private List<Arena> arenas;
-    private Map<UUID, Arena> playerCreationArena;
-    private Map<UUID, CreationStep> playerCreationStep;
+    private final List<Arena> arenas;
+    private final Map<UUID, Arena> playerCreationArena;
+    private final Map<UUID, CreationStep> playerCreationStep;
 
     private SimpleArenaService() {
         if (instance != null){
@@ -121,6 +121,15 @@ public class SimpleArenaService {
 
     public void deleteArena(Arena arena) {
         this.arenas.remove(arena);
+    }
+
+    public Arena getRandomArena() {
+        Random random = new Random();
+
+        List<Arena> arenas = getArenas();
+        int size = arenas.size();
+
+        return arenas.get(size > 1 ? random.nextInt(size - 1) : 0);
     }
 
 }

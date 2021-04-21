@@ -6,9 +6,14 @@ import com.palmergames.bukkit.towny.object.Nation;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.message.Message;
+import me.kaotich00.fwwar.objects.war.ParticipantNation;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.command.CommandSender;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class RemoveCommand extends AdminCommand {
 
@@ -18,29 +23,24 @@ public class RemoveCommand extends AdminCommand {
 
         SimpleWarService warService = SimpleWarService.getInstance();
 
-        if(!warService.getCurrentWar().isPresent()) {
+        if(!warService.getWar().isPresent()) {
             Message.WAR_NOT_FOUND.send(sender);
             return;
         }
 
-        War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+        War war = warService.getWar().get();
 
-        if(currentWar.getWarStatus().equals(WarStatus.CONFIRMED)) {
+        if(war.getWarStatus().equals(WarStatus.CONFIRMED)) {
             Message.WAR_ALREADY_CONFIRMED.send(sender);
             return;
         }
 
-        if(currentWar.getWarStatus().equals(WarStatus.STARTED)) {
+        if(war.getWarStatus().equals(WarStatus.STARTED)) {
             Message.WAR_ALREADY_STARTED.send(sender);
             return;
         }
 
         String nationName = args[1];
-
-        if(!currentWar.getParticipantsNations().stream().filter(nation -> nation.getName().equalsIgnoreCase(nationName)).findFirst().isPresent()) {
-            Message.NATION_NOT_PRESENT.send(sender);
-            return;
-        }
 
         TownyAPI townyAPI = TownyAPI.getInstance();
         Nation nation;
@@ -51,14 +51,19 @@ public class RemoveCommand extends AdminCommand {
             return;
         }
 
-        currentWar.removeNation(nation);
+        if(war.getNation(nation.getUuid()) == null) {
+            Message.NATION_NOT_PRESENT.send(sender);
+            return;
+        }
+
+        war.removeNation(nation);
         Message.NATION_SUCCESSFULLY_REMOVED.send(sender, nation.getName());
 
     }
 
     @Override
     public String getInfo() {
-        return super.getInfo();
+        return "";
     }
 
     @Override
@@ -68,12 +73,27 @@ public class RemoveCommand extends AdminCommand {
 
     @Override
     public String getName() {
-        return super.getName();
+        return "remove";
     }
 
     @Override
     public Integer getRequiredArgs() {
         return 2;
+    }
+
+    @Override
+    public List<String> getSuggestions(String[] args) {
+        List<String> suggestions = new ArrayList<>();
+        Optional<War> optWar = SimpleWarService.getInstance().getWar();
+        if(!optWar.isPresent()) {
+            return null;
+        }
+
+        War currentWar = optWar.get();
+        for(ParticipantNation nation: currentWar.getNations()) {
+           suggestions.add(nation.getNation().getName());
+        }
+        return suggestions;
     }
 
 }

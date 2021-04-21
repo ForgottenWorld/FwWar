@@ -9,6 +9,8 @@ import me.kaotich00.fwwar.services.SimpleArenaService;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class ArenaEditCommand extends AdminCommand {
@@ -33,22 +35,31 @@ public class ArenaEditCommand extends AdminCommand {
 
     @Override
     public String getInfo() {
-        return super.getInfo();
+        return "";
     }
 
     @Override
     public String getUsage() {
-        return "/planetwar arena edit <name>";
+        return "/war arena edit <name>";
     }
 
     @Override
     public String getName() {
-        return super.getName();
+        return "edit";
     }
 
     @Override
     public Integer getRequiredArgs() {
         return 2;
+    }
+
+    @Override
+    public List<String> getSuggestions(String[] args) {
+        List<String> suggestions = new ArrayList<>();
+        for(Arena arena: SimpleArenaService.getInstance().getArenas()) {
+            suggestions.add(arena.getName());
+        }
+        return suggestions;
     }
 
 }

@@ -13,9 +13,8 @@ import java.util.UUID;
 public class SimpleStorageService {
 
     private static SimpleStorageService instance;
-    private String saveCorePlotsFile = "coreplots.yml";
-    private FileConfiguration corePlotConfig;
-    private Fwwar plugin;
+    private final String saveCorePlotsFile = "coreplots.yml";
+    private final Fwwar plugin;
 
     private SimpleStorageService(Fwwar plugin) {
         if (instance != null){

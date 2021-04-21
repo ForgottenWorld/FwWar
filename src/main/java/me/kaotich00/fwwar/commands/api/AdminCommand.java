@@ -4,7 +4,7 @@ import me.kaotich00.fwwar.utils.MessageUtils;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 
-public class AdminCommand extends UserCommand {
+public abstract class AdminCommand extends UserCommand {
 
     @Override
     public void onCommand(CommandSender sender, String[] args) {

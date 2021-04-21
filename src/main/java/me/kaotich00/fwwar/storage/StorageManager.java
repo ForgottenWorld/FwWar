@@ -4,12 +4,11 @@ import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.objects.arena.Arena;
 import me.kaotich00.fwwar.objects.kit.Kit;
 import me.kaotich00.fwwar.services.SimpleArenaService;
+import me.kaotich00.fwwar.services.SimpleKitService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.LocationType;
-import me.kaotich00.fwwar.utils.MessageUtils;
 import me.kaotich00.fwwar.utils.WarTypes;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -24,9 +23,9 @@ import java.util.UUID;
 public class StorageManager {
 
     private static StorageManager instance;
-    private String saveArenasFile = "arenas.yml";
-    private String saveKitsFile = "kits.yml";
-    private Fwwar plugin;
+    private final String saveArenasFile = "arenas.yml";
+    private final String saveKitsFile = "kits.yml";
+    private final Fwwar plugin;
 
     private StorageManager(Fwwar plugin) {
         if (instance != null){
@@ -66,7 +65,7 @@ public class StorageManager {
         FileConfiguration data = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), saveArenasFile));
         SimpleArenaService simpleArenaManager = SimpleArenaService.getInstance();
 
-        if(data != null && data.getConfigurationSection("arenas") != null) {
+        if(data.getConfigurationSection("arenas") != null) {
             for (String key : data.getConfigurationSection("arenas").getKeys(false)) {
                 Arena arena = simpleArenaManager.newArena(key);
                 Bukkit.getConsoleSender().sendMessage("    >> Loaded Arena " + arena.getName());
@@ -89,7 +88,7 @@ public class StorageManager {
     }
 
     public void saveKits() throws IOException {
-        Map<Kit, WarTypes> kits = SimpleWarService.getInstance().getAllKits();
+        Map<Kit, WarTypes> kits = SimpleKitService.getInstance().getAllKits();
 
         FileConfiguration data = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), saveKitsFile));
         for(Map.Entry<Kit,WarTypes> entry: kits.entrySet()) {
@@ -105,9 +104,9 @@ public class StorageManager {
 
     public void loadKits() {
         FileConfiguration data = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), saveKitsFile));
-        SimpleWarService simpleWarService = SimpleWarService.getInstance();
+        SimpleKitService simpleKitService = SimpleKitService.getInstance();
 
-        if(data != null && data.getConfigurationSection("kits") != null) {
+        if(data.getConfigurationSection("kits") != null) {
             for (String key : data.getConfigurationSection("kits").getKeys(false)) {
                 Kit kit = new Kit(key);
                 List<ItemStack> items = (List<ItemStack>) data.get("kits." + key + ".items");
@@ -117,7 +116,7 @@ public class StorageManager {
 
                 WarTypes warType = WarTypes.valueOf(data.get("kits." + key + ".type").toString());
 
-                simpleWarService.addKit(warType, kit);
+                simpleKitService.addKit(warType, kit);
 
                 Bukkit.getConsoleSender().sendMessage("    >> Loaded Kit " + kit.getName());
             }

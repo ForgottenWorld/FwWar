@@ -8,14 +8,15 @@ import me.kaotich00.fwwar.utils.WarTypes;
 import me.kaotich00.fwwar.war.assault.SiegeWar;
 import org.bukkit.Bukkit;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class SimpleWarService implements WarService {
 
     private static SimpleWarService instance;
     private int warTaskId;
-
-    Map<WarTypes, Map<String, Kit>> kits;
 
     private War currentWar;
 
@@ -24,7 +25,6 @@ public class SimpleWarService implements WarService {
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
         }
         this.currentWar = null;
-        this.kits = new HashMap<>();
     }
 
     public static SimpleWarService getInstance() {
@@ -38,7 +38,7 @@ public class SimpleWarService implements WarService {
      * Get the current running war if present
      * @return Optional<War>
      */
-    public Optional<War> getCurrentWar() {
+    public Optional<War> getWar() {
         return Optional.ofNullable(this.currentWar);
     }
 
@@ -73,43 +73,6 @@ public class SimpleWarService implements WarService {
 
     public void setWarTaskId(int warTaskId) {
         this.warTaskId = warTaskId;
-    }
-
-    public void addKit(WarTypes warType, Kit kit){
-        if(!this.kits.containsKey(warType)) {
-            this.kits.put(warType, new HashMap<>());
-        }
-        this.kits.get(warType).put(kit.getName(), kit);
-    }
-
-    public void removeKit(WarTypes warType, String kitName) {
-        this.kits.get(warType).remove(kitName);
-    }
-
-    public void updateKit(WarTypes warType, String kitName, Kit kit) {
-        this.kits.get(warType).put(kitName, kit);
-    }
-
-    public Collection<Kit> getKitsForType(WarTypes warType) {
-        return this.kits.get(warType).values();
-    }
-
-    public Optional<Kit> getKitForName(WarTypes warType, String name) {
-        if(!this.kits.containsKey(warType)) {
-            this.kits.put(warType, new HashMap<>());
-        }
-        return Optional.ofNullable(this.kits.get(warType).get(name));
-    }
-
-    @Override
-    public Map<Kit, WarTypes> getAllKits() {
-        Map<Kit, WarTypes> kits = new HashMap<>();
-        for(Map.Entry<WarTypes, Map<String,Kit>> entry : this.kits.entrySet()) {
-            for(Map.Entry<String,Kit> entry2 : entry.getValue().entrySet()) {
-                kits.put(entry2.getValue(), entry.getKey());
-            }
-        }
-        return kits;
     }
 
 }

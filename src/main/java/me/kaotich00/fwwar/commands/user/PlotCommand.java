@@ -6,12 +6,14 @@ import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownBlock;
 import me.kaotich00.fwwar.commands.api.UserCommand;
-import me.kaotich00.fwwar.services.SimplePlotService;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.plot.CorePlot;
+import me.kaotich00.fwwar.services.SimplePlotService;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.UUID;
 
 public class PlotCommand extends UserCommand {
@@ -81,7 +83,7 @@ public class PlotCommand extends UserCommand {
 
     @Override
     public String getInfo() {
-        return super.getInfo();
+        return "";
     }
 
     @Override
@@ -91,12 +93,17 @@ public class PlotCommand extends UserCommand {
 
     @Override
     public String getName() {
-        return super.getName();
+        return "plot";
     }
 
     @Override
     public Integer getRequiredArgs() {
         return 1;
+    }
+
+    @Override
+    public List<String> getSuggestions(String[] args) {
+        return null;
     }
 
 }

@@ -8,6 +8,7 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.kit.Kit;
+import me.kaotich00.fwwar.services.SimpleKitService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,20 +22,20 @@ import java.util.List;
 
 public class KitEditGui {
 
-    private String kitName;
-    private Player player;
-    private Kit kit;
+    private final String kitName;
+    private final Player player;
+    private final Kit kit;
 
     public KitEditGui(String kitName, Player player) {
         this.kitName = kitName;
         this.player = player;
 
-        War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
-        this.kit = SimpleWarService.getInstance().getKitForName(currentWar.getWarType(), kitName).get();
+        War currentWar = SimpleWarService.getInstance().getWar().get();
+        this.kit = SimpleKitService.getInstance().getKitForName(currentWar.getWarType(), kitName).get();
     }
 
     public Gui prepareGui() {
-        War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+        War currentWar = SimpleWarService.getInstance().getWar().get();
         Gui mainGUI = new Gui(6, "Editing kit: " + ChatColor.RED + kitName);
 
         OutlinePane background = new OutlinePane(0, 4, 9, 2, Pane.Priority.LOWEST);
@@ -44,7 +45,7 @@ public class KitEditGui {
         mainGUI.addPane(background);
 
         OutlinePane items = new OutlinePane(0, 0, 9, 4, Pane.Priority.HIGH);
-        for(ItemStack item: SimpleWarService.getInstance().getKitForName(currentWar.getWarType(), kitName).get().getItemsList()) {
+        for(ItemStack item: SimpleKitService.getInstance().getKitForName(currentWar.getWarType(), kitName).get().getItemsList()) {
             items.addItem(new GuiItem(item));
         }
         mainGUI.addPane(items);
@@ -66,7 +67,7 @@ public class KitEditGui {
                 }
             }
 
-            SimpleWarService.getInstance().updateKit(currentWar.getWarType(), this.kitName, this.kit);
+            SimpleKitService.getInstance().updateKit(currentWar.getWarType(), this.kitName, this.kit);
 
             Message.KIT_MODIFIED.send(player);
 

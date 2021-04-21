@@ -6,7 +6,9 @@ import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class UserCommand implements Command {
+import java.util.List;
+
+public abstract class UserCommand implements Command {
 
     @Override
     public void onCommand(CommandSender sender, String[] args) {
@@ -17,23 +19,18 @@ public class UserCommand implements Command {
     }
 
     @Override
-    public String getName() {
-        return null;
-    }
+    public abstract String getName();
 
     @Override
-    public String getUsage() {
-        return null;
-    }
+    public abstract String getUsage();
 
     @Override
-    public String getInfo() {
-        return null;
-    }
+    public abstract String getInfo();
 
     @Override
-    public Integer getRequiredArgs() {
-        return null;
-    }
+    public abstract Integer getRequiredArgs();
+
+    @Override
+    public abstract List<String> getSuggestions(String[] args);
 
 }

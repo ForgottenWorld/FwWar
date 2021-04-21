@@ -1,9 +1,6 @@
 package me.kaotich00.fwwar.commands;
 
-import com.palmergames.bukkit.towny.TownyAPI;
-import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.utils.NameUtil;
-import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.commands.Command;
 import me.kaotich00.fwwar.commands.admin.*;
 import me.kaotich00.fwwar.commands.admin.arena.ArenaCommand;
@@ -11,8 +8,6 @@ import me.kaotich00.fwwar.commands.user.ChooseKitCommand;
 import me.kaotich00.fwwar.commands.user.InfoCommand;
 import me.kaotich00.fwwar.commands.user.PlotCommand;
 import me.kaotich00.fwwar.message.Message;
-import me.kaotich00.fwwar.objects.arena.Arena;
-import me.kaotich00.fwwar.services.SimpleArenaService;
 import me.kaotich00.fwwar.utils.CommandUtils;
 import me.kaotich00.fwwar.utils.MessageUtils;
 import org.bukkit.command.CommandException;
@@ -26,12 +21,10 @@ import java.util.Map;
 
 public class WarCommandManager implements TabExecutor {
 
-    private Map<String, Command> commandRegistry;
-    private Fwwar plugin;
+    private final Map<String, Command> commandRegistry;
 
-    public WarCommandManager(Fwwar plugin) {
+    public WarCommandManager() {
         this.commandRegistry = new HashMap<>();
-        this.plugin = plugin;
         setup();
     }
 
@@ -73,7 +66,7 @@ public class WarCommandManager implements TabExecutor {
             }
             try {
                 fwCommand.onCommand(sender, args);
-            } catch (CommandException e) {
+            } catch (CommandException ignored) {
             }
         }
 
@@ -83,51 +76,17 @@ public class WarCommandManager implements TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String alias, String[] args) {
         List<String> suggestions = new ArrayList<>();
-        String argsIndex = "";
+        String argsIndex = args[args.length - 1];
 
         /* Suggest child commands */
         if(args.length == 1) {
-            argsIndex = args[0];
-
-            for(String commandName: this.commandRegistry.keySet()) {
-                suggestions.add(commandName);
-            }
+            suggestions.addAll(this.commandRegistry.keySet());
         }
 
-        if(args.length == 2) {
-            argsIndex = args[1];
-
-            switch(args[0]) {
-                case CommandUtils.WAR_ADD_NATION_COMMAND:
-                    TownyAPI townyAPI = TownyAPI.getInstance();
-                    for(Nation nation: townyAPI.getDataSource().getNations()) {
-                        suggestions.add(nation.getName());
-                    }
-                    break;
-                case CommandUtils.WAR_ARENA_COMMAND:
-                    suggestions.add("new");
-                    suggestions.add("edit");
-                    suggestions.add("delete");
-                    break;
-                case CommandUtils.WAR_CHOOSE_ARENA:
-                    for(Arena arena: SimpleArenaService.getInstance().getArenas()) {
-                        suggestions.add(arena.getName());
-                    }
-                    break;
-            }
-        }
-
-        if(args.length == 3) {
-            argsIndex = args[2];
-
-            switch(args[1]) {
-                case CommandUtils.ARENA_EDIT_COMMAND:
-                case CommandUtils.ARENA_DELETE_COMMAND:
-                    for(Arena arena: SimpleArenaService.getInstance().getArenas()) {
-                        suggestions.add(arena.getName());
-                    }
-                    break;
-            }
+        if(args.length > 1) {
+            Command fwCommand = getCommand(args[0]);
+            if(fwCommand == null) return null;
+            suggestions = fwCommand.getSuggestions(args);
         }
 
         return NameUtil.filterByStart(suggestions, argsIndex);

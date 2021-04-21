@@ -9,6 +9,8 @@ import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class ChooseArenaCommand extends AdminCommand {
@@ -19,12 +21,12 @@ public class ChooseArenaCommand extends AdminCommand {
 
         SimpleWarService warService = SimpleWarService.getInstance();
 
-        if (!warService.getCurrentWar().isPresent()) {
+        if (!warService.getWar().isPresent()) {
             Message.WAR_NOT_FOUND.send(sender);
             return;
         }
 
-        War currentWar = SimpleWarService.getInstance().getCurrentWar().get();
+        War currentWar = SimpleWarService.getInstance().getWar().get();
 
         if (currentWar.getWarStatus().equals(WarStatus.CONFIRMED)) {
             Message.WAR_ALREADY_CONFIRMED.send(sender);
@@ -50,7 +52,7 @@ public class ChooseArenaCommand extends AdminCommand {
 
     @Override
     public String getInfo() {
-        return super.getInfo();
+        return "";
     }
 
     @Override
@@ -60,12 +62,21 @@ public class ChooseArenaCommand extends AdminCommand {
 
     @Override
     public String getName() {
-        return super.getName();
+        return "chooseArena";
     }
 
     @Override
     public Integer getRequiredArgs() {
         return 2;
+    }
+
+    @Override
+    public List<String> getSuggestions(String[] args) {
+        List<String> suggestions = new ArrayList<>();
+        for(Arena arena: SimpleArenaService.getInstance().getArenas()) {
+            suggestions.add(arena.getName());
+        }
+        return suggestions;
     }
 
 }

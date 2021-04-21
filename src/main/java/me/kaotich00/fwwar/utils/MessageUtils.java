@@ -2,6 +2,8 @@ package me.kaotich00.fwwar.utils;
 
 import org.bukkit.ChatColor;
 
+import java.util.Collections;
+
 public class MessageUtils {
 
     public static String EOL = "\n";
@@ -18,6 +20,10 @@ public class MessageUtils {
                 ChatColor.YELLOW + "Fw" +
                 ChatColor.GOLD + ChatColor.BOLD + "War" +
                 ChatColor.YELLOW + " ]-------------------oOo ";
+    }
+
+    public static String chatDelimiter() {
+        return ChatColor.YELLOW + "\n" + ChatColor.STRIKETHROUGH + "\n" + ChatColor.BOLD + String.join("", Collections.nCopies(45, "-"));
     }
 
     public static String formatSuccessMessage(String message) {

@@ -5,7 +5,7 @@ import me.kaotich00.fwwar.Fwwar;
 public class ConfigurationManager {
 
     private static ConfigurationManager configInstance;
-    private Fwwar plugin;
+    private final Fwwar plugin;
 
     private ConfigurationManager(Fwwar plugin) {
         if (configInstance != null){

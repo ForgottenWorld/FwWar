@@ -10,22 +10,10 @@ import java.util.Optional;
 
 public interface WarService {
 
-    Optional<War> getCurrentWar();
+    Optional<War> getWar();
 
     void setCurrentWar(War war);
 
     int getWarTaskId();
-
-    void addKit(WarTypes warType, Kit kit);
-
-    void removeKit(WarTypes warType, String kitName);
-
-    void updateKit(WarTypes warType, String kitName, Kit kit);
-
-    Collection<Kit> getKitsForType(WarTypes warType);
-
-    Optional<Kit> getKitForName(WarTypes warType, String name);
-
-    Map<Kit, WarTypes> getAllKits();
 
 }
