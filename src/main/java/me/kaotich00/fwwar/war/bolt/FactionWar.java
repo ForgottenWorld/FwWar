@@ -68,7 +68,7 @@ public class FactionWar extends BoltWar {
             Nation firstNation = null;
             Map<UUID, Location> playersToTeleport = new HashMap<>();
 
-            for(ParticipantNation participantNation: this.getParticipants()) {
+            for(ParticipantNation participantNation: this.getNations()) {
 
                 if (firstNation == null)
                     firstNation = participantNation.getNation();
@@ -165,7 +165,7 @@ public class FactionWar extends BoltWar {
     private List<UUID> checkKits() {
         List<UUID> playerWithNoKits = new ArrayList<>();
 
-        for(ParticipantNation participantNation: this.getParticipants()) {
+        for(ParticipantNation participantNation: this.getNations()) {
             for (ParticipantTown participantTown : participantNation.getTowns()) {
                 Set<UUID> residents = participantTown.getPlayers();
                 for(UUID uuid: residents) {

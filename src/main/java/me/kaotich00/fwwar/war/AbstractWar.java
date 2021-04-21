@@ -111,13 +111,13 @@ public abstract class AbstractWar implements War {
 
     public boolean hasEnoughParticipants() {
         boolean shouldWarEnd = false;
-        if(getParticipants().size() < 2) {
+        if(getNations().size() < 2) {
             shouldWarEnd = true;
         } else {
             /* Check if at least 2 Nations are considered enemies between each other */
             boolean areThereEnemies = false;
-            for(ParticipantNation n: getParticipants()) {
-                for(ParticipantNation plausibleEnemy: getParticipants()) {
+            for(ParticipantNation n: getNations()) {
+                for(ParticipantNation plausibleEnemy: getNations()) {
                     if(n.getNation().hasEnemy(plausibleEnemy.getNation())) {
                         areThereEnemies = true;
                     }

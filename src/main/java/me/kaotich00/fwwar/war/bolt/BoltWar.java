@@ -39,7 +39,7 @@ public abstract class BoltWar extends AbstractWar implements KitWar {
 
     @Override
     public void stopWar() {
-        for(ParticipantNation participantNation: this.getParticipants()) {
+        for(ParticipantNation participantNation: this.getNations()) {
             for(ParticipantTown participantTown: participantNation.getTowns()) {
                 Set<UUID> residents = participantTown.getPlayers();
                 Town town = participantTown.getTown();
@@ -75,17 +75,17 @@ public abstract class BoltWar extends AbstractWar implements KitWar {
 
             if(!hasResident(resident)) return;
 
-            getParticipant(town.getNation().getUuid())
+            getNation(town.getNation().getUuid())
                     .getTown(town.getUuid())
                     .removePlayer(player.getUniqueId());
 
             Message.WAR_PLAYER_DEFEATED.send(player);
             Message.WAR_PLAYER_DEATH.broadcast(player.getName(), town.getName());
 
-            boolean shouldRemoveNation = getParticipant(town.getNation().getUuid()).getTowns().size() == 0;
+            boolean shouldRemoveNation = getNation(town.getNation().getUuid()).getTowns().size() == 0;
 
             if(shouldRemoveNation) {
-                removeParticipant(town.getNation());
+                removeNation(town.getNation());
                 Message.NATION_DEFEATED.broadcast(town.getNation().getName());
             }
 

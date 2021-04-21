@@ -53,7 +53,7 @@ public class ClassicWar extends AssaultWar {
 
             Map<UUID, Location> playersToTeleport = new HashMap<>();
             Nation firstNation = null;
-            for(ParticipantNation participantNation: this.getParticipants()) {
+            for(ParticipantNation participantNation: this.getNations()) {
 
                 if(firstNation == null)
                     firstNation = participantNation.getNation();
@@ -140,7 +140,7 @@ public class ClassicWar extends AssaultWar {
 
     @Override
     public void stopWar() {
-        for(ParticipantNation participantNation: this.getParticipants()) {
+        for(ParticipantNation participantNation: this.getNations()) {
             for(ParticipantTown participantTown: participantNation.getTowns()) {
                 Set<UUID> residents = participantTown.getPlayers();
                 Town town = participantTown.getTown();
@@ -175,14 +175,14 @@ public class ClassicWar extends AssaultWar {
 
             if(!hasResident(resident)) return;
 
-            getParticipant(residentNation.getUuid())
+            getNation(residentNation.getUuid())
                     .getTown(residentTown.getUuid())
                     .removePlayer(resident.getUUID());
 
             Message.WAR_PLAYER_DEFEATED.send(player);
             Message.WAR_PLAYER_DEATH.broadcast(resident.getPlayer().getName(), residentTown.getName());
 
-            if(getParticipant(residentNation.getUuid()).getTown(residentTown.getUuid()).getPlayers().size() == 0) {
+            if(getNation(residentNation.getUuid()).getTown(residentTown.getUuid()).getPlayers().size() == 0) {
                 Message.TOWN_DEFEATED.broadcast(residentTown.getName());
                 setTownDefeated(residentNation, residentTown);
             }

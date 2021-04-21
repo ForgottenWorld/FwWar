@@ -56,12 +56,10 @@ public class RandomFactionWar extends BoltWar {
 
             setWarStatus(WarStatus.STARTED);
 
-            Kit kit = SimpleKitService.getInstance().generateRandomKit();
-
             Nation firstNation = null;
             Map<UUID, Location> playersToTeleport = new HashMap<>();
 
-            for(ParticipantNation participantNation: this.getParticipants()) {
+            for(ParticipantNation participantNation: this.getNations()) {
 
                 if (firstNation == null)
                     firstNation = participantNation.getNation();
@@ -79,6 +77,7 @@ public class RandomFactionWar extends BoltWar {
                         if(player != null) {
                             player.getInventory().clear();
 
+                            Kit kit = SimpleKitService.getInstance().generateRandomKit();
                             for(ItemStack item: kit.getItemsList()) {
                                 player.getInventory().addItem(item);
                             }
