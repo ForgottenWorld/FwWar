@@ -25,12 +25,27 @@ public abstract class AbstractWar implements War {
      *  - ENDED: The war has ended
      */
     protected WarStatus warStatus;
-    /* The list of all participant nations */
+    /*
+        This Map is updated with current
+        participating town and nations, which means
+        that when a town or nation are defeated, they
+        will be removed from the map
+     */
     protected Map<UUID, ParticipantNation> participants;
+    /*
+        Those are container used to simplify
+        search operations, making them O(1)
+    */
+    protected Set<UUID> nationsContainer;
+    protected Set<UUID> townsContainer;
+    protected Set<UUID> playersContainer;
+
     /* Queue handler for PlayerDeathEvent */
     protected DeathQueue deathQueue;
+
     /* Kill counter handler for scoreboard Leaderboard */
     protected KillCounter killCounter;
+
     /* The Arena in which the war will be disputed */
     protected Arena arena;
 
@@ -38,6 +53,10 @@ public abstract class AbstractWar implements War {
         this.participants = new HashMap<>();
         this.deathQueue = new DeathQueue();
         this.killCounter = new KillCounter();
+
+        this.nationsContainer = new HashSet<>();
+        this.townsContainer = new HashSet<>();
+        this.playersContainer = new HashSet<>();
     }
 
     @Override
@@ -51,61 +70,42 @@ public abstract class AbstractWar implements War {
     }
 
     @Override
-    public void addParticipant(Nation nation) {
+    public void addNation(Nation nation) {
         if(this.participants.containsKey(nation.getUuid()))
             return;
 
         this.participants.put(nation.getUuid(), new ParticipantNation(nation));
+        this.nationsContainer.add(nation.getUuid());
     }
 
     @Override
-    public void removeParticipant(Nation nation) {
+    public void removeNation(Nation nation) {
         this.participants.remove(nation.getUuid());
+        this.nationsContainer.remove(nation.getUuid());
     }
 
     @Override
-    public ParticipantNation getParticipant(UUID nationUUID) {
+    public ParticipantNation getNation(UUID nationUUID) {
         return this.participants.get(nationUUID);
     }
 
     @Override
     public boolean hasNation(Nation nation) {
-        return this.participants.containsKey(nation.getUuid());
+        return this.nationsContainer.contains(nation.getUuid());
     }
 
     @Override
     public boolean hasTown(Town town) {
-        UUID nationUUID;
-        try {
-            if(!hasNation(town.getNation())) return false;
-            nationUUID = town.getNation().getUuid();
-        } catch (NotRegisteredException e) {
-            return false;
-        }
-
-        ParticipantTown participantTown = this.getParticipant(nationUUID).getTown(town.getUuid());
-        return participantTown != null;
+        return this.townsContainer.contains(town.getUuid());
     }
 
     @Override
     public boolean hasResident(Resident resident) {
-        UUID townUUID;
-        UUID nationUUID;
-        try {
-            if(!hasNation(resident.getTown().getNation())) return false;
-            if(!hasTown(resident.getTown())) return false;
-
-            townUUID = resident.getTown().getUuid();
-            nationUUID = resident.getTown().getNation().getUuid();
-        } catch (NotRegisteredException e) {
-            return false;
-        }
-
-        return this.getParticipant(nationUUID).getTown(townUUID).getPlayers().contains(resident.getPlayer().getUniqueId());
+        return this.playersContainer.contains(resident.getUUID());
     }
 
     @Override
-    public List<ParticipantNation> getParticipants() {
+    public List<ParticipantNation> getNations() {
         return new ArrayList<>(this.participants.values());
     }
 

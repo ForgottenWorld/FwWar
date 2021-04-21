@@ -6,7 +6,6 @@ import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
-import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.message.Message;
@@ -19,7 +18,6 @@ import me.kaotich00.fwwar.utils.WarStatus;
 import me.kaotich00.fwwar.war.assault.SiegeWar;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -45,7 +43,7 @@ public class AddCommand extends AdminCommand {
         }
 
         if(war.hasParticipantsLimit()) {
-            if (war.getMaxAllowedParticipants() < war.getParticipants().size() + 1) {
+            if (war.getMaxAllowedParticipants() < war.getNations().size() + 1) {
                 Message.CANNOT_ADD_MORE_NATIONS.send(sender);
                 return;
             }
@@ -62,7 +60,7 @@ public class AddCommand extends AdminCommand {
             return;
         }
 
-        if(war.getParticipant(nation.getUuid()) != null) {
+        if(war.getNation(nation.getUuid()) != null) {
             Message.NATION_ALREADY_PRESENT.send(sender);
             return;
         }
@@ -113,10 +111,10 @@ public class AddCommand extends AdminCommand {
             return;
         }
 
-        war.addParticipant(nation);
+        war.addNation(nation);
 
         for(Town town: nation.getTowns()) {
-            ParticipantNation participantNation = war.getParticipant(nation.getUuid());
+            ParticipantNation participantNation = war.getNation(nation.getUuid());
             participantNation.addTown(town);
 
             for(Resident resident: town.getResidents()) {

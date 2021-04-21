@@ -43,25 +43,25 @@ public interface War {
      * Push a participant Nation to the War.
      * @param nation the Nation to be added
      */
-    void addParticipant(Nation nation);
+    void addNation(Nation nation);
 
     /**
      * Remove a given Nation from the War.
      * @param nation the Nation to be removed
      */
-    void removeParticipant(Nation nation);
+    void removeNation(Nation nation);
 
     /**
      * Get a single ParticipantNation entry.
      * @return ParticipantNation the participant nation
      */
-    ParticipantNation getParticipant(UUID nationUUID);
+    ParticipantNation getNation(UUID nationUUID);
 
     /**
      * Get a list of participants Nations to the war.
      * @return a List of Nation
      */
-    List<ParticipantNation> getParticipants();
+    List<ParticipantNation> getNations();
 
     /**
      * Check if the given nation is in the war

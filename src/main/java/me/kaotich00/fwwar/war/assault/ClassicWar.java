@@ -17,7 +17,6 @@ import me.kaotich00.fwwar.services.SimpleScoreboardService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.*;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
@@ -55,7 +54,7 @@ public class ClassicWar extends AssaultWar {
 
             Map<UUID, Location> playersToTeleport = new HashMap<>();
             Nation firstNation = null;
-            for(ParticipantNation participantNation: this.getParticipants()) {
+            for(ParticipantNation participantNation: this.getNations()) {
 
                 if(firstNation == null)
                     firstNation = participantNation.getNation();
@@ -141,7 +140,7 @@ public class ClassicWar extends AssaultWar {
 
     @Override
     public void stopWar() {
-        for(ParticipantNation participantNation: this.getParticipants()) {
+        for(ParticipantNation participantNation: this.getNations()) {
             for(ParticipantTown participantTown: participantNation.getTowns()) {
                 Set<UUID> residents = participantTown.getPlayers();
                 Town town = participantTown.getTown();
@@ -194,9 +193,9 @@ public class ClassicWar extends AssaultWar {
             Nation residentNation = residentTown.getNation();
 
             if(hasTown(residentTown))
-                getParticipant(residentNation.getUuid()).getTown(residentTown.getUuid()).removePlayer(resident.getUUID());
+                getNation(residentNation.getUuid()).getTown(residentTown.getUuid()).removePlayer(resident.getUUID());
 
-            if(getParticipant(residentNation.getUuid()).getTown(residentTown.getUuid()).getPlayers().size() == 0) {
+            if(getNation(residentNation.getUuid()).getTown(residentTown.getUuid()).getPlayers().size() == 0) {
                 Message.TOWN_DEFEATED.broadcast(residentTown.getName());
                 setTownDefeated(residentNation, residentTown);
             }
@@ -206,13 +205,13 @@ public class ClassicWar extends AssaultWar {
             }
 
             /* Check if the required amount of Nations is present */
-            if(getParticipants().size() < 2) {
+            if(getNations().size() < 2) {
                 shouldWarEnd = true;
             } else {
                 /* Check if at least 2 Nations are considered enemies between each other */
                 boolean areThereEnemies = false;
-                for(ParticipantNation n: getParticipants()) {
-                    for(ParticipantNation plausibleEnemy: getParticipants()) {
+                for(ParticipantNation n: getNations()) {
+                    for(ParticipantNation plausibleEnemy: getNations()) {
                         if(n.getNation().hasEnemy(plausibleEnemy.getNation())) {
                             areThereEnemies = true;
                         }

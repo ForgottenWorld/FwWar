@@ -13,15 +13,15 @@ public abstract class AssaultWar extends AbstractWar {
     protected HashMap<Nation, List<Town>> townsForNation;
 
     @Override
-    public void addParticipant(Nation nation) {
-        super.addParticipant(nation);
+    public void addNation(Nation nation) {
+        super.addNation(nation);
 
         this.townsForNation.put(nation, new ArrayList<>(nation.getTowns()));
     }
 
     @Override
-    public void removeParticipant(Nation nation) {
-        super.removeParticipant(nation);
+    public void removeNation(Nation nation) {
+        super.removeNation(nation);
 
         this.townsForNation.remove(nation);
     }

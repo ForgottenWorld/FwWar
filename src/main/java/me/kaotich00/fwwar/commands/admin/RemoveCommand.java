@@ -7,7 +7,6 @@ import me.kaotich00.fwwar.api.war.War;
 import me.kaotich00.fwwar.commands.api.AdminCommand;
 import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.war.ParticipantNation;
-import me.kaotich00.fwwar.objects.war.ParticipantTown;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.WarStatus;
 import org.bukkit.command.CommandSender;
@@ -52,12 +51,12 @@ public class RemoveCommand extends AdminCommand {
             return;
         }
 
-        if(war.getParticipant(nation.getUuid()) == null) {
+        if(war.getNation(nation.getUuid()) == null) {
             Message.NATION_NOT_PRESENT.send(sender);
             return;
         }
 
-        war.removeParticipant(nation);
+        war.removeNation(nation);
         Message.NATION_SUCCESSFULLY_REMOVED.send(sender, nation.getName());
 
     }
@@ -91,7 +90,7 @@ public class RemoveCommand extends AdminCommand {
         }
 
         War currentWar = optWar.get();
-        for(ParticipantNation nation: currentWar.getParticipants()) {
+        for(ParticipantNation nation: currentWar.getNations()) {
            suggestions.add(nation.getNation().getName());
         }
         return suggestions;

@@ -2,7 +2,6 @@ package me.kaotich00.fwwar.war.assault;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
-import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.message.Message;
@@ -49,15 +48,15 @@ public class SiegeWar extends AssaultWar {
         }
 
         // Check if the required amount of Nations is present
-        if(getParticipants().size() < 2) {
+        if(getNations().size() < 2) {
             Message.NOT_ENOUGH_NATIONS.broadcast();
             return;
         }
 
         // Check if at least 2 Nations are considered enemies between each other
         boolean areThereEnemies = false;
-        for(ParticipantNation nation: getParticipants()) {
-            for(ParticipantNation plausibleEnemy: getParticipants()) {
+        for(ParticipantNation nation: getNations()) {
+            for(ParticipantNation plausibleEnemy: getNations()) {
                 if(nation.getNation().hasEnemy(plausibleEnemy.getNation())) {
                     areThereEnemies = true;
                 }
@@ -82,7 +81,7 @@ public class SiegeWar extends AssaultWar {
 
     @Override
     public void stopWar() {
-        for(ParticipantNation nation: this.getParticipants()) {
+        for(ParticipantNation nation: this.getNations()) {
             for (ParticipantTown participantTown : nation.getTowns()) {
                 Town town = participantTown.getTown();
                 for (UUID uuid : participantTown.getPlayers()) {

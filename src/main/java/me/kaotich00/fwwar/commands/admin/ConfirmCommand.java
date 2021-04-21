@@ -19,7 +19,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,7 +47,7 @@ public class ConfirmCommand extends AdminCommand {
             return;
         }
 
-        if(currentWar.getParticipants().size() < 1) {
+        if(currentWar.getNations().size() < 1) {
             Message.WAR_AT_LEAST_TWO_NATION.send(sender);
             return;
         }
@@ -67,7 +66,7 @@ public class ConfirmCommand extends AdminCommand {
             return;
         }
 
-        for(ParticipantNation participantNation: currentWar.getParticipants()) {
+        for(ParticipantNation participantNation: currentWar.getNations()) {
             for(ParticipantTown participantTown: participantNation.getTowns()) {
                 for(UUID playerUUID: participantTown.getPlayers()) {
                     Player participantPlayer = Bukkit.getPlayer(playerUUID);

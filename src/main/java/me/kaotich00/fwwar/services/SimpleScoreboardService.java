@@ -1,8 +1,6 @@
 package me.kaotich00.fwwar.services;
 
-import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
-import com.palmergames.bukkit.towny.object.Town;
 import fr.mrmicky.fastboard.FastBoard;
 import me.kaotich00.fwwar.Fwwar;
 import me.kaotich00.fwwar.api.war.KitWar;
@@ -44,7 +42,7 @@ public class SimpleScoreboardService {
         if(!optWar.isPresent()) return;
         War war = optWar.get();
 
-        for(ParticipantNation nation: war.getParticipants()) {
+        for(ParticipantNation nation: war.getNations()) {
             for(ParticipantTown town: nation.getTowns()) {
                 for(Resident resident: town.getTown().getResidents()) {
                     Player player = Bukkit.getPlayer(resident.getUUID());
@@ -115,7 +113,7 @@ public class SimpleScoreboardService {
 
     private void updateFactionKitScoreboard(War war) {
 
-        for(ParticipantNation nation: war.getParticipants()) {
+        for(ParticipantNation nation: war.getNations()) {
             for(ParticipantTown town: nation.getTowns()) {
                 for(Resident resident: town.getTown().getResidents()) {
                     Player player = Bukkit.getPlayer(resident.getUUID());
@@ -160,7 +158,7 @@ public class SimpleScoreboardService {
 
     private void genericWarScoreboard(War currentWar) {
 
-        for (ParticipantNation nation : currentWar.getParticipants()) {
+        for (ParticipantNation nation : currentWar.getNations()) {
             for (ParticipantTown town : nation.getTowns()) {
                 for (Resident resident : town.getTown().getResidents()) {
                     Player player = Bukkit.getPlayer(resident.getUUID());
@@ -206,7 +204,7 @@ public class SimpleScoreboardService {
         FileConfiguration defaultConfig = Fwwar.getDefaultConfig();
         AssaultWar war = (AssaultWar) SimpleWarService.getInstance().getWar().get();
 
-        for (ParticipantNation nation : war.getParticipants()) {
+        for (ParticipantNation nation : war.getNations()) {
             for (ParticipantTown town : nation.getTowns()) {
                 for (Resident resident : town.getTown().getResidents()) {
                     Player player = Bukkit.getPlayer(resident.getUUID());
@@ -219,7 +217,7 @@ public class SimpleScoreboardService {
                             lines.add("");
                             lines.add(ChatColor.GOLD + "" + ChatColor.BOLD + "  War type: " + ChatColor.YELLOW + war.getWarType().name());
                             lines.add("");
-                            for (ParticipantNation participant : war.getParticipants()) {
+                            for (ParticipantNation participant : war.getNations()) {
                                 lines.add(org.bukkit.ChatColor.YELLOW + "  >> Nation: " + org.bukkit.ChatColor.GOLD + participant.getNation().getName());
                                 for (ParticipantTown town2 : participant.getTowns()) {
                                     int townHP = defaultConfig.getInt("war.town_max_hp");

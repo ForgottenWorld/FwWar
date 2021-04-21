@@ -113,14 +113,14 @@ public class DiscourseImporter {
                     nation.getAccount().withdraw(price, "Joining the war");
 
                     Message.IMPORTER_INFO.send(sender, ChatColor.GREEN + "Successfully added nation " + ChatColor.GOLD + nationName);
-                    importedWar.addParticipant(nation);
+                    importedWar.addNation(nation);
 
                     String[] participants = parsedValues.get("partecipanti").replace("[", "").replace("]", "").split(",");
                     for(String playerName: participants) {
                         Message.IMPORTER_INFO.send(sender, "Adding resident " + ChatColor.GREEN + playerName + ChatColor.GRAY + " to participants");
                         Resident resident = townyAPI.getDataSource().getResident(playerName);
 
-                        ParticipantNation participantNation = importedWar.getParticipant(resident.getTown().getNation().getUuid());
+                        ParticipantNation participantNation = importedWar.getNation(resident.getTown().getNation().getUuid());
                         if(participantNation == null) continue;
                         ParticipantTown participantTown = participantNation.getTown(resident.getTown().getUuid());
                         if(participantTown == null) continue;

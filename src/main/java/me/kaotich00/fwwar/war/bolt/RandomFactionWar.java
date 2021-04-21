@@ -18,7 +18,6 @@ import me.kaotich00.fwwar.services.SimpleScoreboardService;
 import me.kaotich00.fwwar.services.SimpleWarService;
 import me.kaotich00.fwwar.utils.*;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
@@ -62,7 +61,7 @@ public class RandomFactionWar extends BoltWar {
             Nation firstNation = null;
             Map<UUID, Location> playersToTeleport = new HashMap<>();
 
-            for(ParticipantNation participantNation: this.getParticipants()) {
+            for(ParticipantNation participantNation: this.getNations()) {
 
                 if (firstNation == null)
                     firstNation = participantNation.getNation();
@@ -155,7 +154,7 @@ public class RandomFactionWar extends BoltWar {
 
     @Override
     public void stopWar() {
-        for(ParticipantNation participantNation: this.getParticipants()) {
+        for(ParticipantNation participantNation: this.getNations()) {
             for(ParticipantTown participantTown: participantNation.getTowns()) {
                 Set<UUID> residents = participantTown.getPlayers();
                 Town town = participantTown.getTown();
@@ -206,7 +205,7 @@ public class RandomFactionWar extends BoltWar {
 
             Set<UUID> participants = null;
             if(hasTown(town))
-                participants = getParticipant(town.getNation().getUuid()).getTown(town.getUuid()).getPlayers();
+                participants = getNation(town.getNation().getUuid()).getTown(town.getUuid()).getPlayers();
 
             if(participants == null) {
                 return;
@@ -216,20 +215,20 @@ public class RandomFactionWar extends BoltWar {
                 return;
             }
 
-            getParticipant(town.getNation().getUuid()).getTown(town.getUuid()).removePlayer(player.getUniqueId());
+            getNation(town.getNation().getUuid()).getTown(town.getUuid()).removePlayer(player.getUniqueId());
             Message.WAR_PLAYER_DEFEATED.send(player);
 
             boolean shouldRemoveNation = true;
-            if(getParticipant(town.getNation().getUuid()).getTowns().size() > 0){
+            if(getNation(town.getNation().getUuid()).getTowns().size() > 0){
                 shouldRemoveNation = false;
             }
 
             if(shouldRemoveNation) {
-                removeParticipant(town.getNation());
+                removeNation(town.getNation());
                 Message.NATION_DEFEATED.broadcast(town.getNation().getName());
             }
 
-            if(getParticipants().size() < 2) {
+            if(getNations().size() < 2) {
                 SimpleScoreboardService.getInstance().removeScoreboards();
                 SimpleWarService.getInstance().stopWar();
             }

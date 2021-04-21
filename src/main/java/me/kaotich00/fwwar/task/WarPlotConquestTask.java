@@ -44,7 +44,7 @@ public class WarPlotConquestTask implements Runnable {
 
         boolean shouldWarEnd = false;
 
-        for(ParticipantNation participantNation: war.getParticipants()) {
+        for(ParticipantNation participantNation: war.getNations()) {
             Iterator<ParticipantTown> iterator = participantNation.getTowns().iterator();
             while(iterator.hasNext()) {
                 ParticipantTown participantTown = iterator.next();
@@ -121,7 +121,7 @@ public class WarPlotConquestTask implements Runnable {
                     if(corePlot.getConquestPercentage() >= townHP) {
                         try {
                             war.setTownDefeated(town.getNation(), town);
-                            war.getParticipant(nation.getUuid()).removeTown(town.getUuid());
+                            war.getNation(nation.getUuid()).removeTown(town.getUuid());
                             Message.TOWN_DEFEATED_SIEGE_WAR.broadcast(town.getName());
                         } catch (NotRegisteredException e) {
                             e.printStackTrace();
@@ -130,18 +130,18 @@ public class WarPlotConquestTask implements Runnable {
 
                     if(war.getTownsForNation(nation).size() == 0) {
                         Message.NATION_DEFEATED.broadcast(nation.getName());
-                        war.removeParticipant(nation);
+                        war.removeNation(nation);
                     }
 
                     /* Check if the required amount of Nations is present */
-                    if(war.getParticipants().size() < 2) {
+                    if(war.getNations().size() < 2) {
                         shouldWarEnd = true;
                         break;
                     } else {
                         /* Check if at least 2 Nations are considered enemies between each other */
                         boolean areThereEnemies = false;
-                        for(ParticipantNation n: war.getParticipants()) {
-                            for(ParticipantNation plausibleEnemy: war.getParticipants()) {
+                        for(ParticipantNation n: war.getNations()) {
+                            for(ParticipantNation plausibleEnemy: war.getNations()) {
                                 if(n.getNation().hasEnemy(plausibleEnemy.getNation())) {
                                     areThereEnemies = true;
                                 }
