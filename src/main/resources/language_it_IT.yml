@@ -163,9 +163,14 @@ strings:
     &e&m&l---------------------------------------------
     &a
     &l Benvenuto nel menu modifica dei kit
-    &7&l Per piacere digita il &anome &7del kit che vorresti modificare
-    &7&l Kit disponibili:
+    &7 Per piacere digita il &6nome &7del kit che vorresti modificare
+    &7
+    &3 Kit disponibili:
   kit_name_selection: "&7Per piacere digita un nome riconoscibile per il kit, tipo &6'Tank' &7oppure &6'Healer'"
+  kit_required: "&7Il kit e' obbligatorio? Rispondi &6'true' &7se lo è, &6'false' &7in caso contrario."
+  kit_quantity: "&7Qual e' il numero massimo di persone che possono selezionare il kit? Digita &6-1 &7se non c'e' limite."
+  same_kit_already_selected: "&cHai gia' selezionato questo kit per la guerra"
+  kit_max_quantity_reached: "&cImpossibile selezionare il kit, quantità massima raggiunta"
 
   arena_already_exists: "&cUn arena con questo nome &6{0} &cesiste gia'"
   arena_not_found: "&cArena &6{0} &cnon trovata."

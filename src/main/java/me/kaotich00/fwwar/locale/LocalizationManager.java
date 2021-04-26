@@ -14,7 +14,7 @@ public class LocalizationManager {
 
     private static LocalizationManager instance;
     private final Fwwar plugin;
-    private final String defaultLanguageFile = "language_en_EN.yml";
+    private final String defaultLanguageFile = "language_it_IT.yml";
 
     private final Map<String, String> strings;
 

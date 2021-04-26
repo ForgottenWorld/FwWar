@@ -75,6 +75,10 @@ public enum Message {
     KIT_MENU("kit_menu", false),
     KIT_NAME_SELECTION("kit_name_selection", false),
     KIT_EDITOR("kit_editor", false),
+    KIT_REQUIRED("kit_required", false),
+    KIT_QUANTITY("kit_quantity", false),
+    SAME_KIT_ALREADY_SELECTED("same_kit_already_selected", true),
+    KIT_MAX_QUANTITY_REACHED("kit_max_quantity_reached", true),
 
     ARENA_ALREADY_EXISTS("arena_already_exists", true),
     ARENA_NOT_FOUND("arena_not_found", true),

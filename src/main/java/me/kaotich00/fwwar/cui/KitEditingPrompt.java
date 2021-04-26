@@ -107,16 +107,72 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
             Kit kit = new Kit(input);
             kitService.addKit(war.getWarType(), kit);
 
-            Message.KIT_CREATED.send((Player) context.getForWhom(), input);
+            context.setSessionData("kit", kit);
 
+            return new NewKitRequiredPrompt();
+        }
+
+    }
+
+    private class NewKitRequiredPrompt extends FixedSetPrompt {
+
+        @Override
+        public String getPromptText(ConversationContext context) {
+            return Message.KIT_REQUIRED.asString();
+        }
+
+        @Override
+        protected Prompt acceptValidatedInput(ConversationContext conversationContext, String s) {
+            Kit kit = (Kit) conversationContext.getSessionData("kit");
+            if(s.equals("true"))
+                kit.setRequired(true);
+
+            return new NewKitQuantityPrompt();
+        }
+
+        @Override
+        protected boolean isInputValid(ConversationContext context, String input) {
+            return (input.equals("true") || input.equals("false"));
+        }
+
+        @Override
+        protected String getFailedValidationText(ConversationContext context, String invalidInput) {
+            return "Input must either be true of false.";
+        }
+    }
+
+    private class NewKitQuantityPrompt extends NumericPrompt {
+
+        @Override
+        public String getPromptText(ConversationContext context) {
+            return Message.KIT_QUANTITY.asString();
+        }
+
+        @Override
+        protected Prompt acceptValidatedInput(ConversationContext context, Number input) {
+
+            Kit kit = (Kit) context.getSessionData("kit");
+            kit.setQuantity(input.intValue());
+
+            Message.KIT_CREATED.send((Player) context.getForWhom(), kit.getName());
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Fwwar.getPlugin(Fwwar.class), () -> {
                 Player player = (Player) context.getForWhom();
-                KitEditGui kitEditGui = new KitEditGui(input, player);
+                KitEditGui kitEditGui = new KitEditGui(kit.getName(), player);
                 Gui kitGUI = kitEditGui.prepareGui();
                 kitGUI.show(player);
             }, 40L);
 
             return Prompt.END_OF_CONVERSATION;
+        }
+
+        @Override
+        protected boolean isNumberValid(ConversationContext context, Number input) {
+            return input.intValue() >= -1 && input.intValue() != 0;
+        }
+
+        @Override
+        protected String getFailedValidationText(ConversationContext context, Number invalidInput) {
+            return "Input number must be greater than -1 and not 0";
         }
 
     }
@@ -136,7 +192,7 @@ public class KitEditingPrompt implements ConversationAbandonedListener{
 
             Collection<Kit> kitsList = kitService.getKitsForType(war.getWarType());
             for(Kit kit : kitsList) {
-                promptMessage.append(ChatColor.YELLOW + "" + ChatColor.BOLD + "\n [").append(kit.getName()).append("] \n");
+                promptMessage.append(ChatColor.YELLOW + " - ").append(kit.getName()).append("\n");
             }
 
             promptMessage.append(MessageUtils.chatDelimiter());

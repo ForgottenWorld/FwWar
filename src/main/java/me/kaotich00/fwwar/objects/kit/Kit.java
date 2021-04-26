@@ -7,12 +7,16 @@ import java.util.List;
 
 public class Kit {
 
-    String name;
+    private final String name;
     private final List<ItemStack> itemsList;
+    private boolean required;
+    private int quantity;
 
     public Kit(String name) {
         this.name = name;
         this.itemsList = new ArrayList<>();
+        this.required = false;
+        this.quantity = -1;
     }
 
     public List<ItemStack> getItemsList() {
@@ -29,6 +33,22 @@ public class Kit {
 
     public String getName() {
         return this.name;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 
 }

@@ -97,6 +97,8 @@ public class StorageManager {
 
             data.set("kits." + kit.getName() + ".type", warType.name());
             data.set("kits." + kit.getName() + ".items", kit.getItemsList());
+            data.set("kits." + kit.getName() + ".required", kit.isRequired());
+            data.set("kits." + kit.getName() + ".quantity", kit.getQuantity());
         }
 
         data.save(new File(plugin.getDataFolder(), saveKitsFile));
@@ -115,6 +117,9 @@ public class StorageManager {
                 }
 
                 WarTypes warType = WarTypes.valueOf(data.get("kits." + key + ".type").toString());
+
+                kit.setRequired(data.get("kits." + key + ".required").equals("true") ? true : false);
+                kit.setQuantity((int) data.get("kits." + key + ".quantity"));
 
                 simpleKitService.addKit(warType, kit);
 

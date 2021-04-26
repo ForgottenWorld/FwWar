@@ -10,6 +10,7 @@ import me.kaotich00.fwwar.message.Message;
 import me.kaotich00.fwwar.objects.kit.Kit;
 import me.kaotich00.fwwar.services.SimpleKitService;
 import me.kaotich00.fwwar.services.SimpleWarService;
+import me.kaotich00.fwwar.war.bolt.FactionWar;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -58,7 +59,6 @@ public class KitSelectionGui {
                 Optional<Kit> optSelectedKit = SimpleKitService.getInstance().getKitForName(war.getWarType(), kitName);
                 optSelectedKit.ifPresent(selectedKit -> {
                     ((KitWar)war).setPlayerKit(player, selectedKit);
-                    Message.KIT_SELECTED.send(player, kitName);
                 });
 
                 player.getOpenInventory().close();
@@ -69,16 +69,34 @@ public class KitSelectionGui {
     }
 
     private ItemStack kitBuilder(Kit kit) {
+        War war = SimpleWarService.getInstance().getWar().get();
+
         ItemStack kitBuilder = kit.getItemsList().size() > 0 ? kit.getItemsList().get(0).clone() : new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta kitBuilderItemMeta = kitBuilder.getItemMeta();
         kitBuilderItemMeta.setDisplayName(kit.getName());
 
         List<String> kitBuilderLore = new ArrayList<>();
+
+        if(war instanceof FactionWar) {
+            Integer kitUsage = ((FactionWar) war).getKitUsageCount(this.player, kit);
+            int kitQuantity = kit.getQuantity();
+
+            String usage = String.valueOf(kitUsage);
+            String quantity = String.valueOf(kitQuantity);
+            if(kitQuantity == -1)
+                quantity = "infinito";
+
+            kitBuilderLore.add(ChatColor.LIGHT_PURPLE + "Scelti: " + usage + "/" + quantity);
+            kitBuilderLore.add(ChatColor.DARK_PURPLE + "Obbligatorio: " + (kit.isRequired() ? "Si" : "No"));
+            kitBuilderLore.add("");
+        }
+
         for(ItemStack item: kit.getItemsList()) {
             kitBuilderLore.add(ChatColor.GREEN + item.getI18NDisplayName() + " x " + item.getAmount());
         }
         kitBuilderItemMeta.setLore(kitBuilderLore);
         kitBuilderItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        kitBuilderItemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         kitBuilder.setItemMeta(kitBuilderItemMeta);
 
         return kitBuilder;

@@ -31,11 +31,13 @@ import java.util.*;
 
 public class FactionWar extends BoltWar {
 
+    private final Map<UUID, Map<String, Integer>> kitSelectionCount;
     private final Map<UUID, Kit> playerKits;
 
     public FactionWar() {
         this.setWarStatus(WarStatus.CREATED);
         this.playerKits = new HashMap<>();
+        this.kitSelectionCount = new HashMap<>();
     }
 
     @Override
@@ -187,12 +189,82 @@ public class FactionWar extends BoltWar {
 
     @Override
     public void setPlayerKit(Player player, Kit kit) {
+        TownyAPI townyAPI = TownyAPI.getInstance();
+
+        try {
+            Resident resident = townyAPI.getDataSource().getResident(player.getName());
+            Nation nation = resident.getTown().getNation();
+
+            UUID nationUUID = nation.getUuid();
+
+            if(!this.kitSelectionCount.containsKey(nationUUID))
+                this.kitSelectionCount.put(nationUUID, new HashMap<>());
+
+            Optional<Kit> optCurrentPlayerKit = getPlayerKit(player);
+            if(optCurrentPlayerKit.isPresent()) {
+                Kit currentPlayerKit = optCurrentPlayerKit.get();
+
+                if(currentPlayerKit.equals(kit)) {
+                    Message.SAME_KIT_ALREADY_SELECTED.send(player);
+                    return;
+                }
+            }
+
+            Integer currentUsage = this.kitSelectionCount.get(nationUUID).get(kit.getName());
+            if(currentUsage == null)
+                currentUsage = 0;
+
+            currentUsage++;
+
+            if(kit.getQuantity() != -1 && (currentUsage > kit.getQuantity())) {
+                Message.KIT_MAX_QUANTITY_REACHED.send(player);
+                return;
+            }
+
+            this.kitSelectionCount.get(nationUUID).put(kit.getName(), currentUsage);
+
+            if(optCurrentPlayerKit.isPresent()) {
+                Kit currentPlayerKit = optCurrentPlayerKit.get();
+
+                Integer kitUsage = this.kitSelectionCount.get(nationUUID).get(currentPlayerKit.getName());
+                if(kitUsage != null) {
+                    this.kitSelectionCount.get(nationUUID).put(currentPlayerKit.getName(), Math.max(kitUsage - 1, 0));
+                }
+            }
+        } catch (NotRegisteredException e) {
+            e.printStackTrace();
+        }
         this.playerKits.put(player.getUniqueId(), kit);
+
+        Message.KIT_SELECTED.send(player, kit.getName());
     }
 
     @Override
     public Optional<Kit> getPlayerKit(Player player) {
         return Optional.ofNullable(this.playerKits.get(player.getUniqueId()));
+    }
+
+    public Integer getKitUsageCount(Player player, Kit kit) {
+        TownyAPI townyAPI = TownyAPI.getInstance();
+
+        UUID nationUUID = null;
+
+        try {
+            Resident resident = townyAPI.getDataSource().getResident(player.getName());
+            Nation nation = resident.getTown().getNation();
+
+            nationUUID = nation.getUuid();
+        } catch (NotRegisteredException e) {
+            e.printStackTrace();
+        }
+
+        if(!this.kitSelectionCount.containsKey(nationUUID))
+            this.kitSelectionCount.put(nationUUID, new HashMap<>());
+
+        if(!this.kitSelectionCount.get(nationUUID).containsKey(kit.getName()))
+            this.kitSelectionCount.get(nationUUID).put(kit.getName(), 0);
+
+        return this.kitSelectionCount.get(nationUUID).get(kit.getName());
     }
 
 }
